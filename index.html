@@ -2214,7 +2214,7 @@
             };
 
             await update(ref(db, 'users/' + uid), userUpdates);
-            await update(ref(db, 'withdrawals/' + wid), { status: 'successful withdraw  ' });
+            await update(ref(db, 'withdrawals/' + wid), { status: 'successful withdraw' });
             alert("Withdrawal Approved!");
             openAdminPanel(); // Refresh stats
         };
