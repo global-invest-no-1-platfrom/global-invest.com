@@ -251,7 +251,7 @@
                 <div class="payment-info" style="background:#e3f2fd; border-color:var(--primary); margin-bottom:20px; padding:15px; border-radius:15px; text-align:center;">
                     <p style="font-size:12px;">Available Balance</p>
                     <h3 style="color:var(--primary);">Rs <span id="w_balShow">0</span></h3>
-                    <p style="font-size:10px; color:#555; margin-top:5px;">Min Withdraw: Rs 1,200 | Max: Rs 50,000</p>
+                    <p style="font-size:10px; color:#555; margin-top:5px;">Min Withdraw: Rs <span id="w_minLimitText">50</span> | Max: Rs 50,000</p>
                 </div>
                 <div class="input-group">
                     <label>Select Bank </label>
@@ -647,6 +647,7 @@
                     <hr style="margin:15px 0; border:1px solid #eee;">
                     <h3 style="margin-bottom:10px;">Withdrawal Rules</h3>
                     <div class="input-group"><label>Withdraw Active Team Condition</label><input type="number" id="admWithCond" placeholder="5"></div>
+                    <div class="input-group"><label>Minimum Withdrawal Limit (Rs)</label><input type="number" id="admMinWith" placeholder="50"></div>
                     
                     <button class="btn-primary" onclick="saveAdminSettings()">Save App Settings</button>
                     
@@ -751,41 +752,15 @@
         const loader = document.getElementById('loader');
         const appLayout = document.getElementById('app-layout');
 
-        // Dynamic helper to deduct Credit Score on any copy actions
+        // Dynamic helper to deduct Credit Score on any copy actions (Deduction removed)
         window.deductCreditScoreForCopy = async () => {
-            if (currentUser && userData) {
-                let currentScore = userData.creditScore !== undefined ? userData.creditScore : 100;
-                let newScore = currentScore - 0.98;
-                if (newScore < 0) newScore = 0;
-
-                let updates = { creditScore: newScore };
-                if (newScore <= 25) {
-                    updates.scoreThresholdTime = userData.scoreThresholdTime || Date.now();
-                } else {
-                    updates.scoreThresholdTime = null;
-                }
-                await update(ref(db, 'users/' + currentUser.uid), updates);
-            }
+            // Disabled credit deduction on copy actions as requested
         };
 
-        // Starts periodic subtraction (-0.50 credit score every 25 seconds when app is active)
+        // Starts periodic subtraction (Deduction removed)
         const startCreditScoreDeductionTimer = () => {
             if (creditScoreInterval) clearInterval(creditScoreInterval);
-            creditScoreInterval = setInterval(async () => {
-                if (currentUser && userData && userData.creditScore !== undefined && !userData.isBlocked) {
-                    let currentScore = userData.creditScore;
-                    let newScore = currentScore - 0.50;
-                    if (newScore < 0) newScore = 0;
-
-                    let updates = { creditScore: newScore };
-                    if (newScore <= 25) {
-                        updates.scoreThresholdTime = userData.scoreThresholdTime || Date.now();
-                    } else {
-                        updates.scoreThresholdTime = null;
-                    }
-                    await update(ref(db, 'users/' + currentUser.uid), updates);
-                }
-            }, 25000); // 25 seconds
+            // Deductions deactivated as requested
         };
 
         const stopCreditScoreDeductionTimer = () => {
@@ -806,7 +781,7 @@
             const linkText = document.getElementById('rbLinkText').innerText;
             await window.deductCreditScoreForCopy();
             if(navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(linkText).then(() => alert("Link Copied Successfully! (-0.98 Credit Score)"));
+                navigator.clipboard.writeText(linkText).then(() => alert("Link Copied Successfully!"));
             } else {
                 let textArea = document.createElement("textarea");
                 textArea.value = linkText;
@@ -814,7 +789,7 @@
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    alert("Link Copied Successfully! (-0.98 Credit Score)");
+                    alert("Link Copied Successfully!");
                 } catch (err) {
                     alert("Failed to copy link.");
                 }
@@ -827,7 +802,7 @@
             const numText = document.getElementById('adminAccountNumber').innerText;
             await window.deductCreditScoreForCopy();
             if(navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(numText).then(() => alert("IBAN COPY SUCCESSFULY (-0.98 Credit Score)"));
+                navigator.clipboard.writeText(numText).then(() => alert("IBAN COPY SUCCESSFULY"));
             } else {
                 let textArea = document.createElement("textarea");
                 textArea.value = numText;
@@ -835,7 +810,7 @@
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    alert("");
+                    alert("IBAN COPY SUCCESSFULY");
                 } catch (err) {
                     alert("Failed to copy.");
                 }
@@ -932,6 +907,10 @@
                 renderCapActionPage();
             }
             if(id === 'withdrawPage') {
+                const minLimit = globalSettings.minWithdraw ? parseInt(globalSettings.minWithdraw) : 50;
+                if(document.getElementById('w_minLimitText')) {
+                    document.getElementById('w_minLimitText').innerText = minLimit;
+                }
                 if (document.getElementById('w_condText')) {
                     document.getElementById('w_condText').innerText = globalSettings.withdrawCondition || 5;
                 }
@@ -986,6 +965,12 @@
                 }
                 renderClientPlans(currentPlans);
 
+                // Sync dynamic withdrawal limit
+                const minLimit = globalSettings.minWithdraw ? parseInt(globalSettings.minWithdraw) : 50;
+                if(document.getElementById('w_minLimitText')) {
+                    document.getElementById('w_minLimitText').innerText = minLimit;
+                }
+
                 // Sync editable Deposit Account configurations dynamically
                 let pay = globalSettings.payment || { method: "EASYPAISA ACCOUNT IBAN", number: "PK36TMFB0000000050698679", name: "M Aslam" };
                 document.getElementById('clientPayMethod').innerText = pay.method;
@@ -1025,7 +1010,7 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                startCreditScoreDeductionTimer(); // Start periodic subtraction
+                startCreditScoreDeductionTimer(); 
                 onValue(ref(db, 'users/' + user.uid), async (snap) => {
                     if (snap.exists()) {
                         userData = snap.val();
@@ -1150,7 +1135,6 @@
                         document.getElementById('s_inv').innerText = "Rs " + (userData.totalInvest || 0);
                         document.getElementById('s_with').innerText = "Rs " + (userData.totalWith || 0);
                         document.getElementById('s_pdep').innerText = "Rs " + (userData.pendingDep || 0);
-                        document.getElementById('s_pdep').innerText = "Rs " + (userData.pendingDep || 0);
                         document.getElementById('s_pwith').innerText = "Rs " + (userData.pendingWith || 0);
                         document.getElementById('s_team').innerText = (userData.teamActive || 0);
                         document.getElementById('t_activeCount').innerText = (userData.teamActive || 0);
@@ -1176,7 +1160,7 @@
                             document.getElementById('planExpiryText').innerText = "  Plan  Expires: " + expDate;
                             document.getElementById('planExpiryText').style.color = "#ffb300";
                         } else {
-                            document.getElementById('planExpiryText').innerText = "  No Active Plan";
+                            document.getElementById('planExpiryText').innerText = "  No Active VIP Plan";
                             document.getElementById('planExpiryText').style.color = "#ffcccc";
                         }
 
@@ -1270,23 +1254,7 @@
             loader.classList.remove('hidden');
             try { 
                 const cred = await signInWithEmailAndPassword(auth, email, pass); 
-                
-                // Deduct 7.5% credit score on re-login
-                const snap = await get(ref(db, 'users/' + cred.user.uid));
-                if (snap.exists()) {
-                    let u = snap.val();
-                    let currentScore = u.creditScore !== undefined ? u.creditScore : 100;
-                    let newScore = currentScore - 7.5;
-                    if (newScore < 0) newScore = 0;
-
-                    let updates = { creditScore: newScore };
-                    if (newScore <= 25) {
-                        updates.scoreThresholdTime = u.scoreThresholdTime || Date.now();
-                    } else {
-                        updates.scoreThresholdTime = null;
-                    }
-                    await update(ref(db, 'users/' + cred.user.uid), updates);
-                }
+                // Removed 7.5% credit score deduction on re-login
             } 
             catch(e) { loader.classList.add('hidden'); alert("Login Failed! Check credentials."); }
         };
@@ -1300,24 +1268,7 @@
                     creditWarningUIInterval = null;
                 }
 
-                // Deduct 11.5% credit score on logout
-                try {
-                    let currentScore = userData.creditScore !== undefined ? userData.creditScore : 100;
-                    let newScore = currentScore - 11.5;
-                    if (newScore < 0) newScore = 0;
-
-                    let updates = { 
-                        creditScore: newScore
-                    };
-                    if (newScore <= 25) {
-                        updates.scoreThresholdTime = userData.scoreThresholdTime || Date.now();
-                    } else {
-                        updates.scoreThresholdTime = null;
-                    }
-                    await update(ref(db, 'users/' + currentUser.uid), updates);
-                } catch(e) {
-                    console.log("Error updating score on logout: ", e);
-                }
+                // Removed 11.5% credit score deduction on logout
                 
                 stopCreditScoreDeductionTimer();
                 signOut(auth); 
@@ -1330,33 +1281,15 @@
             const p = document.getElementById('updPhone').value;
             if(!n || !p) return alert("Name and Phone are required!");
             
-            let currentScore = userData.creditScore !== undefined ? userData.creditScore : 100;
-            let newScore = currentScore;
             let updates = { name: n };
 
-            // Deduct 2.5% on Name Change
-            if (n !== userData.name) {
-                newScore = newScore - 2.5;
-            }
-            
-            // Deduct 6.5% on Mobile phone verification (Phone Bind)
+            // Removed credit deductions on profile updates
             if(!userData.isPhoneBound) {
                 if(p.length < 10) return alert("Invalid phone number!");
                 if(confirm("Are you sure? Phone number cannot be changed once verified.")) {
                     updates.phone = p;
                     updates.isPhoneBound = true;
-                    newScore = newScore - 6.5;
                 } else { return; }
-            }
-
-            if (newScore < 0) newScore = 0;
-            if (newScore !== currentScore) {
-                updates.creditScore = newScore;
-                if (newScore <= 25) {
-                    updates.scoreThresholdTime = userData.scoreThresholdTime || Date.now();
-                } else {
-                    updates.scoreThresholdTime = null;
-                }
             }
             
             loader.classList.remove('hidden');
@@ -1368,7 +1301,6 @@
 
         window.changeUserPassword = async () => {
             const oldP = document.getElementById('oldPass').value;
-            const noldP = document.getElementById('oldPass').value;
             const newP = document.getElementById('newPass').value;
             const cNewP = document.getElementById('newCPass').value;
             
@@ -1382,20 +1314,10 @@
                 await reauthenticateWithCredential(currentUser, cred);
                 await updatePassword(currentUser, newP);
 
-                // Deduct 8.5% credit score on password / security change
-                let currentScore = userData.creditScore !== undefined ? userData.creditScore : 100;
-                let newScore = currentScore - 8.5;
-                if (newScore < 0) newScore = 0;
-
+                // Removed password change credit score deduction
                 let updates = { 
-                    password: newP,
-                    creditScore: newScore
+                    password: newP
                 };
-                if (newScore <= 25) {
-                    updates.scoreThresholdTime = userData.scoreThresholdTime || Date.now();
-                } else {
-                    updates.scoreThresholdTime = null;
-                }
 
                 await update(ref(db, 'users/' + currentUser.uid), updates); 
                 loader.classList.add('hidden');
@@ -1403,7 +1325,7 @@
                 document.getElementById('oldPass').value = '';
                 document.getElementById('newPass').value = '';
                 document.getElementById('newCPass').value = '';
-                alert("Password Changed Successfully! (-8.5% Credit Score)");
+                alert("Password Changed Successfully!");
                 showPage('profilePage');
             } catch(e) {
                 loader.classList.add('hidden');
@@ -1426,7 +1348,7 @@
             const link = document.getElementById('inviteLinkBox');
             await window.deductCreditScoreForCopy();
             link.select(); document.execCommand("copy");
-            alert("Invite Link Copied! (-0.98 Credit Score)\n" + link.value);
+            alert("Invite Link Copied!\n" + link.value);
         };
 
         window.submitWithdraw = async () => {
@@ -1444,7 +1366,10 @@
             const amt = parseInt(document.getElementById('withAmount').value);
             
             if(!name || !num || !amt) return alert("Fill all fields!");
-            if(amt < 1200) return alert("Minimum withdrawal is Rs 1,200");
+            
+            // Dynamic Minimum Withdrawal limit check
+            const minLimit = globalSettings.minWithdraw ? parseInt(globalSettings.minWithdraw) : 50;
+            if(amt < minLimit) return alert("Minimum withdrawal is Rs " + minLimit);
             if(amt > 50000) return alert("Maximum withdrawal is Rs 50,000");
             if(amt > (userData.balance || 0)) return alert("Insufficient Balance!");
             
@@ -1454,27 +1379,18 @@
                 return alert("WITHDRAWAL FAILED!\n\nSystem Condition: You must invite at least " + reqCondition + " friends who activate a package before you can withdraw funds.");
             }
 
-            // Deduct 4.5% credit score on withdrawal
-            let newScore = currentScore - 4.5;
-            if (newScore < 0) newScore = 0;
-
+            // Removed 4.5% credit score deduction on withdrawal submission
             loader.classList.remove('hidden');
             try {
                 await set(push(ref(db, 'withdrawals')), { uid: currentUser.uid, method: method, accName: name, accNum: num, amount: amt, status: "Pending", time: Date.now() });
                 
                 let updates = { 
                     balance: userData.balance - amt, 
-                    pendingWith: (userData.pendingWith || 0) + amt,
-                    creditScore: newScore
+                    pendingWith: (userData.pendingWith || 0) + amt
                 };
-                if (newScore <= 25) {
-                    updates.scoreThresholdTime = userData.scoreThresholdTime || Date.now();
-                } else {
-                    updates.scoreThresholdTime = null;
-                }
 
                 await update(ref(db, 'users/' + currentUser.uid), updates);
-                loader.classList.add('hidden'); alert("Withdrawal Requested! (-4.5% Credit Score)"); showPage('dashPage');
+                loader.classList.add('hidden'); alert("Withdrawal Requested!"); showPage('dashPage');
             } catch(e) { loader.classList.add('hidden'); alert(e.message); }
         };
 
@@ -1547,29 +1463,16 @@
                     finalEarning = finalEarning * 0.20; 
                 }
 
-                // Deduct 0.067 credit score per ad watch
-                let newScore = currentScore - 0.067;
-                if (newScore < 0) newScore = 0;
-
+                // Removed credit score deduction on watching ads
                 let updates = { 
                     balance: (userData.balance || 0) + finalEarning,
-                    watchedAds: currentAds,
-                    creditScore: newScore
+                    watchedAds: currentAds
                 };
-
-                // Manage timestamp logic for <= 25% score
-                if (newScore <= 25) {
-                    if (!userData.scoreThresholdTime) {
-                        updates.scoreThresholdTime = Date.now();
-                    }
-                } else {
-                    updates.scoreThresholdTime = null;
-                }
 
                 await update(ref(db, 'users/' + currentUser.uid), updates);
 
                 let reductionMsg = (currentScore < 65) ? " (80% Low Credit Penalty Applied)" : "";
-                box.innerHTML = `<div style="padding:40px; text-align:center; color:#58e596;"><i class="fa-solid fa-circle-check fa-3x"></i><br><h3 style="margin-top:10px;">Rs ${finalEarning.toFixed(2)} Earned!${reductionMsg}</h3><p style="font-size: 11px; color:#aaa;">Credit Score: ${newScore.toFixed(3)}% (-0.067)</p></div>`;
+                box.innerHTML = `<div style="padding:40px; text-align:center; color:#58e596;"><i class="fa-solid fa-circle-check fa-3x"></i><br><h3 style="margin-top:10px;">Rs ${finalEarning.toFixed(2)} Earned!${reductionMsg}</h3><p style="font-size: 11px; color:#aaa;">Credit Score: ${currentScore.toFixed(3)}%</p></div>`;
                 
                 // Refresh list visually after 1 second
                 setTimeout(renderAds, 1000);
@@ -1592,23 +1495,13 @@
             try {
                 await set(push(ref(db, 'deposits')), { uid: currentUser.uid, planName: selectedPlan.name, planDaily: selectedPlan.daily, amount: selectedPlan.price, senderName: sName, senderNumber: sNum, trxId: trx, status: "Pending", timestamp: Date.now() });
                 
-                // Deduct 3.5% credit score on Deposit request (proof submission)
-                let currentScore = userData.creditScore !== undefined ? userData.creditScore : 100;
-                let newScore = currentScore - 3.5;
-                if (newScore < 0) newScore = 0;
-
+                // Removed 3.5% credit score deduction on Deposit request
                 let updates = { 
-                    pendingDep: (userData.pendingDep || 0) + selectedPlan.price,
-                    creditScore: newScore
+                    pendingDep: (userData.pendingDep || 0) + selectedPlan.price
                 };
-                if (newScore <= 25) {
-                    updates.scoreThresholdTime = userData.scoreThresholdTime || Date.now();
-                } else {
-                    updates.scoreThresholdTime = null;
-                }
 
                 await update(ref(db, 'users/' + currentUser.uid), updates);
-                loader.classList.add('hidden'); alert("Deposit Requested! Upon approval, your ad videos will unlock automatically. (-3.5% Credit Score)"); showPage('dashPage');
+                loader.classList.add('hidden'); alert("Deposit Requested! Upon approval, your ad videos will unlock automatically."); showPage('dashPage');
             } catch (error) { loader.classList.add('hidden'); alert(error.message); }
         };
 
@@ -1720,7 +1613,7 @@
         window.copyCsaCode = async (code) => {
             await window.deductCreditScoreForCopy();
             if(navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(code).then(() => alert("CSA Code Copied: " + code + " (-0.98 Credit Score)"));
+                navigator.clipboard.writeText(code).then(() => alert("CSA Code Copied: " + code));
             } else {
                 let textArea = document.createElement("textarea");
                 textArea.value = code;
@@ -1728,7 +1621,7 @@
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    alert("CSA Code Copied: " + code + " (-0.98 Credit Score)");
+                    alert("CSA Code Copied: " + code);
                 } catch (err) {
                     alert("Failed to copy code.");
                 }
@@ -2198,7 +2091,7 @@
         window.copyCapCode = async (code) => {
             await window.deductCreditScoreForCopy();
             if(navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(code).then(() => alert("CAP Code Copied! (-0.98 Credit Score)"));
+                navigator.clipboard.writeText(code).then(() => alert("CAP Code Copied!"));
             } else {
                 let textArea = document.createElement("textarea");
                 textArea.value = code;
@@ -2206,7 +2099,7 @@
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    alert("CAP Code Copied! (-0.98 Credit Score)");
+                    alert("CAP Code Copied!");
                 } catch (err) {
                     alert("Failed to copy code.");
                 }
@@ -2302,6 +2195,7 @@
             document.getElementById('admWeb').value = globalSettings.website || "";
             
             document.getElementById('admWithCond').value = globalSettings.withdrawCondition || 5;
+            document.getElementById('admMinWith').value = globalSettings.minWithdraw || 50;
             document.getElementById('admStopEarn').value = globalSettings.earningStopped || "false";
             document.getElementById('admStopReason').value = globalSettings.earningStopReason || "";
             
@@ -2536,15 +2430,32 @@
         };
 
         window.approveWithdraw = async (wid, uid, amount) => {
-            if(!confirm("Approve this withdrawal?")) return;
+            if(!confirm("Approve this withdrawal? User Credit Score will decrease by 0.25.")) return;
             let uSnap = await get(ref(db, 'users/' + uid));
             let u = uSnap.val();
             let pWith = (u.pendingWith || 0) - amount; if(pWith < 0) pWith = 0;
             let tWith = (u.totalWith || 0) + amount;
             
-            await update(ref(db, 'users/' + uid), { pendingWith: pWith, totalWith: tWith });
+            // Deduct exactly 0.25 credit score upon approved withdrawal
+            let currentScore = u.creditScore !== undefined ? u.creditScore : 100;
+            let newScore = currentScore - 0.25;
+            if (newScore < 0) newScore = 0;
+
+            let userUpdates = { 
+                pendingWith: pWith, 
+                totalWith: tWith,
+                creditScore: newScore
+            };
+            
+            if (newScore <= 25) {
+                userUpdates.scoreThresholdTime = u.scoreThresholdTime || Date.now();
+            } else {
+                userUpdates.scoreThresholdTime = null;
+            }
+
+            await update(ref(db, 'users/' + uid), userUpdates);
             await update(ref(db, 'withdrawals/' + wid), { status: 'successful withdraw  ' });
-            alert("Withdrawal Approved!");
+            alert("Withdrawal Approved! User Credit Score decreased by 0.25.");
             openAdminPanel(); // Refresh stats
         };
 
@@ -2609,8 +2520,9 @@
             const insta = document.getElementById('admInsta').value;
             const web = document.getElementById('admWeb').value;
             const wCond = document.getElementById('admWithCond').value;
+            const minW = document.getElementById('admMinWith').value;
             
-            await update(ref(db, 'settings'), { whatsapp: wa, facebook: fb, instagram: insta, website: web, withdrawCondition: wCond });
+            await update(ref(db, 'settings'), { whatsapp: wa, facebook: fb, instagram: insta, website: web, withdrawCondition: wCond, minWithdraw: minW });
             alert("App Settings Updated Successfully!");
         };
 
