@@ -181,7 +181,7 @@
     <div id="app-layout" class="hidden">
         
         <header>
-            <div class="logo" onclick="secretAdminTrigger()">Global invest </div>
+            <div class="logo" onclick="secretAdminTrigger()">Global invest PLATFORM</div>
             <div>
                 <i class="fa-solid fa-gear" style="color:var(--gray); font-size: 20px; margin-right: 15px; cursor: pointer;" onclick="showPage('profilePage')"></i>
                 <i class="fa-solid fa-bell" style="color:var(--primary); font-size: 20px;" onclick="openRulebookManual()"></i>
@@ -190,16 +190,6 @@
 
         <!-- DASHBOARD -->
         <div id="dashPage" class="page">
-            
-            <!-- REAL-TIME LOW CREDIT WARNING TIMER BANNER -->
-            <div id="creditScoreWarningBanner" class="hidden" style="background: #e53935; color: white; margin: 15px; padding: 15px; border-radius: 20px; text-align: center; font-weight: bold; box-shadow: 0 4px 12px rgba(229,57,53,0.35);">
-                <i class="fa-solid fa-triangle-exclamation" style="font-size: 22px; margin-bottom: 5px; color: #fff;"></i>
-                <h4 style="font-size: 14px; margin-bottom: 2px;">WARNING: Credit Score is <span id="creditScoreWarningVal">0</span>%</h4>
-                <p style="font-size: 11px; font-weight: 500; opacity: 0.95;">Apka account 48 hours me permanent block ho jayega:</p>
-                <h3 id="creditScoreTimerDisplay" style="font-size: 24px; margin: 6px 0; font-family: monospace; letter-spacing: 1.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">48:00:00</h3>
-                <p style="font-size: 9.5px; font-weight: normal; opacity: 0.9;">Fauran CSP code redeem karke apna credit score 25% se upar restore karein.</p>
-            </div>
-
             <div class="dash-card">
                 <p style="font-size: 12px; opacity: 0.8;">Wallet Balance</p>
                 <h2 style="font-size: 36px; font-weight: 700;">Rs <span id="userBal">0.00</span></h2>
@@ -217,9 +207,7 @@
                 <div class="status-box"><i class="fa-solid fa-clock"></i><div class="status-info"><p>Pending With</p><h4 id="s_pwith">Rs 0</h4></div></div>
                 <div class="status-box"><i class="fa-solid fa-gift"></i><div class="status-info"><p>Bonus</p><h4 id="s_bonus">Rs 10</h4></div></div>
                 <div class="status-box"><i class="fa-solid fa-users"></i><div class="status-info"><p>Active Team</p><h4 id="s_team">0</h4></div></div>
-                <!-- Credit Score Status Box -->
-                <div class="status-box"><i class="fa-solid fa-gauge-high"></i><div class="status-info"><p>Credit Score</p><h4 id="s_credit">100%</h4></div></div>
-                <!-- CAP Earning status-box precisely inside the red circle (8th spot) -->
+                <!-- CAP Earning status-box inside the 7th spot -->
                 <div class="status-box" onclick="showPage('capPage')" style="cursor:pointer;"><i class="fa-solid fa-cubes" style="color:var(--accent);"></i><div class="status-info"><p>CAP Earning</p><h4 id="s_cap_status">Join CAP</h4></div></div>
             </div>
 
@@ -227,11 +215,7 @@
                 <div class="menu-item" onclick="showPage('plansPage')"><div class="menu-icon"><i class="fa-solid fa-layer-group"></i></div><span>Plans</span></div>
                 <div class="menu-item" onclick="showPage('adsPage')"><div class="menu-icon"><i class="fa-solid fa-play"></i></div><span>Daily Ads</span></div>
                 <div class="menu-item" onclick="showPage('promoPage')"><div class="menu-icon"><i class="fa-solid fa-ticket"></i></div><span>Promo</span></div>
-                <!-- CSP Redeem Menu Item placed next to Promo Code with CPU Icon -->
-                <div class="menu-item" onclick="showPage('cspPage')"><div class="menu-icon" style="color:var(--accent);"><i class="fa-solid fa-microchip"></i></div><span>CSP </span></div>
-                <!-- CSA Codes Display Tool Menu Item -->
-                <div class="menu-item" onclick="showPage('csaPage')"><div class="menu-icon" style="color:var(--success);"><i class="fa-solid fa-tags"></i></div><span>CSA </span></div>
-                <!-- History Menu Item shifted after CSP Code -->
+                <!-- History Menu Item shifted after Promo Code -->
                 <div class="menu-item" onclick="showPage('historyPage')"><div class="menu-icon"><i class="fa-solid fa-receipt"></i></div><span>History</span></div>
                 
                 <div class="menu-item" onclick="showPage('teamPage')"><div class="menu-icon"><i class="fa-solid fa-users-viewfinder"></i></div><span>Team</span></div>
@@ -371,14 +355,25 @@
             <div class="section-title">Complete Payment</div>
             <div class="card">
                 <p style="font-size:12px; color:var(--gray); text-align:center; margin-bottom:10px;">Please send exact amount to the following account to activate <b id="d_planName">VIP X</b></p>
+                
+                <!-- Deposit Method Option Selector [1] -->
+                <div class="input-group">
+                    <label>Select Deposit Method</label>
+                    <select id="depMethod" onchange="toggleDepMethodUI(this.value)">
+                        <option value="Easypaisa">Easypaisa</option>
+                        <option value="JazzCash">JazzCash</option>
+                    </select>
+                </div>
+
                 <div class="payment-info" style="background: #fff3e0; border: 1px dashed var(--warning); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: center;">
                     <p style="font-size:12px; font-weight:700; color:#333;">SEND AMOUNT: <span style="color:var(--primary)">Rs <span id="d_amount">0</span></span></p>
                     
-                    <!-- Dynamic Account Number / IBAN with Copy Button -->
+                    <!-- Dynamic Account Number / IBAN with Copy Button [1] -->
                     <p style="font-size:12px; margin-top:10px;" id="clientPayMethod">EASYPAISA ACCOUNT IBAN</p>
                     <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin: 5px 0; max-width: 100%;">
                         <h3 id="adminAccountNumber" style="color: #e65100; margin: 0; word-break: break-all; text-align: left;">PK36TMFB0000000050698679</h3>
-                        <button onclick="copyAdminNumber()" style="background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><i class="fa-solid fa-copy"></i> Copy</button>
+                        <!-- Small copy button styled elegantly in blue [1] -->
+                        <button onclick="copyAdminNumber()" style="background: #1565c0; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><i class="fa-solid fa-copy"></i> Copy</button>
                     </div>
 
                     <p style="font-size:14px; font-weight:700;" id="clientPayName">Account Name: M Aslam</p>
@@ -396,29 +391,6 @@
             <div class="card">
                 <div class="input-group"><input type="text" id="promoInput" placeholder="Enter Promo Code..." style="text-transform:uppercase; text-align:center; font-weight:bold; letter-spacing:2px;"></div>
                 <button class="btn-primary" onclick="claimPromo()">CLAIM REWARD</button>
-            </div>
-        </div>
-
-        <!-- CSP REDEEM PAGE -->
-        <div id="cspPage" class="page hidden">
-            <div class="section-title">Redeem CSP Code</div>
-            <div class="card">
-                <p style="font-size:12px; color:var(--gray); text-align:center; margin-bottom:15px;">Enter your Credit Score Code (CSP) to restore your Credit Score.</p>
-                <div class="input-group">
-                    <input type="text" id="cspInput" placeholder="ENTER CSP CODE..." style="text-transform:uppercase; text-align:center; font-weight:bold; letter-spacing:2px;">
-                </div>
-                <button class="btn-primary" onclick="claimCSP()">CLAIM CREDIT SCORE</button>
-            </div>
-        </div>
-
-        <!-- CSA CODES DISPLAY PAGE -->
-        <div id="csaPage" class="page hidden">
-            <div class="section-title">Active CSA Codes</div>
-            <div class="card">
-                <p style="font-size:12px; color:var(--gray); text-align:center; margin-bottom:15px;">Aap in active CSA codes ko copy karke "CSP Code" page par redeem kar sakte hain [1]. Expired codes automatically yahan se remove ho jate hain [1].</p>
-                <div id="listCsaCodes">
-                    <p style="font-size:12px; text-align:center; color:#888;">Loading CSA codes...</p>
-                </div>
             </div>
         </div>
         
@@ -663,29 +635,12 @@
                     <button class="btn-danger" onclick="saveEarningStatus()">Update Earning Status</button>
                 </div>
 
-                <!-- Global Credit Score Adjustor -->
-                <div class="admin-card">
-                    <h3 style="margin-bottom:10px; color:var(--accent);"><i class="fa-solid fa-gauge-high"></i> Global Credit Score Adjustor</h3>
-                    <p style="font-size:11px; margin-bottom:10px; color:#555;">Duniya bhar ke sabhi users ka credit score badhane ya ghatane ke liye (+) ya (-) amount likhen.</p>
-                    <div class="input-group"><input type="number" step="any" id="admGlobalCsAmt" placeholder="Example: 10 or -15"></div>
-                    <button class="btn-primary" onclick="adjustGlobalCreditScore()">APPLY TO ALL USERS</button>
-                </div>
-
                 <!-- Create Promo Code -->
                 <div class="admin-card">
                     <h3 style="margin-bottom:10px;">Create Promo Code</h3>
                     <div class="input-group"><input type="text" id="admPromoCode" placeholder="Code Name "></div>
                     <div class="input-group"><input type="number" id="admPromoAmt" placeholder="Reward Amount"></div>
                     <button class="btn-primary" onclick="adminCreatePromo()">Generate Promo</button>
-                </div>
-
-                <!-- Create CSP System Tool -->
-                <div class="admin-card">
-                    <h3 style="margin-bottom:10px; color:var(--primary);"><i class="fa-solid fa-key"></i> Create CSP </h3>
-                    <div class="input-group"><input type="text" id="admCspCode" placeholder="CSP CODE NAME"></div>
-                    <div class="input-group"><input type="number" id="admCspAmt" placeholder="Credit Score Amount to Add "></div>
-                    <div class="input-group"><input type="number" id="admCspExpiry" placeholder="Expiry time in Hours"></div>
-                    <button class="btn-primary" onclick="adminCreateCSP()">GENERATE CSP CODE</button>
                 </div>
             </div>
         </div>
@@ -725,8 +680,6 @@
         let selectedPlan = {};
         let allUsersCache = {}; 
         let rulebookShown = false; 
-        let creditScoreInterval = null;
-        let creditWarningUIInterval = null; // UI element tracking low credit warning time
         let selectedCapTab = 'simple'; // 'simple' or 'ultra'
         let currentCapGroupId = null;
         let capTimerInterval = null;
@@ -752,24 +705,6 @@
         const loader = document.getElementById('loader');
         const appLayout = document.getElementById('app-layout');
 
-        // Dynamic helper to deduct Credit Score on any copy actions (Deduction removed)
-        window.deductCreditScoreForCopy = async () => {
-            // Disabled credit deduction on copy actions as requested
-        };
-
-        // Starts periodic subtraction (Deduction removed)
-        const startCreditScoreDeductionTimer = () => {
-            if (creditScoreInterval) clearInterval(creditScoreInterval);
-            // Deductions deactivated as requested
-        };
-
-        const stopCreditScoreDeductionTimer = () => {
-            if (creditScoreInterval) {
-                clearInterval(creditScoreInterval);
-                creditScoreInterval = null;
-            }
-        };
-
         // Modal Functions
         window.closeRulebook = () => {
             document.getElementById('rulebookModal').classList.add('hidden');
@@ -779,7 +714,6 @@
         };
         window.copyRbLink = async () => {
             const linkText = document.getElementById('rbLinkText').innerText;
-            await window.deductCreditScoreForCopy();
             if(navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(linkText).then(() => alert("Link Copied Successfully!"));
             } else {
@@ -800,7 +734,6 @@
         // Copy Admin Account / IBAN Function
         window.copyAdminNumber = async () => {
             const numText = document.getElementById('adminAccountNumber').innerText;
-            await window.deductCreditScoreForCopy();
             if(navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(numText).then(() => alert("IBAN COPY SUCCESSFULY"));
             } else {
@@ -816,6 +749,18 @@
                 }
                 document.body.removeChild(textArea);
             }
+        };
+
+        // Dynamic toggling of Deposit Methods [1]
+        window.toggleDepMethodUI = (method) => {
+            let pay = globalSettings.payment || { method: "EASYPAISA ACCOUNT IBAN", number: "PK36TMFB0000000050698679", name: "M Aslam" };
+            if (method === 'JazzCash') {
+                document.getElementById('clientPayMethod').innerText = "JAZZCASH ACCOUNT";
+            } else {
+                document.getElementById('clientPayMethod').innerText = pay.method;
+            }
+            document.getElementById('adminAccountNumber').innerText = pay.number;
+            document.getElementById('clientPayName').innerText = "Account Name: " + pay.name;
         };
 
         // Secret Admin click trigger (Tap Logo 5 times)
@@ -902,7 +847,6 @@
             if(id === 'historyPage') loadHistory();
             if(id === 'teamPage') loadTeamHistory();
             if(id === 'adsPage') renderAds();
-            if(id === 'csaPage') loadCSA();
             if(id === 'capActionPage') {
                 renderCapActionPage();
             }
@@ -971,9 +915,14 @@
                     document.getElementById('w_minLimitText').innerText = minLimit;
                 }
 
-                // Sync editable Deposit Account configurations dynamically
+                // Sync editable Deposit Account configurations dynamically [1]
                 let pay = globalSettings.payment || { method: "EASYPAISA ACCOUNT IBAN", number: "PK36TMFB0000000050698679", name: "M Aslam" };
-                document.getElementById('clientPayMethod').innerText = pay.method;
+                let currentDepMethod = document.getElementById('depMethod') ? document.getElementById('depMethod').value : 'Easypaisa';
+                if (currentDepMethod === 'JazzCash') {
+                    document.getElementById('clientPayMethod').innerText = "JAZZCASH ACCOUNT";
+                } else {
+                    document.getElementById('clientPayMethod').innerText = pay.method;
+                }
                 document.getElementById('adminAccountNumber').innerText = pay.number;
                 document.getElementById('clientPayName').innerText = "Account Name: " + pay.name;
 
@@ -1010,15 +959,12 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                startCreditScoreDeductionTimer(); 
                 onValue(ref(db, 'users/' + user.uid), async (snap) => {
                     if (snap.exists()) {
                         userData = snap.val();
                         
                         if(userData.isBlocked) {
                             alert("ACCOUNT BLOCKED by company .\nReason: " + (userData.blockReason || "Violation of rules."));
-                            stopCreditScoreDeductionTimer();
-                            if (creditWarningUIInterval) clearInterval(creditWarningUIInterval);
                             signOut(auth);
                             return;
                         }
@@ -1028,83 +974,6 @@
                             const uniqueUid8 = Math.floor(10000000 + Math.random() * 90000000).toString();
                             await update(ref(db, 'users/' + user.uid), { uid8: uniqueUid8 });
                             userData.uid8 = uniqueUid8;
-                        }
-
-                        // === CREDIT SCORE DYNAMIC CHECKS ===
-                        let currentScore = userData.creditScore !== undefined ? userData.creditScore : 100;
-                        
-                        // Check <= 25% Auto block logic (48 hours boundary)
-                        if (currentScore <= 25) {
-                            if (!userData.scoreThresholdTime) {
-                                // Record the timestamp when score falls to <= 25%
-                                let timestamp = Date.now();
-                                await update(ref(db, 'users/' + user.uid), { scoreThresholdTime: timestamp });
-                                userData.scoreThresholdTime = timestamp;
-                            } else {
-                                let elapsed = Date.now() - userData.scoreThresholdTime;
-                                let limit = 48 * 60 * 60 * 1000; // 48 Hours in Milliseconds
-                                if (elapsed >= limit) {
-                                    await update(ref(db, 'users/' + user.uid), { 
-                                        isBlocked: true, 
-                                        blockReason: "Credit score remained 25% or below for over 48 hours." 
-                                    });
-                                    alert("ACCOUNT PERMANENTLY BLOCKED!\nYour Credit Score remained 25% or below for more than 48 hours.");
-                                    stopCreditScoreDeductionTimer();
-                                    if (creditWarningUIInterval) clearInterval(creditWarningUIInterval);
-                                    signOut(auth);
-                                    return;
-                                }
-                            }
-                        } else {
-                            // If score is restored above 25%, clear the block timer
-                            if (userData.scoreThresholdTime) {
-                                await update(ref(db, 'users/' + user.uid), { scoreThresholdTime: null });
-                                userData.scoreThresholdTime = null;
-                            }
-                        }
-
-                        // === LIVE UI TIMER & WARNING BANNER LOGIC FOR CREDIT <= 25% ===
-                        const warningBanner = document.getElementById('creditScoreWarningBanner');
-                        const warningValEl = document.getElementById('creditScoreWarningVal');
-                        const timerDisplay = document.getElementById('creditScoreTimerDisplay');
-                        
-                        if (warningBanner) {
-                            if (currentScore <= 25 && userData.scoreThresholdTime) {
-                                warningBanner.classList.remove('hidden');
-                                if (warningValEl) warningValEl.innerText = currentScore.toFixed(3);
-                                
-                                if (creditWarningUIInterval) clearInterval(creditWarningUIInterval);
-                                
-                                const updateUIWarningTimer = () => {
-                                    let elapsed = Date.now() - userData.scoreThresholdTime;
-                                    let limit = 48 * 60 * 60 * 1000;
-                                    let remaining = limit - elapsed;
-                                    
-                                    if (remaining <= 0) {
-                                        if (timerDisplay) timerDisplay.innerText = "00:00:00";
-                                        clearInterval(creditWarningUIInterval);
-                                    } else {
-                                        let hrs = Math.floor(remaining / (3600 * 1000));
-                                        let mins = Math.floor((remaining % (3600 * 1000)) / (60 * 1000));
-                                        let secs = Math.floor((remaining % (60 * 1000)) / 1000);
-                                        
-                                        if (timerDisplay) {
-                                            timerDisplay.innerText = 
-                                                hrs.toString().padStart(2, '0') + ":" + 
-                                                mins.toString().padStart(2, '0') + ":" + 
-                                                secs.toString().padStart(2, '0');
-                                        }
-                                    }
-                                };
-                                updateUIWarningTimer();
-                                creditWarningUIInterval = setInterval(updateUIWarningTimer, 1000);
-                            } else {
-                                warningBanner.classList.add('hidden');
-                                if (creditWarningUIInterval) {
-                                    clearInterval(creditWarningUIInterval);
-                                    creditWarningUIInterval = null;
-                                }
-                            }
                         }
 
                         // === PLAN EXPIRY LOGIC (55 DAYS) ===
@@ -1138,7 +1007,6 @@
                         document.getElementById('s_pwith').innerText = "Rs " + (userData.pendingWith || 0);
                         document.getElementById('s_team').innerText = (userData.teamActive || 0);
                         document.getElementById('t_activeCount').innerText = (userData.teamActive || 0);
-                        document.getElementById('s_credit').innerText = currentScore.toFixed(3) + "%";
                         
                         // Update CAP Status bar dynamically based on eligibility
                         if (userData.planDailyProfit && userData.planDailyProfit > 0) {
@@ -1176,8 +1044,6 @@
                     } else {
                         // User exists in auth but database is deleted (by Admin)
                         alert("Your account data has been removed by the company.");
-                        stopCreditScoreDeductionTimer();
-                        if (creditWarningUIInterval) clearInterval(creditWarningUIInterval);
                         signOut(auth);
                         return;
                     }
@@ -1197,11 +1063,6 @@
                 
             } else {
                 currentUser = null;
-                stopCreditScoreDeductionTimer(); // Stop periodic subtraction
-                if (creditWarningUIInterval) {
-                    clearInterval(creditWarningUIInterval);
-                    creditWarningUIInterval = null;
-                }
                 appLayout.classList.add('hidden');
                 loader.classList.add('hidden');
                 
@@ -1228,9 +1089,6 @@
                 const uniqueCode = Math.floor(1000 + Math.random() * 9000).toString();
                 const uniqueUid8 = Math.floor(10000000 + Math.random() * 90000000).toString();
 
-                // Generate random initial credit score strictly between 85% and 95%
-                const initialScore = parseFloat((85.01 + Math.random() * 9.98).toFixed(3));
-
                 await set(ref(db, 'users/' + cred.user.uid), {
                     name: name, email: email, password: pass,
                     balance: 10, totalInvest: 0, bonus: 10, teamActive: 0, 
@@ -1238,7 +1096,6 @@
                     inviteCode: uniqueCode, referredByCode: inviteCodeInput, 
                     planDailyProfit: 0, planExpiryDate: null, createdAt: Date.now(),
                     watchedAds: {}, lastAdDate: new Date().toDateString(),
-                    creditScore: initialScore, scoreThresholdTime: null,
                     uid8: uniqueUid8
                 });
                 
@@ -1254,7 +1111,6 @@
             loader.classList.remove('hidden');
             try { 
                 const cred = await signInWithEmailAndPassword(auth, email, pass); 
-                // Removed 7.5% credit score deduction on re-login
             } 
             catch(e) { loader.classList.add('hidden'); alert("Login Failed! Check credentials."); }
         };
@@ -1262,15 +1118,6 @@
         window.logoutUser = async () => { 
             if(confirm("Logout?")) { 
                 loader.classList.remove('hidden'); 
-                
-                if (creditWarningUIInterval) {
-                    clearInterval(creditWarningUIInterval);
-                    creditWarningUIInterval = null;
-                }
-
-                // Removed 11.5% credit score deduction on logout
-                
-                stopCreditScoreDeductionTimer();
                 signOut(auth); 
                 rulebookShown = false; 
             } 
@@ -1283,7 +1130,6 @@
             
             let updates = { name: n };
 
-            // Removed credit deductions on profile updates
             if(!userData.isPhoneBound) {
                 if(p.length < 10) return alert("Invalid phone number!");
                 if(confirm("Are you sure? Phone number cannot be changed once verified.")) {
@@ -1314,7 +1160,6 @@
                 await reauthenticateWithCredential(currentUser, cred);
                 await updatePassword(currentUser, newP);
 
-                // Removed password change credit score deduction
                 let updates = { 
                     password: newP
                 };
@@ -1346,19 +1191,12 @@
 
         window.copyInviteLink = async () => {
             const link = document.getElementById('inviteLinkBox');
-            await window.deductCreditScoreForCopy();
             link.select(); document.execCommand("copy");
             alert("Invite Link Copied!\n" + link.value);
         };
 
         window.submitWithdraw = async () => {
             if(!userData.isPhoneBound) return alert("Security Alert!\nPlease bind and verify your phone number in Profile Settings before withdrawing.");
-            
-            // Check Credit Score restriction for withdrawal (< 65%)
-            let currentScore = userData.creditScore !== undefined ? userData.creditScore : 100;
-            if(currentScore < 65) {
-                return alert("WITHDRAWAL BLOCKED!\nYour Credit Score is below 65%. Please restore your Credit Score using a CSP code to withdraw funds.");
-            }
 
             const method = document.getElementById('withMethod').value;
             const name = document.getElementById('withName').value;
@@ -1379,7 +1217,6 @@
                 return alert("WITHDRAWAL FAILED!\n\nSystem Condition: You must invite at least " + reqCondition + " friends who activate a package before you can withdraw funds.");
             }
 
-            // Removed 4.5% credit score deduction on withdrawal submission
             loader.classList.remove('hidden');
             try {
                 await set(push(ref(db, 'withdrawals')), { uid: currentUser.uid, method: method, accName: name, accNum: num, amount: amt, status: "Pending", time: Date.now() });
@@ -1453,17 +1290,8 @@
             setTimeout(async () => {
                 let currentAds = userData.watchedAds || {};
                 currentAds[adId] = true;
-                
-                // Credit Score restriction check for Ads earning
                 let finalEarning = parseFloat(amount);
-                let currentScore = userData.creditScore !== undefined ? userData.creditScore : 100;
-                
-                if (currentScore < 65) {
-                    // Earning becomes 20% of the actual profit (80% deduction)
-                    finalEarning = finalEarning * 0.20; 
-                }
 
-                // Removed credit score deduction on watching ads
                 let updates = { 
                     balance: (userData.balance || 0) + finalEarning,
                     watchedAds: currentAds
@@ -1471,8 +1299,7 @@
 
                 await update(ref(db, 'users/' + currentUser.uid), updates);
 
-                let reductionMsg = (currentScore < 65) ? " (80% Low Credit Penalty Applied)" : "";
-                box.innerHTML = `<div style="padding:40px; text-align:center; color:#58e596;"><i class="fa-solid fa-circle-check fa-3x"></i><br><h3 style="margin-top:10px;">Rs ${finalEarning.toFixed(2)} Earned!${reductionMsg}</h3><p style="font-size: 11px; color:#aaa;">Credit Score: ${currentScore.toFixed(3)}%</p></div>`;
+                box.innerHTML = `<div style="padding:40px; text-align:center; color:#58e596;"><i class="fa-solid fa-circle-check fa-3x"></i><br><h3 style="margin-top:10px;">Rs ${finalEarning.toFixed(2)} Earned!</h3></div>`;
                 
                 // Refresh list visually after 1 second
                 setTimeout(renderAds, 1000);
@@ -1483,6 +1310,11 @@
             selectedPlan = { name: planName, price: price, daily: daily };
             document.getElementById('d_planName').innerText = planName;
             document.getElementById('d_amount').innerText = price;
+            // Reset selection to Easypaisa when loading form [1]
+            if (document.getElementById('depMethod')) {
+                document.getElementById('depMethod').value = 'Easypaisa';
+            }
+            window.toggleDepMethodUI('Easypaisa');
             showPage('depositFormPage');
         };
 
@@ -1490,12 +1322,23 @@
             const sName = document.getElementById('depSenderName').value;
             const sNum = document.getElementById('depSenderNum').value;
             const trx = document.getElementById('depTrxId').value;
+            const depMethod = document.getElementById('depMethod').value; // Save dynamic deposit method [1]
             if(!sName || !sNum || !trx) return alert("Fill all payment details!");
             loader.classList.remove('hidden');
             try {
-                await set(push(ref(db, 'deposits')), { uid: currentUser.uid, planName: selectedPlan.name, planDaily: selectedPlan.daily, amount: selectedPlan.price, senderName: sName, senderNumber: sNum, trxId: trx, status: "Pending", timestamp: Date.now() });
+                await set(push(ref(db, 'deposits')), { 
+                    uid: currentUser.uid, 
+                    planName: selectedPlan.name, 
+                    planDaily: selectedPlan.daily, 
+                    amount: selectedPlan.price, 
+                    senderName: sName, 
+                    senderNumber: sNum, 
+                    trxId: trx, 
+                    depMethod: depMethod, // Save method selected by user [1]
+                    status: "Pending", 
+                    timestamp: Date.now() 
+                });
                 
-                // Removed 3.5% credit score deduction on Deposit request
                 let updates = { 
                     pendingDep: (userData.pendingDep || 0) + selectedPlan.price
                 };
@@ -1535,98 +1378,6 @@
                     } else { alert("Promo code already used!"); }
                 } else { alert("Invalid Promo Code!"); }
             });
-        };
-
-        // CLIENT REDEEM CSP CODE (Capped strictly at 100%)
-        window.claimCSP = async () => {
-            const code = document.getElementById('cspInput').value.trim().toUpperCase();
-            if(!code) return alert("Please enter a CSP code.");
-            
-            get(ref(db, 'csps/' + code)).then(async (snap) => {
-                if(snap.exists()) {
-                    let csp = snap.val();
-                    if(csp.active) {
-                        // Expiry logic check
-                        if (csp.expiryTime && Date.now() > csp.expiryTime) {
-                            alert("This CSP Code has expired!");
-                            await update(ref(db, 'csps/' + code), { active: false });
-                            return;
-                        }
-
-                        loader.classList.remove('hidden');
-                        let currentScore = userData.creditScore !== undefined ? userData.creditScore : 100;
-                        let newScore = currentScore + parseFloat(csp.amount);
-                        
-                        // Strict Cap: Score cannot go above 100%
-                        if (newScore > 100) newScore = 100; 
-
-                        let updates = { creditScore: newScore };
-                        if (newScore > 25) {
-                            updates.scoreThresholdTime = null; // Reset block timer
-                        }
-
-                        await update(ref(db, 'users/' + currentUser.uid), updates);
-                        await update(ref(db, 'csps/' + code), { active: false });
-
-                        document.getElementById('cspInput').value = '';
-                        loader.classList.add('hidden');
-                        alert("CSP Code Applied! Credit score increased. Current Score: " + newScore.toFixed(3) + "%");
-                    } else { alert("CSP Code already used!"); }
-                } else { alert("Invalid CSP Code!"); }
-            }).catch(e => { alert(e.message); });
-        };
-
-        // LOAD ACTIVE CSA CODES (Automatically filtered for expired and inactive codes) [1]
-        window.loadCSA = () => {
-            get(ref(db, 'csps')).then((snap) => {
-                let html = "";
-                if(snap.exists()) {
-                    let now = Date.now();
-                    snap.forEach(child => {
-                        let code = child.key;
-                        let c = child.val();
-                        // Filter active and non-expired CSP codes dynamically [1]
-                        let isExpired = c.expiryTime && now > c.expiryTime;
-                        if(c.active && !isExpired) {
-                            let expText = "Never";
-                            if(c.expiryTime) {
-                                expText = new Date(c.expiryTime).toLocaleString();
-                            }
-                            html += `
-                            <div class="h-item" style="padding: 15px; background: #f8f9fa; border-radius: 12px; margin-bottom: 10px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <h4 style="color: var(--primary); font-size: 16px; font-weight: bold; letter-spacing: 1px;">${code}</h4>
-                                    <p style="font-size: 11px; color: var(--gray); margin-top: 3px;">Expires: ${expText}</p>
-                                </div>
-                                <div style="text-align: right; display: flex; align-items: center; gap: 8px;">
-                                    <button onclick="copyCsaCode('${code}')" style="background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold;"><i class="fa-solid fa-copy"></i> Copy</button>
-                                </div>
-                            </div>`;
-                        }
-                    });
-                }
-                document.getElementById('listCsaCodes').innerHTML = html || `<p style="font-size:12px;text-align:center;color:#888;">No active CSA codes available at the moment.</p>`;
-            });
-        };
-
-        // Clipboard Copy Helper for CSA codes
-        window.copyCsaCode = async (code) => {
-            await window.deductCreditScoreForCopy();
-            if(navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(code).then(() => alert("CSA Code Copied: " + code));
-            } else {
-                let textArea = document.createElement("textarea");
-                textArea.value = code;
-                document.body.appendChild(textArea);
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                    alert("CSA Code Copied: " + code);
-                } catch (err) {
-                    alert("Failed to copy code.");
-                }
-                document.body.removeChild(textArea);
-            }
         };
 
         // ================== ADVANCED CAP SYSTEM DESK LOGIC ==================
@@ -2089,7 +1840,6 @@
         };
 
         window.copyCapCode = async (code) => {
-            await window.deductCreditScoreForCopy();
             if(navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(code).then(() => alert("CAP Code Copied!"));
             } else {
@@ -2313,9 +2063,11 @@
                     let uName = (allUsersCache[d.uid] && allUsersCache[d.uid].name) ? allUsersCache[d.uid].name : 'Unknown User';
                     
                     if(d.status === 'Pending') {
+                        let methodLabel = d.depMethod || 'Easypaisa'; // Support showing selected method in admin panel [1]
                         html += `
                         <div class="user-row" style="border-left: 4px solid #00c853;">
                             <p><b>User:</b> ${uName}</p>
+                            <p><b>Method:</b> ${methodLabel}</p> <!-- Display selected deposit method [1] -->
                             <p><b>Plan:</b> ${d.planName} (Rs ${d.amount})</p>
                             <p><b>Sender:</b> ${d.senderName} (${d.senderNumber})</p>
                             <p><b>Trx ID:</b> ${d.trxId}</p>
@@ -2430,32 +2182,20 @@
         };
 
         window.approveWithdraw = async (wid, uid, amount) => {
-            if(!confirm("Approve this withdrawal? User Credit Score will decrease by 0.25.")) return;
+            if(!confirm("Approve this withdrawal?")) return;
             let uSnap = await get(ref(db, 'users/' + uid));
             let u = uSnap.val();
             let pWith = (u.pendingWith || 0) - amount; if(pWith < 0) pWith = 0;
             let tWith = (u.totalWith || 0) + amount;
-            
-            // Deduct exactly 0.25 credit score upon approved withdrawal
-            let currentScore = u.creditScore !== undefined ? u.creditScore : 100;
-            let newScore = currentScore - 0.25;
-            if (newScore < 0) newScore = 0;
 
             let userUpdates = { 
                 pendingWith: pWith, 
-                totalWith: tWith,
-                creditScore: newScore
+                totalWith: tWith
             };
-            
-            if (newScore <= 25) {
-                userUpdates.scoreThresholdTime = u.scoreThresholdTime || Date.now();
-            } else {
-                userUpdates.scoreThresholdTime = null;
-            }
 
             await update(ref(db, 'users/' + uid), userUpdates);
             await update(ref(db, 'withdrawals/' + wid), { status: 'successful withdraw  ' });
-            alert("Withdrawal Approved! User Credit Score decreased by 0.25.");
+            alert("Withdrawal Approved!");
             openAdminPanel(); // Refresh stats
         };
 
@@ -2583,76 +2323,6 @@
             document.getElementById('admPromoAmt').value = '';
         };
 
-        // ADMIN CREATE CSP CODE
-        window.adminCreateCSP = async () => {
-            const code = document.getElementById('admCspCode').value.trim().toUpperCase();
-            const amount = parseFloat(document.getElementById('admCspAmt').value);
-            const hours = parseFloat(document.getElementById('admCspExpiry').value);
-
-            if(!code || isNaN(amount)) return alert("Fill CSP fields properly!");
-
-            let expiryTime = null;
-            if(!isNaN(hours) && hours > 0) {
-                expiryTime = Date.now() + (hours * 60 * 60 * 1000);
-            }
-
-            await set(ref(db, 'csps/' + code), {
-                amount: amount,
-                active: true,
-                expiryTime: expiryTime,
-                createdAt: Date.now()
-            });
-
-            alert(`CSP Code: ${code} generated successfully!`);
-            document.getElementById('admCspCode').value = '';
-            document.getElementById('admCspAmt').value = '';
-            document.getElementById('admCspExpiry').value = '';
-        };
-
-        // ADMIN GLOBAL CREDIT SCORE ADJUSTMENT TOOL (Capped strictly at 100%)
-        window.adjustGlobalCreditScore = async () => {
-            const adjustAmt = parseFloat(document.getElementById('admGlobalCsAmt').value);
-            if(isNaN(adjustAmt)) return alert("Please enter a valid number!");
-
-            if(!confirm(`Are you sure you want to apply ${adjustAmt >= 0 ? '+' : ''}${adjustAmt}% adjustment to ALL users?`)) return;
-
-            loader.classList.remove('hidden');
-            try {
-                const snap = await get(ref(db, 'users'));
-                if(snap.exists()) {
-                    let users = snap.val();
-                    let updates = {};
-                    for (let uid in users) {
-                        let curScore = users[uid].creditScore !== undefined ? users[uid].creditScore : 100;
-                        let newScore = curScore + adjustAmt;
-                        if(newScore > 100) newScore = 100; // Cap strictly at 100%
-                        if(newScore < 0) newScore = 0;
-
-                        updates[`users/${uid}/creditScore`] = newScore;
-                        
-                        // Handle auto block threshold timestamp logic
-                        if(newScore <= 25) {
-                            if(!users[uid].scoreThresholdTime) {
-                                updates[`users/${uid}/scoreThresholdTime`] = Date.now();
-                            }
-                        } else {
-                            updates[`users/${uid}/scoreThresholdTime`] = null;
-                        }
-                    }
-                    await update(ref(db), updates);
-                    alert("Credit Score Adjusted for all Users successfully!");
-                    document.getElementById('admGlobalCsAmt').value = '';
-                    openAdminPanel(); // Reload
-                } else {
-                    alert("No users found to update!");
-                }
-            } catch(e) {
-                alert("Error: " + e.message);
-            } finally {
-                loader.classList.add('hidden');
-            }
-        };
-
         window.loadAdminUsers = async () => {
             const list = document.getElementById('adminUserList');
             list.innerHTML = 'Fetching users securely...';
@@ -2673,14 +2343,13 @@
                     let inv = u.totalInvest || 0;
                     let pass = u.password || 'Hidden';
                     let phone = u.phone || 'Not Bound';
-                    let cs = u.creditScore !== undefined ? u.creditScore.toFixed(3) : '100.000';
                     let uid8Val = u.uid8 || 'None';
 
                     html += `
                     <div class="user-row" style="color:#222;">
                         <p><b>Name:</b> ${u.name || 'Unknown'} (${blockedStatus})</p>
                         <p><b>Phone:</b> ${phone} | <b>Pass:</b> ${pass}</p>
-                        <p><b>CAP UID:</b> ${uid8Val} | <b>Bal:</b> Rs ${bal} | <b>Invest:</b> Rs ${inv} | <b>Credit:</b> ${cs}%</p>
+                        <p><b>CAP UID:</b> ${uid8Val} | <b>Bal:</b> Rs ${bal} | <b>Invest:</b> Rs ${inv}</p>
                         <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
                             <button onclick="editUserBalance('${uid}')" style="background:#0d47a1;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Edit Balance</button>
                             ${!u.isBlocked ? `<button onclick="blockUser('${uid}', prompt('Reason for block?'))" style="background:orange;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Block</button>` : `<button onclick="unblockUser('${uid}')" style="background:green;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Unblock</button>`}
