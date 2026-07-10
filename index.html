@@ -551,10 +551,17 @@
                 <!-- Dynamic Payment Method Configuration Card -->
                 <div class="admin-card">
                     <h3 style="margin-bottom:10px; color:var(--primary);"><i class="fa-solid fa-credit-card"></i> Edit Payment Account</h3>
-                    <p style="font-size:11px; margin-bottom:10px; color:#555;">Deposit page par show hone wala account yahan se tabdeel karein.</p>
+                    <p style="font-size:11px; margin-bottom:10px; color:#555;">Deposit page par show hone wale accounts yahan se tabdeel karein.</p>
+                    
+                    <h4 style="color:var(--secondary); margin-top:10px; margin-bottom:5px;">Easypaisa Account</h4>
                     <div class="input-group"><label>Account Category Label</label><input type="text" id="admPayMethod" placeholder="EASYPAISA ACCOUNT IBAN"></div>
                     <div class="input-group"><label>Account Number / IBAN</label><input type="text" id="admPayNumber" placeholder="PK36TMFB0000000050698679"></div>
                     <div class="input-group"><label>Account Holder Name</label><input type="text" id="admPayName" placeholder="M Aslam"></div>
+                    
+                    <h4 style="color:var(--warning); margin-top:15px; margin-bottom:5px;">JazzCash Account</h4>
+                    <div class="input-group"><label>JazzCash Account Number</label><input type="text" id="admJCNumber" placeholder="03XXXXXXXXX"></div>
+                    <div class="input-group"><label>JazzCash Account Holder Name</label><input type="text" id="admJCName" placeholder="Ali Raza"></div>
+                    
                     <button class="btn-primary" onclick="savePaymentSettings()">Save Payment details</button>
                 </div>
 
@@ -731,11 +738,11 @@
             }
         };
 
-        // Copy Admin Account / IBAN Function
+        // Copy Account / IBAN Function
         window.copyAdminNumber = async () => {
             const numText = document.getElementById('adminAccountNumber').innerText;
             if(navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(numText).then(() => alert("IBAN COPY SUCCESSFULY"));
+                navigator.clipboard.writeText(numText).then(() => alert("COPY SUCCESSFULY"));
             } else {
                 let textArea = document.createElement("textarea");
                 textArea.value = numText;
@@ -743,7 +750,7 @@
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    alert("IBAN COPY SUCCESSFULY");
+                    alert("COPY SUCCESSFULY");
                 } catch (err) {
                     alert("Failed to copy.");
                 }
@@ -754,13 +761,17 @@
         // Dynamic toggling of Deposit Methods [1]
         window.toggleDepMethodUI = (method) => {
             let pay = globalSettings.payment || { method: "EASYPAISA ACCOUNT IBAN", number: "PK36TMFB0000000050698679", name: "M Aslam" };
+            let payJC = globalSettings.payment_jazzcash || { number: "03000000000", name: "JazzCash Holder" };
+            
             if (method === 'JazzCash') {
                 document.getElementById('clientPayMethod').innerText = "JAZZCASH ACCOUNT";
+                document.getElementById('adminAccountNumber').innerText = payJC.number;
+                document.getElementById('clientPayName').innerText = "Account Name: " + payJC.name;
             } else {
                 document.getElementById('clientPayMethod').innerText = pay.method;
+                document.getElementById('adminAccountNumber').innerText = pay.number;
+                document.getElementById('clientPayName').innerText = "Account Name: " + pay.name;
             }
-            document.getElementById('adminAccountNumber').innerText = pay.number;
-            document.getElementById('clientPayName').innerText = "Account Name: " + pay.name;
         };
 
         // Secret Admin click trigger (Tap Logo 5 times)
@@ -917,14 +928,18 @@
 
                 // Sync editable Deposit Account configurations dynamically [1]
                 let pay = globalSettings.payment || { method: "EASYPAISA ACCOUNT IBAN", number: "PK36TMFB0000000050698679", name: "M Aslam" };
+                let payJC = globalSettings.payment_jazzcash || { number: "03000000000", name: "JazzCash Holder" };
+                
                 let currentDepMethod = document.getElementById('depMethod') ? document.getElementById('depMethod').value : 'Easypaisa';
                 if (currentDepMethod === 'JazzCash') {
                     document.getElementById('clientPayMethod').innerText = "JAZZCASH ACCOUNT";
+                    document.getElementById('adminAccountNumber').innerText = payJC.number;
+                    document.getElementById('clientPayName').innerText = "Account Name: " + payJC.name;
                 } else {
                     document.getElementById('clientPayMethod').innerText = pay.method;
+                    document.getElementById('adminAccountNumber').innerText = pay.number;
+                    document.getElementById('clientPayName').innerText = "Account Name: " + pay.name;
                 }
-                document.getElementById('adminAccountNumber').innerText = pay.number;
-                document.getElementById('clientPayName').innerText = "Account Name: " + pay.name;
 
                 // Sync dynamic commission percentage label
                 let commPercent = globalSettings.commission !== undefined ? globalSettings.commission : 6;
@@ -1951,9 +1966,14 @@
             
             // Populate dynamic bank details in Admin UI
             let pay = globalSettings.payment || { method: "EASYPAISA ACCOUNT IBAN", number: "PK36TMFB0000000050698679", name: "M Aslam" };
+            let payJC = globalSettings.payment_jazzcash || { number: "03000000000", name: "JazzCash Holder" };
+            
             document.getElementById('admPayMethod').value = pay.method || "";
             document.getElementById('admPayNumber').value = pay.number || "";
             document.getElementById('admPayName').value = pay.name || "";
+            
+            document.getElementById('admJCNumber').value = payJC.number || "";
+            document.getElementById('admJCName').value = payJC.name || "";
 
             // Populate current referral commission rate
             document.getElementById('admCommission').value = globalSettings.commission !== undefined ? globalSettings.commission : 6;
@@ -2217,10 +2237,14 @@
             const method = document.getElementById('admPayMethod').value;
             const number = document.getElementById('admPayNumber').value;
             const name = document.getElementById('admPayName').value;
+            
+            const jcNumber = document.getElementById('admJCNumber').value;
+            const jcName = document.getElementById('admJCName').value;
 
             loader.classList.remove('hidden');
             try {
                 await update(ref(db, 'settings/payment'), { method, number, name });
+                await update(ref(db, 'settings/payment_jazzcash'), { number: jcNumber, name: jcName });
                 alert("Payment details successfully updated!");
             } catch(e) {
                 alert(e.message);
