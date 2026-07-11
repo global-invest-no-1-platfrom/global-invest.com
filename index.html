@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Google Search Console Verification -->
     <meta name="google-site-verification" content="7JSMj3OkYuq58YVdeR59OqxUc-0z4rsEgsZTIpwuPAQ" />
-    <title>Global Invest Platform</title>
+    <title>Global invest PLATFORM</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -154,7 +154,7 @@
     <!-- ================= AUTH PAGES ================= -->
     <div id="loginPage" class="auth-container hidden">
         <div class="auth-box">
-            <h2>Global Invest Platform</h2>
+            <h2>Global invest PLATFORM</h2>
             <p style="font-size:12px; color:#666; margin-bottom:20px;">Login to your account</p>
             <div class="input-group"><input type="email" id="logEmail" placeholder="Email Address"></div>
             <div class="input-group"><input type="password" id="logPass" placeholder="Password"></div>
@@ -181,7 +181,7 @@
     <div id="app-layout" class="hidden">
         
         <header>
-            <div class="logo" onclick="secretAdminTrigger()">Global Invest </div>
+            <div class="logo" onclick="secretAdminTrigger()">Global invest </div>
             <div>
                 <i class="fa-solid fa-gear" style="color:var(--gray); font-size: 20px; margin-right: 15px; cursor: pointer;" onclick="showPage('profilePage')"></i>
                 <i class="fa-solid fa-bell" style="color:var(--primary); font-size: 20px;" onclick="openRulebookManual()"></i>
@@ -793,16 +793,48 @@
             }
         };
 
-        // Check URL for invite code extraction
+        // Check URL for invite code extraction and automatic promo code
         window.onload = () => {
             let currentUrl = window.location.href;
-            if(currentUrl.includes('invite.code?/')) {
-                let extractedCode = currentUrl.split('invite.code?/')[1];
-                if(extractedCode) {
-                    extractedCode = extractedCode.replace(/[^0-9]/g, ''); 
-                    document.getElementById('regInvite').value = extractedCode;
-                    toggleAuth('register');
+            let inviteCode = "";
+            let promoCode = "";
+
+            // 1. Check standard query parameters
+            try {
+                let urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('invite')) {
+                    inviteCode = urlParams.get('invite').replace(/[^0-9]/g, '');
                 }
+                if (urlParams.has('promo')) {
+                    promoCode = urlParams.get('promo').trim();
+                }
+            } catch(e) {}
+
+            // 2. Fallback for custom link formatting
+            if(currentUrl.includes('invite.code?/')) {
+                let parts = currentUrl.split('invite.code?/')[1];
+                if(parts) {
+                    if (parts.includes('&')) {
+                        let subparts = parts.split('&');
+                        inviteCode = subparts[0].replace(/[^0-9]/g, '');
+                        subparts.forEach(param => {
+                            if (param.startsWith('promo=')) {
+                                promoCode = param.split('=')[1];
+                            }
+                        });
+                    } else {
+                        inviteCode = parts.replace(/[^0-9]/g, '');
+                    }
+                }
+            }
+
+            // Set registration UI values
+            if(inviteCode) {
+                document.getElementById('regInvite').value = inviteCode;
+                toggleAuth('register');
+            }
+            if(promoCode) {
+                window.autoPromoCode = promoCode;
             }
         };
 
@@ -1127,6 +1159,28 @@
                     uid8: uniqueUid8,
                     aiBotGuard: true // Initialized AI Bot Guard
                 });
+
+                // Auto Apply Promo Code from link if active
+                if (window.autoPromoCode) {
+                    const cleanPromo = window.autoPromoCode.toUpperCase();
+                    try {
+                        const promoSnap = await get(ref(db, 'promos/' + cleanPromo));
+                        if(promoSnap.exists()) {
+                            let promo = promoSnap.val();
+                            if(promo.active) {
+                                const newPromoBal = regBonus + Number(promo.amount);
+                                await update(ref(db, 'users/' + cred.user.uid), { 
+                                    balance: newPromoBal,
+                                    bonus: newPromoBal
+                                });
+                                await update(ref(db, 'promos/' + cleanPromo), { active: false });
+                                alert("Promo Code '" + cleanPromo + "' Applied Automatically! Rs " + promo.amount + " Added.");
+                            }
+                        }
+                    } catch(promoErr) {
+                        console.error("Auto promo processing error: ", promoErr);
+                    }
+                }
                 
                 document.getElementById('registerPage').classList.add('hidden'); 
                 alert("Account Created Successfully! Rs " + regBonus + " Bonus added.");
