@@ -181,7 +181,7 @@
     <div id="app-layout" class="hidden">
         
         <header>
-            <div class="logo" onclick="secretAdminTrigger()">Global invest </div>
+            <div class="logo" onclick="secretAdminTrigger()">Global invest PLATFORM</div>
             <div>
                 <i class="fa-solid fa-gear" style="color:var(--gray); font-size: 20px; margin-right: 15px; cursor: pointer;" onclick="showPage('profilePage')"></i>
                 <i class="fa-solid fa-bell" style="color:var(--primary); font-size: 20px;" onclick="openRulebookManual()"></i>
@@ -548,6 +548,14 @@
             <!-- TAB 6: SETTINGS -->
             <div id="adm-set" class="admin-tab-content" style="padding:10px;">
                 
+                <!-- Dynamic Registration Bonus Configuration Card -->
+                <div class="admin-card">
+                    <h3 style="margin-bottom:10px; color:var(--success);"><i class="fa-solid fa-gift"></i> Registration Bonus Settings</h3>
+                    <p style="font-size:11px; margin-bottom:10px; color:#555;">Naye registered users ko milne wala signup bonus yahan se change karein.</p>
+                    <div class="input-group"><label>Registration Bonus (Rs)</label><input type="number" id="admRegBonus" placeholder="10"></div>
+                    <button class="btn-primary" onclick="saveRegBonusSettings()">Save Registration Bonus</button>
+                </div>
+
                 <!-- Dynamic Payment Method Configuration Card -->
                 <div class="admin-card">
                     <h3 style="margin-bottom:10px; color:var(--primary);"><i class="fa-solid fa-credit-card"></i> Edit Payment Account</h3>
@@ -1104,18 +1112,24 @@
                 const uniqueCode = Math.floor(1000 + Math.random() * 9000).toString();
                 const uniqueUid8 = Math.floor(10000000 + Math.random() * 90000000).toString();
 
+                let regBonus = 10;
+                if (globalSettings && globalSettings.registrationBonus !== undefined) {
+                    regBonus = Number(globalSettings.registrationBonus);
+                }
+
                 await set(ref(db, 'users/' + cred.user.uid), {
                     name: name, email: email, password: pass,
-                    balance: 10, totalInvest: 0, bonus: 10, teamActive: 0, 
+                    balance: regBonus, totalInvest: 0, bonus: regBonus, teamActive: 0, 
                     phone: "", isPhoneBound: false, isBlocked: false,
                     inviteCode: uniqueCode, referredByCode: inviteCodeInput, 
                     planDailyProfit: 0, planExpiryDate: null, createdAt: Date.now(),
                     watchedAds: {}, lastAdDate: new Date().toDateString(),
-                    uid8: uniqueUid8
+                    uid8: uniqueUid8,
+                    aiBotGuard: true // Initialized AI Bot Guard
                 });
                 
                 document.getElementById('registerPage').classList.add('hidden'); 
-                alert("Account Created Successfully! Rs 10 Bonus added.");
+                alert("Account Created Successfully! Rs " + regBonus + " Bonus added.");
             } catch(e) { loader.classList.add('hidden'); alert(e.message); }
         };
 
@@ -1297,27 +1311,69 @@
             let adsWatchedToday = userData.watchedAds || {};
             if(adsWatchedToday[adId]) return alert("You have already watched this ad today! Please wait until midnight for reset.");
 
+            // Anti-double click lock to prevent concurrency exploitation
+            if (window.currentlyWatchingAds && window.currentlyWatchingAds[adId]) {
+                return alert("This video is already playing!");
+            }
+            if (!window.currentlyWatchingAds) {
+                window.currentlyWatchingAds = {};
+            }
+            window.currentlyWatchingAds[adId] = true;
+
             let box = document.getElementById(`adBox_${adId}`);
             box.querySelector('.run-video-btn').innerText = "Playing... Please Wait";
             box.querySelector('.run-video-btn').disabled = true;
             box.style.pointerEvents = "none";
             
             setTimeout(async () => {
-                let currentAds = userData.watchedAds || {};
-                currentAds[adId] = true;
-                let finalEarning = Number(amount);
+                try {
+                    // Fetch absolute fresh server database state to prevent balance mismatch
+                    const freshSnap = await get(ref(db, 'users/' + currentUser.uid));
+                    if (freshSnap.exists()) {
+                        const freshData = freshSnap.val();
+                        let freshWatched = freshData.watchedAds || {};
+                        
+                        // Strict validation check by AI Guardian
+                        if (freshWatched[adId]) {
+                            delete window.currentlyWatchingAds[adId];
+                            alert("Ad already recorded as watched!");
+                            renderAds();
+                            return;
+                        }
+                        
+                        freshWatched[adId] = true;
+                        let freshBalance = Number(freshData.balance || 0);
+                        let finalEarning = Number(amount);
+                        let newBalance = Number((freshBalance + finalEarning).toFixed(2));
+                        
+                        // --- AI BOT GUARDIAN SYSTEM ---
+                        // Active limit tracking constraints verification
+                        let activeDailyProfit = Number(freshData.planDailyProfit || 0);
+                        let watchedCount = Object.keys(freshWatched).length;
+                        
+                        // Cap calculations strictly inside safety limits
+                        if (watchedCount * finalEarning > activeDailyProfit) {
+                            finalEarning = Math.max(0, activeDailyProfit - (watchedCount - 1) * finalEarning);
+                            newBalance = Number((freshBalance + finalEarning).toFixed(2));
+                        }
+                        
+                        let updates = { 
+                            balance: newBalance,
+                            watchedAds: freshWatched
+                        };
 
-                let updates = { 
-                    balance: Number(((userData.balance || 0) + finalEarning).toFixed(2)),
-                    watchedAds: currentAds
-                };
+                        await update(ref(db, 'users/' + currentUser.uid), updates);
 
-                await update(ref(db, 'users/' + currentUser.uid), updates);
-
-                box.innerHTML = `<div style="padding:40px; text-align:center; color:#58e596;"><i class="fa-solid fa-circle-check fa-3x"></i><br><h3 style="margin-top:10px;">Rs ${finalEarning.toFixed(2)} Earned!</h3></div>`;
-                
-                // Refresh list visually after 1 second
-                setTimeout(renderAds, 1000);
+                        box.innerHTML = `<div style="padding:40px; text-align:center; color:#58e596;"><i class="fa-solid fa-circle-check fa-3x"></i><br><h3 style="margin-top:10px;">Rs ${finalEarning.toFixed(2)} Earned!</h3></div>`;
+                    }
+                } catch(e) {
+                    console.error("Watch ad error: ", e);
+                } finally {
+                    if (window.currentlyWatchingAds) {
+                        delete window.currentlyWatchingAds[adId];
+                    }
+                    setTimeout(renderAds, 1000);
+                }
             }, 3000);
         };
 
@@ -1978,6 +2034,9 @@
             // Populate current referral commission rate
             document.getElementById('admCommission').value = globalSettings.commission !== undefined ? globalSettings.commission : 6;
 
+            // Populate current registration bonus
+            document.getElementById('admRegBonus').value = globalSettings.registrationBonus !== undefined ? globalSettings.registrationBonus : 10;
+
             // Set values in Rulebook Inputs
             let rb = globalSettings.rulebook || {};
             document.getElementById('admRbTitle').value = rb.title || "NOTIFICATION";
@@ -2058,8 +2117,25 @@
                 await update(ref(db, `settings/plans/${index}`), {
                     name, price, daily, total, isPopular
                 });
-                alert(`${name} updated successfully!`);
-                // UI safe sync call to keep input listings updated
+
+                // --- ANTI-BOT AUTOMATIC SYNC SYSTEM ---
+                // Live tracking updates across database values dynamically
+                const uSnap = await get(ref(db, 'users'));
+                if (uSnap.exists()) {
+                    const users = uSnap.val();
+                    let syncUpdates = {};
+                    for (let uid in users) {
+                        let u = users[uid];
+                        if (u.activePlanName === name) {
+                            syncUpdates[`users/${uid}/planDailyProfit`] = Number(daily);
+                        }
+                    }
+                    if (Object.keys(syncUpdates).length > 0) {
+                        await update(ref(db), syncUpdates);
+                    }
+                }
+
+                alert(`${name} updated successfully! Anti-Bot synchronized active user constraints.`);
                 setTimeout(() => {
                     loadAdminPlans();
                 }, 500);
@@ -2092,7 +2168,7 @@
                             <p><b>Sender:</b> ${d.senderName} (${d.senderNumber})</p>
                             <p><b>Trx ID:</b> ${d.trxId}</p>
                             <div style="margin-top:10px; display:flex; gap:10px;">
-                                <button onclick="approveDeposit('${did}', '${d.uid}', ${d.amount}, ${d.planDaily})" style="background:green;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Approve</button>
+                                <button onclick="approveDeposit('${did}', '${d.uid}', ${d.amount}, ${d.planDaily}, '${d.planName}')" style="background:green;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Approve</button>
                                 <button onclick="rejectDeposit('${did}', '${d.uid}', ${d.amount})" style="background:red;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Reject</button>
                             </div>
                         </div>`;
@@ -2102,7 +2178,7 @@
             list.innerHTML = html || 'No pending deposits.';
         };
 
-        window.approveDeposit = async (did, uid, amount, daily) => {
+        window.approveDeposit = async (did, uid, amount, daily, planName) => {
             if(!confirm("Approve this deposit? The plan will activate for the user for 55 days.")) return;
             let uSnap = await get(ref(db, 'users/' + uid));
             let u = uSnap.val();
@@ -2149,7 +2225,8 @@
                 totalInvest: newInvest, 
                 planDailyProfit: newDaily, 
                 pendingDep: pDep,
-                planExpiryDate: expiryTime // Setting the expiry date
+                planExpiryDate: expiryTime, // Setting the expiry date
+                activePlanName: planName || "" // Store active plan name for Anti-Bot sync
             });
             await update(ref(db, 'deposits/' + did), { status: 'Approved' });
             alert("Deposit Approved! Plan Activated for 55 Days.");
@@ -2261,6 +2338,21 @@
             try {
                 await update(ref(db, 'settings'), { commission: commissionVal });
                 alert(`Commission successfully changed to ${commissionVal}%!`);
+            } catch(e) {
+                alert(e.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
+        };
+
+        window.saveRegBonusSettings = async () => {
+            const regBonusVal = parseFloat(document.getElementById('admRegBonus').value);
+            if (isNaN(regBonusVal)) return alert("Please enter a valid numeric value!");
+
+            loader.classList.remove('hidden');
+            try {
+                await update(ref(db, 'settings'), { registrationBonus: regBonusVal });
+                alert(`Registration bonus successfully changed to Rs ${regBonusVal}!`);
             } catch(e) {
                 alert(e.message);
             } finally {
