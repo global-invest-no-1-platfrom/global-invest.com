@@ -1249,7 +1249,7 @@
         window.renderAds = () => {
             const container = document.getElementById('adsContainer');
             
-            if(!userData.planDailyProfit || userData.planDailyProfit <= 0) {
+            if(!userData.planDailyProfit || Number(userData.planDailyProfit) <= 0) {
                 container.innerHTML = `
                     <div style="text-align:center; padding: 40px 20px; background: white; border-radius: 15px; margin: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                         <i class="fa-solid fa-lock" style="font-size: 50px; color: #ccc; margin-bottom: 15px;"></i>
@@ -1262,8 +1262,8 @@
             }
 
             let adHTML = "";
-            let planProfit = userData.planDailyProfit || 0;
-            let perAd = (planProfit / 10).toFixed(2);
+            let planProfit = Number(userData.planDailyProfit) || 0;
+            let perAd = Number((planProfit / 10).toFixed(2));
             let adsWatchedToday = userData.watchedAds || {};
 
             for(let i=1; i<=10; i++) {
@@ -1305,10 +1305,10 @@
             setTimeout(async () => {
                 let currentAds = userData.watchedAds || {};
                 currentAds[adId] = true;
-                let finalEarning = parseFloat(amount);
+                let finalEarning = Number(amount);
 
                 let updates = { 
-                    balance: (userData.balance || 0) + finalEarning,
+                    balance: Number(((userData.balance || 0) + finalEarning).toFixed(2)),
                     watchedAds: currentAds
                 };
 
@@ -1322,7 +1322,7 @@
         };
 
         window.initDeposit = (planName, price, daily) => {
-            selectedPlan = { name: planName, price: price, daily: daily };
+            selectedPlan = { name: planName, price: Number(price), daily: Number(daily) };
             document.getElementById('d_planName').innerText = planName;
             document.getElementById('d_amount').innerText = price;
             // Reset selection to Easypaisa when loading form [1]
@@ -1344,8 +1344,8 @@
                 await set(push(ref(db, 'deposits')), { 
                     uid: currentUser.uid, 
                     planName: selectedPlan.name, 
-                    planDaily: selectedPlan.daily, 
-                    amount: selectedPlan.price, 
+                    planDaily: Number(selectedPlan.daily), 
+                    amount: Number(selectedPlan.price), 
                     senderName: sName, 
                     senderNumber: sNum, 
                     trxId: trx, 
@@ -2106,39 +2106,39 @@
             if(!confirm("Approve this deposit? The plan will activate for the user for 55 days.")) return;
             let uSnap = await get(ref(db, 'users/' + uid));
             let u = uSnap.val();
-            let newInvest = (u.totalInvest || 0) + amount;
-            let newDaily = (u.planDailyProfit || 0) + daily;
-            let pDep = (u.pendingDep || 0) - amount; if(pDep < 0) pDep = 0;
+            let newInvest = (Number(u.totalInvest) || 0) + Number(amount);
+            let newDaily = Number(daily); // strict override to match current VIP plan and prevent previous sum and string concatenation bugs
+            let pDep = (Number(u.pendingDep) || 0) - Number(amount); if(pDep < 0) pDep = 0;
             
             // 55 Days Plan Expiry Timestamp Calculation
             let expiryTime = Date.now() + (55 * 24 * 60 * 60 * 1000); 
 
             // Commission Rate dynamic reading (Default is 6%)
-            let commPercent = globalSettings.commission !== undefined ? globalSettings.commission : 6;
+            let commPercent = globalSettings.commission !== undefined ? Number(globalSettings.commission) : 6;
 
-            if(u.totalInvest === 0 && u.referredByCode) {
+            if((Number(u.totalInvest) || 0) === 0 && u.referredByCode) {
                 let allUsersSnap = await get(ref(db, 'users'));
                 let allUsers = allUsersSnap.val();
                 for(let key in allUsers) {
                     if(allUsers[key].inviteCode === u.referredByCode) {
                         let referrer = allUsers[key];
-                        let comm = amount * (commPercent / 100);
+                        let comm = Number(amount) * (commPercent / 100);
                         await update(ref(db, 'users/' + key), {
-                            balance: (referrer.balance || 0) + comm,
+                            balance: Number(((referrer.balance || 0) + comm).toFixed(2)),
                             teamActive: (referrer.teamActive || 0) + 1
                         });
                         break;
                     }
                 }
-            } else if (u.totalInvest > 0 && u.referredByCode) {
+            } else if ((Number(u.totalInvest) || 0) > 0 && u.referredByCode) {
                 let allUsersSnap = await get(ref(db, 'users'));
                 let allUsers = allUsersSnap.val();
                 for(let key in allUsers) {
                     if(allUsers[key].inviteCode === u.referredByCode) {
                         let referrer = allUsers[key];
-                        let comm = amount * (commPercent / 100);
+                        let comm = Number(amount) * (commPercent / 100);
                         await update(ref(db, 'users/' + key), {
-                            balance: (referrer.balance || 0) + comm
+                            balance: Number(((referrer.balance || 0) + comm).toFixed(2))
                         });
                         break;
                     }
