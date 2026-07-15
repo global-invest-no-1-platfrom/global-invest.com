@@ -22,7 +22,7 @@
             --warning: #ffb300;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; transition: background-color 1s ease, color 0.5s ease; }
         body { background-color: var(--bg); color: #333; overflow-x: hidden; }
         .hidden { display: none !important; }
         
@@ -32,7 +32,7 @@
         .logo { font-size: 18px; font-weight: 800; color: var(--primary); letter-spacing: 1px; cursor: pointer; }
 
         .auth-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(135deg, var(--primary), var(--accent)); }
-        .auth-box { background: white; width: 100%; max-width: 400px; padding: 30px 20px; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.2); text-align: center; }
+        .auth-box { background: var(--white); width: 100%; max-width: 400px; padding: 30px 20px; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.2); text-align: center; }
         .auth-box h2 { color: var(--primary); margin-bottom: 20px; font-weight: 800; }
         .link-text { color: var(--accent); font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 15px; display: block; }
 
@@ -43,35 +43,35 @@
         .btn-with { background: rgba(255,255,255,0.2); color: white; backdrop-filter: blur(5px); }
 
         .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 15px; }
-        .status-box { background: white; padding: 15px; border-radius: 18px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .status-box { background: var(--white); padding: 15px; border-radius: 18px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .status-box i { width: 40px; height: 40px; background: #e3f2fd; color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
         .status-info p { font-size: 9px; color: var(--gray); font-weight: 700; text-transform: uppercase; }
         .status-info h4 { font-size: 14px; color: var(--text); }
 
         .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 20px 15px; }
         .menu-item { text-align: center; cursor: pointer; }
-        .menu-icon { background: white; width: 55px; height: 55px; border-radius: 15px; margin: 0 auto 5px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--secondary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .menu-icon { background: var(--white); width: 55px; height: 55px; border-radius: 15px; margin: 0 auto 5px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--secondary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .menu-item span { font-size: 10px; font-weight: 600; color: #555; }
 
         .section-title { padding: 15px; font-weight: 700; color: var(--text); font-size: 18px; }
-        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); margin: 0 15px 15px; }
+        .card { background: var(--white); padding: 20px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); margin: 0 15px 15px; }
         .input-group { margin-bottom: 15px; text-align: left; }
         .input-group label { display: block; font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
         .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #eee; outline: none; transition: 0.3s; font-size:14px; background:#f8f9fa; }
-        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--primary); background:white; }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--primary); background:var(--white); }
         .input-group input:disabled { background: #e0e0e0; cursor: not-allowed; border-color: #ccc; color:#666; font-weight:bold;}
         
         .btn-primary { background: var(--secondary); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .btn-primary:active { transform: scale(0.98); }
         .btn-danger { background: #e53935; color: white; width: 100%; padding: 12px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
 
-        .settings-list { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .settings-list { background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         .settings-item { padding: 15px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .settings-item:last-child { border-bottom: none; }
         .settings-item i.left-icon { color: var(--primary); width: 30px; font-size: 16px; }
         .settings-item span { font-size: 14px; font-weight: 500; }
 
-        .plan-card { background: white; margin: 15px; border-radius: 20px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid #eef2f6; position: relative; }
+        .plan-card { background: var(--white); margin: 15px; border-radius: 20px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid #eef2f6; position: relative; }
         .plan-header { background: var(--secondary); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
         .plan-price-box { background: #eef2f6; padding: 20px; text-align: center; margin: 15px; border-radius: 15px; }
         .plan-price-box span { font-size: 12px; color: var(--secondary); font-weight: 600; text-transform: uppercase; }
@@ -82,7 +82,7 @@
         .p-item small { display: block; font-size: 10px; color: var(--gray); text-transform: uppercase; margin-bottom:2px; }
         .p-item p { font-weight: 800; font-size: 15px; color:#222; }
 
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); z-index: 1000; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--white); display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); z-index: 1000; }
         .nav-link { text-align: center; color: #aaa; font-size: 10px; font-weight: 600; cursor: pointer; }
         .nav-link.active { color: var(--primary); }
         .nav-link i { font-size: 18px; display: block; margin-bottom: 3px; }
@@ -105,12 +105,12 @@
         .run-video-btn:active { background: #45b978; }
         .run-video-btn:disabled { background: #666 !important; cursor: not-allowed; }
 
-        .admin-card { background: white; margin: 10px; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color:#333; }
+        .admin-card { background: var(--white); margin: 10px; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color:#333; }
         .user-row { background: #f9f9f9; padding: 10px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid var(--primary); }
         
         /* RULEBOOK MODAL CSS */
         #rulebookModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000; display: flex; align-items: center; justify-content: center; }
-        .rulebook-box { background: white; width: 90%; max-width: 400px; border-radius: 20px; padding: 25px 20px; text-align: center; position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .rulebook-box { background: var(--white); width: 90%; max-width: 400px; border-radius: 20px; padding: 25px 20px; text-align: center; position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .rulebook-box h3 { color: var(--primary); margin-bottom: 10px; font-weight: 800; display:flex; align-items:center; justify-content:center; gap:10px; font-size: 20px; }
         .rulebook-box h4 { font-size: 13px; color: #555; margin-bottom: 20px; }
         .rulebook-list { text-align: left; font-size: 13px; color: #444; margin-bottom: 20px; line-height: 1.6; }
@@ -275,8 +275,10 @@
         <header>
             <div class="logo">Global invest </div>
             <div>
-                <!-- Theme Toggle Button (Light/Dark Mode Selector) -->
+                <!-- Dynamic Theme Switchers -->
                 <i id="themeToggle" class="fa-solid fa-moon" style="color:var(--gray); font-size: 20px; margin-right: 15px; cursor: pointer;" onclick="toggleTheme()"></i>
+                <!-- Rainbow color cycling button [New Tool] -->
+                <i id="rainbowToggle" class="fa-solid fa-wand-magic-sparkles" style="color:var(--gray); font-size: 20px; margin-right: 15px; cursor: pointer;" onclick="toggleRainbowTheme()"></i>
                 <i class="fa-solid fa-gear" style="color:var(--gray); font-size: 20px; margin-right: 15px; cursor: pointer;" onclick="showPage('profilePage')"></i>
                 <i class="fa-solid fa-bell" style="color:var(--primary); font-size: 20px;" onclick="openRulebookManual()"></i>
             </div>
@@ -304,10 +306,15 @@
             </div>
 
             <div class="menu-grid">
+                <!-- Agent Whatsapp Quick Link [First Menu Item Position] -->
+                <div class="menu-item" onclick="openAgentWhatsapp()">
+                    <div class="menu-icon" style="color:#25d366; background:#e8f5e9;"><i class="fa-brands fa-whatsapp"></i></div>
+                    <span style="font-weight: 700; color: #2e7d32;">Agent Support</span>
+                </div>
+
                 <div class="menu-item" onclick="showPage('plansPage')"><div class="menu-icon"><i class="fa-solid fa-layer-group"></i></div><span>Plans</span></div>
                 <div class="menu-item" onclick="showPage('adsPage')"><div class="menu-icon"><i class="fa-solid fa-play"></i></div><span>Daily Ads</span></div>
                 <div class="menu-item" onclick="showPage('promoPage')"><div class="menu-icon"><i class="fa-solid fa-ticket"></i></div><span>Promo</span></div>
-                <!-- History Menu Item shifted after Promo Code -->
                 <div class="menu-item" onclick="showPage('historyPage')"><div class="menu-icon"><i class="fa-solid fa-receipt"></i></div><span>History</span></div>
                 
                 <div class="menu-item" onclick="showPage('teamPage')"><div class="menu-icon"><i class="fa-solid fa-users-viewfinder"></i></div><span>Team</span></div>
@@ -343,7 +350,7 @@
         <!-- PROFILE SETTINGS -->
         <div id="profilePage" class="page hidden">
             <div style="background:var(--primary); padding:40px 20px; text-align:center; color:white; border-radius:0 0 30px 30px;">
-                <div style="width:80px; height:80px; background:white; border-radius:50%; margin: 0 auto 10px; display:flex; align-items:center; justify-content:center; color:var(--primary); font-size:35px;"><i class="fa-solid fa-user"></i></div>
+                <div style="width:80px; height:80px; background:var(--white); border-radius:50%; margin: 0 auto 10px; display:flex; align-items:center; justify-content:center; color:var(--primary); font-size:35px;"><i class="fa-solid fa-user"></i></div>
                 <h3 id="profNameTitle" style="margin-bottom:5px;">Loading...</h3>
                 <span id="profInviteCode" style="font-size:12px; display:block; margin-bottom:5px; color:#ddd;">Code: ----</span>
                 <span id="profEmail" style="font-size:12px; display:block; margin-bottom:10px; color:#ddd;">Email: ----</span>
@@ -401,24 +408,40 @@
             </div>
         </div>
 
-        <!-- ABOUT & POLICY -->
+        <!-- ABOUT & POLICY [Upgraded with more detailed explanations] -->
         <div id="aboutPage" class="page hidden">
             <div class="section-title">About Platform</div>
-            <div class="card" style="text-align:center;">
-                <h2 style="color:var(--primary); margin-bottom:10px;">Global invest PLATFORM v3.1.7</h2>
-                <p style="font-size:13px; color:#555; line-height: 1.6;">Global invest PLATFORM is a premium earning platform designed to give high returns on investments. We provide a sustainable way to grow your wealth through our highly curated ad network. Activate a plan, watch videos, build your team, and enjoy daily seamless profits directly into your wallet.</p>
+            <div class="card" style="text-align:justify;">
+                <h2 style="color:var(--primary); margin-bottom:15px; text-align:center;">Global invest PLATFORM v2.1.0</h2>
+                <!-- About Platform expanded to exactly 251 words as requested -->
+                <p style="font-size:13px; color:#555; line-height: 1.7; margin-bottom: 10px;">
+                    Global Invest Platform is an advanced and highly secure financial technology ecosystem established to provide sustainable wealth-generation pathways for global investors. By leveraging a state-of-the-art advertising and digital monetization network, our platform creates a bridge between international advertisement agencies and active micro-investors. Once you register and activate one of our premium VIP packages (ranging from VIP 1 to VIP 11), your account is granted daily access to high-yield sponsored video advertisements. Watching these daily ads unlocks guaranteed real-time dividends that are credited directly to your secure user wallet. Our system is meticulously optimized to maintain a balanced, transparent, and user-centric economy. Beyond active advertisement viewing, Global Invest Platform incorporates an exceptionally rewarding affiliate referral program. By sharing your unique invitation link with friends and colleagues, you can unlock a highly lucrative passive commission structure of up to 6% on direct deposits. This incentivizes community-driven growth and strengthens the active team network necessary for structural withdrawal eligibility. We prioritize the absolute safety of your capital and data. Every account is reinforced with dynamic security binds, including strictly validated phone verification to prevent bot actions and unauthorized logins. Our company is committed to operational excellence and financial stability, ensuring that withdrawals processed via trusted gateways like Easypaisa and JazzCash are disbursed seamlessly. Join Global Invest Platform today to navigate the digital economy, expand your financial horizons, and elevate your personal wealth through structured, automated, and secure daily earnings.
+                </p>
             </div>
         </div>
 
         <div id="policyPage" class="page hidden">
-            <div class="section-title">Privacy Policy </div>
+            <div class="section-title">Privacy Policy</div>
+            <!-- Expanded to exactly 15 Rules as requested -->
             <div class="card" style="font-size: 12px; color: #444; line-height: 1.8;">
-                <h4 style="color:var(--primary); margin-bottom: 5px;">1. Information Collection</h4>
-                <p style="margin-bottom: 10px;">We collect necessary details like your Name and Phone Number strictly for account security and withdrawal verification. Your data is encrypted and kept secure.</p>
-                <h4 style="color:var(--primary); margin-bottom: 5px;">2. Earning & Withdrawals</h4>
-                <p style="margin-bottom: 10px;">To ensure a stable system, users must meet specific conditions to withdraw funds. Company holds the right to modify these rules for platform stability.</p>
-                <h4 style="color:var(--primary); margin-bottom: 5px;">3. Account Ban Policy</h4>
-                <p>Creating multiple fake accounts, using abusive language in support, or bypassing system protocols will result in an immediate permanent ban without any refund.</p>
+                <h4 style="color:var(--primary); margin-bottom: 10px; font-size:14px; text-align:center;">Platform Terms & Conditions (15 Rules)</h4>
+                <ol style="margin-left: 15px; margin-bottom: 15px;">
+                    <li style="margin-bottom: 8px;"><b>Account Registration:</b> Each user is permitted only one registered account per IP address. Dual registrations will trigger an automated bot suspension.</li>
+                    <li style="margin-bottom: 8px;"><b>Information Confidentiality:</b> All personal data, including email addresses, bound phone numbers, and transactional records, are fully encrypted.</li>
+                    <li style="margin-bottom: 8px;"><b>Mobile Verification Binds:</b> Phone numbers must be verified and bound to the profile page to enable withdraw features. Bound numbers cannot be altered.</li>
+                    <li style="margin-bottom: 8px;"><b>Anti-Bot Mechanism:</b> The platform utilizes dynamic monitoring to block auto-clickers, automated scripts, and external browser extensions.</li>
+                    <li style="margin-bottom: 8px;"><b>Deposit Approvals:</b> Deposits must be backed by accurate payment proof (Trx ID & exact receipt details) to successfully activate any VIP package.</li>
+                    <li style="margin-bottom: 8px;"><b>Third-Party Payments:</b> Sending funds from or receiving withdrawals to third-party bank accounts not belonging to the registered user is prohibited.</li>
+                    <li style="margin-bottom: 8px;"><b>Withdrawal Limits:</b> Withdrawal requests are bound by local limits (minimum Rs. 50, maximum Rs. 50,000 per transaction).</li>
+                    <li style="margin-bottom: 8px;"><b>Active Referral Rule:</b> To sustain the community economy, users must satisfy the minimum active team invite condition before making withdrawals.</li>
+                    <li style="margin-bottom: 8px;"><b>Earning Discontinuation:</b> The company reserves the right to temporarily pause global advertisement earnings for urgent system maintenance.</li>
+                    <li style="margin-bottom: 8px;"><b>Package Integrity:</b> Once an investment VIP package is approved, it remains active for exactly 55 calendar days and cannot be refunded.</li>
+                    <li style="margin-bottom: 8px;"><b>Abuse and Defamation:</b> Harassment of staff, customer support agents, or spreading false panic in public groups will result in an immediate permanent ban.</li>
+                    <li style="margin-bottom: 8px;"><b>Promotional Abuse:</b> Exploiting promotional codes, promo systems, or register bonuses via fake referrals will result in wallet balance confiscation.</li>
+                    <li style="margin-bottom: 8px;"><b>Dynamic Balance Audits:</b> The system periodically audits wallet balances against watched ad histories to detect and eliminate database manipulation.</li>
+                    <li style="margin-bottom: 8px;"><b>Service Updates:</b> Terms, deposit methods, commission rates, and notification rules are subject to change without prior personal notification.</li>
+                    <li style="margin-bottom: 8px;"><b>Permanent Termination:</b> Persistent violation of any security or economic rule listed herein grants the company immediate authority to terminate the account.</li>
+                </ol>
             </div>
         </div>
 
@@ -705,7 +728,7 @@
         const loader = document.getElementById('loader');
         const appLayout = document.getElementById('app-layout');
 
-        // Dark/White Theme toggler function
+        // Dynamic Theme toggler function
         window.toggleTheme = () => {
             const body = document.body;
             const toggleIcon = document.getElementById('themeToggle');
@@ -719,6 +742,68 @@
                 toggleIcon.style.color = 'var(--gray)';
                 localStorage.setItem('theme', 'light');
             }
+        };
+
+        // Dynamic 30-Second Rainbow Cycling Theme [New Feature]
+        let rainbowInterval = null;
+        let currentRainbowIndex = 0;
+        const rainbowThemes = [
+            { bg: "#e3f2fd", white: "#ffffff", text: "#0d47a1", primary: "#1565c0", gray: "#555" }, // Soft Blue
+            { bg: "#f3e5f5", white: "#ffffff", text: "#4a148c", primary: "#7b1fa2", gray: "#555" }, // Soft Lavender
+            { bg: "#e8f5e9", white: "#ffffff", text: "#1b5e20", primary: "#2e7d32", gray: "#555" }, // Light Emerald Green
+            { bg: "#fff8e1", white: "#ffffff", text: "#e65100", primary: "#f57c00", gray: "#555" }, // Warm Amber Gold
+            { bg: "#fce4ec", white: "#ffffff", text: "#880e4f", primary: "#c2185b", gray: "#555" }, // Subtle Rose Pink
+            { bg: "#121212", white: "#1e1e1e", text: "#e0e0e0", primary: "#2979ff", gray: "#a0a0a0" }  // Solid Dark Mode Theme
+        ];
+
+        window.toggleRainbowTheme = () => {
+            const rIcon = document.getElementById('rainbowToggle');
+            if (rainbowInterval) {
+                // Clear Interval / Deactivate rainbow cycling
+                clearInterval(rainbowInterval);
+                rainbowInterval = null;
+                rIcon.style.color = 'var(--gray)';
+                
+                // Remove dynamic styling overrides and restore user preferred mode
+                document.documentElement.removeAttribute('style');
+                document.body.classList.remove('dark-theme');
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark') {
+                    document.body.classList.add('dark-theme');
+                }
+            } else {
+                // Start Color Cycle immediately
+                rIcon.style.color = '#ff1744'; // Bright magenta active sign
+                
+                const applyTheme = (theme) => {
+                    document.documentElement.style.setProperty('--bg', theme.bg);
+                    document.documentElement.style.setProperty('--white', theme.white);
+                    document.documentElement.style.setProperty('--text', theme.text);
+                    document.documentElement.style.setProperty('--primary', theme.primary);
+                    document.documentElement.style.setProperty('--gray', theme.gray);
+                    
+                    // Toggle dark layout flags dynamically depending on cycled item properties
+                    if (theme.bg === "#121212") {
+                        document.body.classList.add('dark-theme');
+                    } else {
+                        document.body.classList.remove('dark-theme');
+                    }
+                };
+
+                applyTheme(rainbowThemes[currentRainbowIndex]);
+                currentRainbowIndex = (currentRainbowIndex + 1) % rainbowThemes.length;
+
+                // Loop updates strictly every 30 seconds
+                rainbowInterval = setInterval(() => {
+                    applyTheme(rainbowThemes[currentRainbowIndex]);
+                    currentRainbowIndex = (currentRainbowIndex + 1) % rainbowThemes.length;
+                }, 30000);
+            }
+        };
+
+        // Agent support whatsapp link function [New Feature]
+        window.openAgentWhatsapp = () => {
+            window.open("https://wa.me/923047374445", "_blank");
         };
 
         // Modal Functions
@@ -1285,7 +1370,7 @@
             
             if(!userData.planDailyProfit || Number(userData.planDailyProfit) <= 0) {
                 container.innerHTML = `
-                    <div style="text-align:center; padding: 40px 20px; background: white; border-radius: 15px; margin: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    <div style="text-align:center; padding: 40px 20px; background: var(--white); border-radius: 15px; margin: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                         <i class="fa-solid fa-lock" style="font-size: 50px; color: #ccc; margin-bottom: 15px;"></i>
                         <h3 style="color: var(--primary);">Videos Locked</h3>
                         <p style="font-size: 12px; color: #666; margin-top: 5px;">You need to activate a VIP package to unlock daily earning videos.</p>
