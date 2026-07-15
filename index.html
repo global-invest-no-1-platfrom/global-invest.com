@@ -126,6 +126,98 @@
         .admin-tab-content.active { display: block; }
         .stat-box { background: #333; color: white; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 10px; }
         .stat-box h2 { color: #58e596; }
+
+        /* ================= DARK THEME STYLING ================= */
+        body.dark-theme {
+            --bg: #121212;
+            --white: #1e1e1e;
+            --text: #e0e0e0;
+            --gray: #a0a0a0;
+            color: #e0e0e0;
+        }
+        body.dark-theme header {
+            background: #1e1e1e;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+        body.dark-theme .logo {
+            color: #2979ff;
+        }
+        body.dark-theme .card, 
+        body.dark-theme .status-box, 
+        body.dark-theme .menu-icon, 
+        body.dark-theme .settings-list, 
+        body.dark-theme .plan-card,
+        body.dark-theme .rulebook-box,
+        body.dark-theme .payment-info {
+            background-color: #1e1e1e !important;
+            color: #e0e0e0 !important;
+            border-color: #333 !important;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
+        }
+        body.dark-theme .menu-item span {
+            color: #bbb !important;
+        }
+        body.dark-theme .p-item {
+            background: #252525 !important;
+            border-color: #333 !important;
+        }
+        body.dark-theme .p-item p {
+            color: #fff !important;
+        }
+        body.dark-theme .p-item small {
+            color: #aaa !important;
+        }
+        body.dark-theme .input-group input, 
+        body.dark-theme .input-group select, 
+        body.dark-theme .input-group textarea {
+            background: #2d2d2d !important;
+            border-color: #444 !important;
+            color: #fff !important;
+        }
+        body.dark-theme .input-group input:focus, 
+        body.dark-theme .input-group select:focus, 
+        body.dark-theme .input-group textarea:focus {
+            border-color: var(--accent) !important;
+            background: #333 !important;
+        }
+        body.dark-theme .bottom-nav {
+            background: #1e1e1e !important;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.3) !important;
+        }
+        body.dark-theme .nav-link {
+            color: #777;
+        }
+        body.dark-theme .nav-link.active {
+            color: var(--accent);
+        }
+        body.dark-theme .status-info h4 {
+            color: #fff !important;
+        }
+        body.dark-theme .settings-item {
+            border-color: #2d2d2d !important;
+        }
+        body.dark-theme .settings-item span {
+            color: #e0e0e0 !important;
+        }
+        body.dark-theme #loader {
+            background: rgba(18,18,18,0.95);
+            color: var(--accent);
+        }
+        body.dark-theme .h-item {
+            border-color: #333 !important;
+        }
+        body.dark-theme .h-item h4 {
+            color: #fff !important;
+        }
+        body.dark-theme .user-row {
+            background: #252525 !important;
+            border-color: var(--accent) !important;
+            color: #fff !important;
+        }
+        body.dark-theme .user-row p, 
+        body.dark-theme .user-row span {
+            color: #fff !important;
+        }
     </style>
 </head>
 <body>
@@ -183,6 +275,8 @@
         <header>
             <div class="logo">Global invest </div>
             <div>
+                <!-- Theme Toggle Button (Light/Dark Mode Selector) -->
+                <i id="themeToggle" class="fa-solid fa-moon" style="color:var(--gray); font-size: 20px; margin-right: 15px; cursor: pointer;" onclick="toggleTheme()"></i>
                 <i class="fa-solid fa-gear" style="color:var(--gray); font-size: 20px; margin-right: 15px; cursor: pointer;" onclick="showPage('profilePage')"></i>
                 <i class="fa-solid fa-bell" style="color:var(--primary); font-size: 20px;" onclick="openRulebookManual()"></i>
             </div>
@@ -611,6 +705,22 @@
         const loader = document.getElementById('loader');
         const appLayout = document.getElementById('app-layout');
 
+        // Dark/White Theme toggler function
+        window.toggleTheme = () => {
+            const body = document.body;
+            const toggleIcon = document.getElementById('themeToggle');
+            body.classList.toggle('dark-theme');
+            if (body.classList.contains('dark-theme')) {
+                toggleIcon.className = 'fa-solid fa-sun';
+                toggleIcon.style.color = '#ffb300';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                toggleIcon.className = 'fa-solid fa-moon';
+                toggleIcon.style.color = 'var(--gray)';
+                localStorage.setItem('theme', 'light');
+            }
+        };
+
         // Modal Functions
         window.closeRulebook = () => {
             document.getElementById('rulebookModal').classList.add('hidden');
@@ -675,6 +785,17 @@
 
         // Check URL for invite code extraction and automatic promo code
         window.onload = () => {
+            // Apply saved theme preference on start
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                const toggleIcon = document.getElementById('themeToggle');
+                if (toggleIcon) {
+                    toggleIcon.className = 'fa-solid fa-sun';
+                    toggleIcon.style.color = '#ffb300';
+                }
+            }
+
             let currentUrl = window.location.href;
             let inviteCode = "";
             let promoCode = "";
@@ -1777,6 +1898,65 @@
             document.getElementById('admPromoAmt').value = '';
         };
 
+        // Admin: Specific user plan remove function
+        window.removeUserPlan = async (uid, planKey) => {
+            if(!confirm("Are you sure you want to remove this plan from this user? They will no longer earn profit for this specific plan.")) return;
+            
+            loader.classList.remove('hidden');
+            try {
+                let uSnap = await get(ref(db, 'users/' + uid));
+                if (uSnap.exists()) {
+                    let u = uSnap.val();
+                    let activePlans = u.activePlans || {};
+                    let planToRemove = activePlans[planKey];
+                    
+                    if (planToRemove) {
+                        // Remove the specific plan from user's record
+                        delete activePlans[planKey];
+                        
+                        // Re-calculate daily cumulative profits of remaining active packages
+                        let totalDailyProfit = 0;
+                        let latestExpiryDate = 0;
+                        for (let k in activePlans) {
+                            let p = activePlans[k];
+                            totalDailyProfit += Number(p.daily);
+                            if (p.expiryDate > latestExpiryDate) {
+                                latestExpiryDate = p.expiryDate;
+                            }
+                        }
+
+                        // Deduct plan cost from overall invest total
+                        let newTotalInvest = (Number(u.totalInvest) || 0) - (Number(planToRemove.price) || 0);
+                        if (newTotalInvest < 0) newTotalInvest = 0;
+
+                        await update(ref(db, 'users/' + uid), {
+                            activePlans: activePlans,
+                            planDailyProfit: totalDailyProfit,
+                            planExpiryDate: latestExpiryDate > 0 ? latestExpiryDate : null,
+                            totalInvest: newTotalInvest
+                        });
+
+                        // Sync in all users admin cache as well
+                        if (allUsersCache[uid]) {
+                            allUsersCache[uid].activePlans = activePlans;
+                            allUsersCache[uid].planDailyProfit = totalDailyProfit;
+                            allUsersCache[uid].planExpiryDate = latestExpiryDate > 0 ? latestExpiryDate : null;
+                            allUsersCache[uid].totalInvest = newTotalInvest;
+                        }
+
+                        alert("Plan removed successfully! Daily profit capacity recalculated.");
+                        loadAdminUsers();
+                    } else {
+                        alert("Error: Plan not found or already removed.");
+                    }
+                }
+            } catch(e) {
+                alert("Error: " + e.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
+        };
+
         window.loadAdminUsers = async () => {
             const list = document.getElementById('adminUserList');
             list.innerHTML = 'Fetching users securely...';
@@ -1798,11 +1978,33 @@
                     let pass = u.password || 'Hidden';
                     let phone = u.phone || 'Not Bound';
 
+                    // === BUILD USER ACTIVE PLANS AND CORRESPONDING REMOVE BUTTONS ===
+                    let plansHtml = "";
+                    let activePlans = u.activePlans || {};
+                    if (Object.keys(activePlans).length > 0) {
+                        plansHtml += `
+                        <div style="margin-top: 8px; padding: 10px; background: #eef2f6; border-radius: 8px; font-size:11px; color:#333;">
+                            <b>Active Packages:</b>
+                            <ul style="margin-left: 15px; margin-top:5px; list-style-type:none; padding-left:0;">`;
+                        for (let k in activePlans) {
+                            let p = activePlans[k];
+                            plansHtml += `
+                            <li style="margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; background:white; padding:4px 8px; border-radius:4px; border:1px solid #ddd;">
+                                <span><b>${p.name}</b> (Rs ${p.price} | Daily: Rs ${p.daily})</span>
+                                <button onclick="removeUserPlan('${uid}', '${k}')" style="background:#e53935; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:10px; font-weight:bold;">Remove</button>
+                            </li>`;
+                        }
+                        plansHtml += `</ul></div>`;
+                    } else {
+                        plansHtml += `<p style="font-size:11px; color:#666; margin-top:5px;"><b>Active Packages:</b> None</p>`;
+                    }
+
                     html += `
                     <div class="user-row" style="color:#222;">
                         <p><b>Name:</b> ${u.name || 'Unknown'} (${blockedStatus})</p>
                         <p><b>Phone:</b> ${phone} | <b>Pass:</b> ${pass}</p>
                         <p><b>Bal:</b> Rs ${bal} | <b>Invest:</b> Rs ${inv}</p>
+                        ${plansHtml}
                         <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
                             <button onclick="editUserBalance('${uid}')" style="background:#0d47a1;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Edit Balance</button>
                             ${!u.isBlocked ? `<button onclick="blockUser('${uid}', prompt('Reason for block?'))" style="background:orange;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Block</button>` : `<button onclick="unblockUser('${uid}')" style="background:green;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Unblock</button>`}
