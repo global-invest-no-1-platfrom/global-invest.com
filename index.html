@@ -1938,7 +1938,7 @@
                 planExpiryDate: expiryTime, // Setting the latest activated package expiry timestamp
                 activePlans: activePlans
             });
-            await update(ref(db, 'deposits/' + did), { status: 'Approved' });
+            await update(ref(db, 'deposits/' + did), { status: 'Complete' });
             alert("Deposit Approved! Multi Plan Active, Combined Daily Profit Updated.");
             openAdminPanel(); // Refresh stats
         };
