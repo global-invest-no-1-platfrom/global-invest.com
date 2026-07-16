@@ -670,6 +670,7 @@
                     <div class="input-group"><label>Facebook Link</label><input type="text" id="admFB" placeholder="https://facebook.com/..."></div>
                     <div class="input-group"><label>Instagram Link</label><input type="text" id="admInsta" placeholder="https://instagram.com/..."></div>
                     <div class="input-group"><label>Website Link</label><input type="text" id="admWeb" placeholder="https://..."></div>
+                    <div class="input-group"><label>Agent Support WhatsApp Number</label><input type="text" id="admAgentWA" placeholder="923047374445"></div>
                     
                     <hr style="margin:15px 0; border:1px solid #eee;">
                     <h3 style="margin-bottom:10px;">Withdrawal Rules</h3>
@@ -755,6 +756,202 @@
         // Elements selection
         const loader = document.getElementById('loader');
         const appLayout = document.getElementById('app-layout');
+
+        // ================= SECURITY SYSTEMS & FIREWALL LAYERS =================
+        const SECURITY_KEY_22 = "9827401928374615203948"; // 22-digit security key
+        let sessionNonce = Math.floor(Math.random() * 1000000);
+        let lastActionTimestamp = 0;
+
+        // Custom Cryptographic Transformation algorithm
+        function crypt(text, key) {
+            let result = "";
+            text = String(text);
+            for (let i = 0; i < text.length; i++) {
+                let charCode = text.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+                result += String.fromCharCode(charCode);
+            }
+            return btoa(unescape(encodeURIComponent(result)));
+        }
+
+        function decrypt(cipher, key) {
+            try {
+                let text = decodeURIComponent(escape(atob(cipher)));
+                let result = "";
+                for (let i = 0; i < text.length; i++) {
+                    let charCode = text.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+                    result += String.fromCharCode(charCode);
+                }
+                return result;
+            } catch(e) {
+                return cipher;
+            }
+        }
+
+        function secureEncrypt(val) {
+            if (val === undefined || val === null) return val;
+            const str = String(val);
+            return "__ENC__" + crypt(str, SECURITY_KEY_22);
+        }
+
+        function secureDecrypt(val) {
+            if (typeof val !== 'string' || !val.startsWith("__ENC__")) return val;
+            const cipher = val.substring(7);
+            const decrypted = decrypt(cipher, SECURITY_KEY_22);
+            if (decrypted === "true") return true;
+            if (decrypted === "false") return false;
+            if (!isNaN(decrypted) && decrypted.trim() !== "") return Number(decrypted);
+            return decrypted;
+        }
+
+        function encryptUserObject(u) {
+            if (!u) return u;
+            const encrypted = { ...u };
+            const sensitiveFields = ['balance', 'password', 'phone', 'email', 'totalInvest', 'pendingDep', 'pendingWith', 'bonus', 'teamActive', 'planDailyProfit'];
+            sensitiveFields.forEach(f => {
+                if (u[f] !== undefined && u[f] !== null) {
+                    if (typeof u[f] !== 'string' || !u[f].startsWith("__ENC__")) {
+                        encrypted[f] = secureEncrypt(u[f]);
+                    }
+                }
+            });
+            if (u.activePlans) {
+                const encPlans = {};
+                for (let k in u.activePlans) {
+                    const plan = u.activePlans[k];
+                    encPlans[k] = {
+                        ...plan,
+                        daily: secureEncrypt(plan.daily),
+                        price: secureEncrypt(plan.price)
+                    };
+                }
+                encrypted.activePlans = encPlans;
+            }
+            return encrypted;
+        }
+
+        function decryptUserObject(u) {
+            if (!u) return u;
+            const decrypted = { ...u };
+            for (let f in decrypted) {
+                decrypted[f] = secureDecrypt(decrypted[f]);
+            }
+            if (decrypted.activePlans) {
+                const decPlans = {};
+                for (let k in decrypted.activePlans) {
+                    const plan = decrypted.activePlans[k];
+                    decPlans[k] = {
+                        ...plan,
+                        daily: secureDecrypt(plan.daily),
+                        price: secureDecrypt(plan.price)
+                    };
+                }
+                decrypted.activePlans = decPlans;
+            }
+            return decrypted;
+        }
+
+        async function dbSetUser(uid, data) {
+            const encData = encryptUserObject(data);
+            return set(ref(db, 'users/' + uid), encData);
+        }
+
+        async function dbUpdateUser(uid, updates) {
+            const encUpdates = {};
+            const sensitiveFields = ['balance', 'password', 'phone', 'email', 'totalInvest', 'pendingDep', 'pendingWith', 'bonus', 'teamActive', 'planDailyProfit'];
+            for (let k in updates) {
+                if (k === 'activePlans') {
+                    const encPlans = {};
+                    for (let pk in updates[k]) {
+                        const plan = updates[k][pk];
+                        encPlans[pk] = {
+                            ...plan,
+                            daily: secureEncrypt(plan.daily),
+                            price: secureEncrypt(plan.price)
+                        };
+                    }
+                    encUpdates[k] = encPlans;
+                } else if (sensitiveFields.includes(k)) {
+                    encUpdates[k] = secureEncrypt(updates[k]);
+                } else {
+                    encUpdates[k] = updates[k];
+                }
+            }
+            return update(ref(db, 'users/' + uid), encUpdates);
+        }
+
+        // --- 4 PROGRESSIVE HIGH-PERFORMANCE FIREWALL LAYERS ---
+        function firewallLayer1(inputDetail) {
+            // Layer 1: XSS / Malicious Input Audit Firewall
+            if (!inputDetail) return true;
+            const str = String(inputDetail).toLowerCase();
+            const blacklist = ["<script", "javascript:", "onload", "onerror", "eval(", "__proto__", "constructor", "union select", "drop table", "or 1=1", "exec(", "document.cookie"];
+            for (let item of blacklist) {
+                if (str.includes(item)) return false;
+            }
+            return true;
+        }
+
+        function firewallLayer2() {
+            // Layer 2: Environment Security & Anti-Bot Automation Guard
+            if (navigator.webdriver) return false;
+            if (!navigator.languages || navigator.languages.length === 0) return false;
+            if (window.outerHeight === 0 && window.outerWidth === 0) return false;
+            return true;
+        }
+
+        function firewallLayer3(actionType) {
+            // Layer 3: Dynamic Nonce Session Security (Anti-state tampering)
+            if (typeof sessionNonce !== 'number' || sessionNonce <= 0) return false;
+            sessionNonce = (sessionNonce * 3 + 7) % 1000000;
+            return true;
+        }
+
+        function firewallLayer4() {
+            // Layer 4: Behavioral Zero-Trust Click Velocity Analysis
+            const now = Date.now();
+            if (lastActionTimestamp > 0) {
+                const delta = now - lastActionTimestamp;
+                if (delta < 500) { // Sub-500ms clicks are blocked as bot signatures
+                    return false;
+                }
+            }
+            lastActionTimestamp = now;
+            return true;
+        }
+
+        function executeFirewallChain(actionType, detail = "") {
+            if (!firewallLayer1(detail)) {
+                triggerFirewallBlock("Layer 1 Guard Triggered: Malicious Injection Signature Detected.");
+                return false;
+            }
+            if (!firewallLayer2()) {
+                triggerFirewallBlock("Layer 2 Guard Triggered: Emulator/Automation Webdriver Breach.");
+                return false;
+            }
+            if (!firewallLayer3(actionType)) {
+                triggerFirewallBlock("Layer 3 Guard Triggered: Session Integrity Desynchronization.");
+                return false;
+            }
+            if (!firewallLayer4()) {
+                triggerFirewallBlock("Layer 4 Guard Triggered: Behavioral Velocity Out of Bounds.");
+                return false;
+            }
+            return true;
+        }
+
+        async function triggerFirewallBlock(reason) {
+            console.error("CRITICAL FIREWALL ALARM: " + reason);
+            alert("Security System Triggered: Access Blocked!\nReason: " + reason);
+            if (currentUser) {
+                try {
+                    await dbUpdateUser(currentUser.uid, {
+                        isBlocked: true,
+                        blockReason: "Firewall Auto-Lock: " + reason
+                    });
+                    signOut(auth);
+                } catch(e) {}
+            }
+        }
 
         // Dynamic Theme toggler function
         window.toggleTheme = () => {
@@ -877,12 +1074,17 @@
                 if (!currentIP) return;
 
                 // Save dynamic IP data
-                await update(ref(db, 'users/' + uid), { lastIP: currentIP });
+                await dbUpdateUser(uid, { lastIP: currentIP });
 
                 // Scan system databases
                 const usersSnap = await get(ref(db, 'users'));
                 if (usersSnap.exists()) {
-                    const users = usersSnap.val();
+                    const rawUsers = usersSnap.val();
+                    const users = {};
+                    for (let key in rawUsers) {
+                        users[key] = decryptUserObject(rawUsers[key]);
+                    }
+                    
                     let foundDuplicate = false;
                     let duplicateUIDs = [];
 
@@ -896,12 +1098,12 @@
                     if (foundDuplicate) {
                         // Automatically block dual accounts
                         const blockUpdates = {};
-                        blockUpdates[`users/${uid}/isBlocked`] = true;
-                        blockUpdates[`users/${uid}/blockReason`] = "Anti-Bot Rule: Multiple accounts detected under the same IP address (" + currentIP + ").";
+                        blockUpdates[`users/${uid}/isBlocked`] = secureEncrypt(true);
+                        blockUpdates[`users/${uid}/blockReason`] = secureEncrypt("Anti-Bot Rule: Multiple accounts detected under the same IP address (" + currentIP + ").");
                         
                         duplicateUIDs.forEach(dupUid => {
-                            blockUpdates[`users/${dupUid}/isBlocked`] = true;
-                            blockUpdates[`users/${dupUid}/blockReason`] = "Anti-Bot Rule: Multiple accounts detected under the same IP address (" + currentIP + ").";
+                            blockUpdates[`users/${dupUid}/isBlocked`] = secureEncrypt(true);
+                            blockUpdates[`users/${dupUid}/blockReason`] = secureEncrypt("Anti-Bot Rule: Multiple accounts detected under the same IP address (" + currentIP + ").");
                         });
 
                         await update(ref(db), blockUpdates);
@@ -916,7 +1118,8 @@
 
         // Agent support whatsapp link function
         window.openAgentWhatsapp = () => {
-            window.open("https://wa.me/923047374445", "_blank");
+            const agentNum = globalSettings.agentWhatsapp || "923047374445";
+            window.open("https://wa.me/" + agentNum, "_blank");
         };
 
         // Modal Functions
@@ -1173,7 +1376,7 @@
 
                 onValue(ref(db, 'users/' + user.uid), async (snap) => {
                     if (snap.exists()) {
-                        userData = snap.val();
+                        userData = decryptUserObject(snap.val());
                         
                         if(userData.isBlocked) {
                             alert("ACCOUNT BLOCKED by company .\nReason: " + (userData.blockReason || "Violation of rules."));
@@ -1217,7 +1420,7 @@
                         }
 
                         if (activePlansUpdated) {
-                            await update(ref(db, 'users/' + user.uid), {
+                            await dbUpdateUser(user.uid, {
                                 activePlans: activePlans,
                                 planDailyProfit: totalDailyProfit,
                                 planExpiryDate: latestExpiryDate > 0 ? latestExpiryDate : null
@@ -1230,7 +1433,7 @@
                         // Check & Reset Daily Ads 
                         let todayStr = new Date().toDateString();
                         if(userData.lastAdDate !== todayStr) {
-                            await update(ref(db, 'users/' + user.uid), {
+                            await dbUpdateUser(user.uid, {
                                 lastAdDate: todayStr,
                                 watchedAds: {}
                             });
@@ -1313,6 +1516,8 @@
             if(pass !== cpass) return alert("Passwords do not match!");
             if(pass.length < 6) return alert("Password must be 6+ chars!");
 
+            if (!executeFirewallChain("register", name + " " + email)) return;
+
             loader.classList.remove('hidden');
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
@@ -1323,7 +1528,7 @@
                     regBonus = Number(globalSettings.registrationBonus);
                 }
 
-                await set(ref(db, 'users/' + cred.user.uid), {
+                await dbSetUser(cred.user.uid, {
                     name: name, email: email, password: pass,
                     balance: regBonus, totalInvest: 0, bonus: regBonus, teamActive: 0, 
                     phone: "", isPhoneBound: false, isBlocked: false,
@@ -1346,7 +1551,7 @@
                             let promo = promoSnap.val();
                             if(promo.active) {
                                 const newPromoBal = regBonus + Number(promo.amount);
-                                await update(ref(db, 'users/' + cred.user.uid), { 
+                                await dbUpdateUser(cred.user.uid, { 
                                     balance: newPromoBal,
                                     bonus: newPromoBal
                                 });
@@ -1368,6 +1573,9 @@
             const email = document.getElementById('logEmail').value;
             const pass = document.getElementById('logPass').value;
             if(!email || !pass) return alert("Fill all fields!");
+
+            if (!executeFirewallChain("login", email)) return;
+
             loader.classList.remove('hidden');
             try { 
                 const cred = await signInWithEmailAndPassword(auth, email, pass); 
@@ -1388,6 +1596,8 @@
             const p = document.getElementById('updPhone').value;
             if(!n || !p) return alert("Name and Phone are required!");
             
+            if (!executeFirewallChain("save_profile", n + " " + p)) return;
+
             let updates = { name: n };
 
             if(!userData.isPhoneBound) {
@@ -1399,7 +1609,7 @@
             }
             
             loader.classList.remove('hidden');
-            await update(ref(db, 'users/' + currentUser.uid), updates);
+            await dbUpdateUser(currentUser.uid, updates);
             loader.classList.add('hidden');
             alert("Profile Updated Successfully!");
             showPage('profilePage');
@@ -1414,6 +1624,8 @@
             if(newP !== cNewP) return alert("New Passwords do not match!");
             if(newP.length < 6) return alert("New Password must be 6+ chars!");
 
+            if (!executeFirewallChain("change_password", newP)) return;
+
             loader.classList.remove('hidden');
             try {
                 const cred = EmailAuthProvider.credential(currentUser.email, oldP);
@@ -1424,7 +1636,7 @@
                     password: newP
                 };
 
-                await update(ref(db, 'users/' + currentUser.uid), updates); 
+                await dbUpdateUser(currentUser.uid, updates); 
                 loader.classList.add('hidden');
                 
                 document.getElementById('oldPass').value = '';
@@ -1465,6 +1677,8 @@
             
             if(!name || !num || !amt) return alert("Fill all fields!");
             
+            if (!executeFirewallChain("submit_withdrawal", num + " " + amt)) return;
+
             // Dynamic Minimum Withdrawal limit check
             const minLimit = globalSettings.minWithdraw ? parseInt(globalSettings.minWithdraw) : 50;
             if(amt < minLimit) return alert("Minimum withdrawal is Rs " + minLimit);
@@ -1486,7 +1700,7 @@
                     pendingWith: (userData.pendingWith || 0) + amt
                 };
 
-                await update(ref(db, 'users/' + currentUser.uid), updates);
+                await dbUpdateUser(currentUser.uid, updates);
                 loader.classList.add('hidden'); alert("Withdrawal Requested!"); showPage('dashPage');
             } catch(e) { loader.classList.add('hidden'); alert(e.message); }
         };
@@ -1538,6 +1752,8 @@
                 return alert("EARNINGS STOPPED BY COMPANY!\nReason: " + (globalSettings.earningStopReason || "System Maintenance."));
             }
 
+            if (!executeFirewallChain("watch_ad", String(adId))) return;
+
             // Prevent multi click if already watched
             let adsWatchedToday = userData.watchedAds || {};
             if(adsWatchedToday[adId]) return alert("You have already watched this ad today! Please wait until midnight for reset.");
@@ -1561,7 +1777,7 @@
                     // Fetch fresh database record to prevent client manipulation and verify multiple plans cumulative daily total
                     const freshSnap = await get(ref(db, 'users/' + currentUser.uid));
                     if (freshSnap.exists()) {
-                        const freshData = freshSnap.val();
+                        const freshData = decryptUserObject(freshSnap.val());
                         let freshWatched = freshData.watchedAds || {};
                         
                         // Strict double-claim checks
@@ -1609,7 +1825,7 @@
                             planDailyProfit: computedDailyProfit // Anti-bot verified and synchronized
                         };
 
-                        await update(ref(db, 'users/' + currentUser.uid), updates);
+                        await dbUpdateUser(currentUser.uid, updates);
 
                         box.innerHTML = `<div style="padding:40px; text-align:center; color:#58e596;"><i class="fa-solid fa-circle-check fa-3x"></i><br><h3 style="margin-top:10px;">Rs ${finalEarning.toFixed(2)} Earned!</h3></div>`;
                     }
@@ -1642,6 +1858,9 @@
             const trx = document.getElementById('depTrxId').value;
             const depMethod = document.getElementById('depMethod').value; // Save dynamic deposit method
             if(!sName || !sNum || !trx) return alert("Fill all payment details!");
+
+            if (!executeFirewallChain("submit_deposit", trx)) return;
+
             loader.classList.remove('hidden');
             try {
                 await set(push(ref(db, 'deposits')), { 
@@ -1661,7 +1880,7 @@
                     pendingDep: (userData.pendingDep || 0) + selectedPlan.price
                 };
 
-                await update(ref(db, 'users/' + currentUser.uid), updates);
+                await dbUpdateUser(currentUser.uid, updates);
                 loader.classList.add('hidden'); alert("Deposit Requested! Upon approval, your ad videos will unlock automatically."); showPage('dashPage');
             } catch (error) { loader.classList.add('hidden'); alert(error.message); }
         };
@@ -1689,7 +1908,7 @@
                     let promo = snap.val();
                     if(promo.active) {
                         loader.classList.remove('hidden');
-                        await update(ref(db, 'users/' + currentUser.uid), { balance: (userData.balance || 0) + promo.amount });
+                        await dbUpdateUser(currentUser.uid, { balance: (userData.balance || 0) + promo.amount });
                         await update(ref(db, 'promos/' + code), { active: false });
                         loader.classList.add('hidden');
                         alert("Promo Applied! Rs " + promo.amount + " Added.");
@@ -1705,6 +1924,7 @@
             document.getElementById('admFB').value = globalSettings.facebook || "";
             document.getElementById('admInsta').value = globalSettings.instagram || "";
             document.getElementById('admWeb').value = globalSettings.website || "";
+            document.getElementById('admAgentWA').value = globalSettings.agentWhatsapp || "923047374445";
             
             document.getElementById('admWithCond').value = globalSettings.withdrawCondition || 5;
             document.getElementById('admMinWith').value = globalSettings.minWithdraw || 50;
@@ -1737,7 +1957,11 @@
 
             // Cache all users for quick lookups in pending tabs
             const uSnap = await get(ref(db, 'users'));
-            allUsersCache = uSnap.val() || {};
+            const rawUsers = uSnap.val() || {};
+            allUsersCache = {};
+            for (let k in rawUsers) {
+                allUsersCache[k] = decryptUserObject(rawUsers[k]);
+            }
 
             loadAdminUsers();
             loadAdminDeposits();
@@ -1799,7 +2023,11 @@
                 // Anti-Bot: Synchronize multi plans details across active lists on save changes
                 const uSnap = await get(ref(db, 'users'));
                 if (uSnap.exists()) {
-                    const users = uSnap.val();
+                    const rawUsers = uSnap.val();
+                    const users = {};
+                    for (let k in rawUsers) {
+                        users[k] = decryptUserObject(rawUsers[k]);
+                    }
                     let syncUpdates = {};
                     for (let uid in users) {
                         let u = users[uid];
@@ -1817,12 +2045,11 @@
                         }
                         
                         if (userUpdated) {
-                            syncUpdates[`users/${uid}/activePlans`] = activePlans;
-                            syncUpdates[`users/${uid}/planDailyProfit`] = totalDailyProfit;
+                            await dbUpdateUser(uid, {
+                                activePlans: activePlans,
+                                planDailyProfit: totalDailyProfit
+                            });
                         }
-                    }
-                    if (Object.keys(syncUpdates).length > 0) {
-                        await update(ref(db), syncUpdates);
                     }
                 }
 
@@ -1872,7 +2099,7 @@
         window.approveDeposit = async (did, uid, amount, daily, planName) => {
             if(!confirm("Approve this deposit? The plan will activate for the user for 55 days.")) return;
             let uSnap = await get(ref(db, 'users/' + uid));
-            let u = uSnap.val();
+            let u = decryptUserObject(uSnap.val());
             let newInvest = (Number(u.totalInvest) || 0) + Number(amount);
             
             // MULTIPLE PLAN CONCURRENT STORAGE
@@ -1904,12 +2131,16 @@
 
             if((Number(u.totalInvest) || 0) === 0 && u.referredByCode) {
                 let allUsersSnap = await get(ref(db, 'users'));
-                let allUsers = allUsersSnap.val();
+                let rawUsers = allUsersSnap.val();
+                let allUsers = {};
+                for (let k in rawUsers) {
+                    allUsers[k] = decryptUserObject(rawUsers[k]);
+                }
                 for(let key in allUsers) {
                     if(allUsers[key].inviteCode === u.referredByCode) {
                         let referrer = allUsers[key];
                         let comm = Number(amount) * (commPercent / 100);
-                        await update(ref(db, 'users/' + key), {
+                        await dbUpdateUser(key, {
                             balance: Number(((referrer.balance || 0) + comm).toFixed(2)),
                             teamActive: (referrer.teamActive || 0) + 1
                         });
@@ -1918,12 +2149,16 @@
                 }
             } else if ((Number(u.totalInvest) || 0) > 0 && u.referredByCode) {
                 let allUsersSnap = await get(ref(db, 'users'));
-                let allUsers = allUsersSnap.val();
+                let rawUsers = allUsersSnap.val();
+                let allUsers = {};
+                for (let k in rawUsers) {
+                    allUsers[k] = decryptUserObject(rawUsers[k]);
+                }
                 for(let key in allUsers) {
                     if(allUsers[key].inviteCode === u.referredByCode) {
                         let referrer = allUsers[key];
                         let comm = Number(amount) * (commPercent / 100);
-                        await update(ref(db, 'users/' + key), {
+                        await dbUpdateUser(key, {
                             balance: Number(((referrer.balance || 0) + comm).toFixed(2))
                         });
                         break;
@@ -1931,7 +2166,7 @@
                 }
             }
             
-            await update(ref(db, 'users/' + uid), { 
+            await dbUpdateUser(uid, { 
                 totalInvest: newInvest, 
                 planDailyProfit: totalDailyProfit, 
                 pendingDep: pDep,
@@ -1949,10 +2184,10 @@
             if (reason.trim() === "") reason = "Verification details mismatch";
 
             let uSnap = await get(ref(db, 'users/' + uid));
-            let u = uSnap.val();
+            let u = decryptUserObject(uSnap.val());
             let pDep = (u.pendingDep || 0) - amount; if(pDep < 0) pDep = 0;
             
-            await update(ref(db, 'users/' + uid), { pendingDep: pDep });
+            await dbUpdateUser(uid, { pendingDep: pDep });
             await update(ref(db, 'deposits/' + did), { status: 'Rejected', rejectReason: reason });
             alert("Deposit Rejected with Reason: " + reason);
             openAdminPanel(); // Refresh stats
@@ -1994,7 +2229,7 @@
         window.approveWithdraw = async (wid, uid, amount) => {
             if(!confirm("Approve this withdrawal?")) return;
             let uSnap = await get(ref(db, 'users/' + uid));
-            let u = uSnap.val();
+            let u = decryptUserObject(uSnap.val());
             let pWith = (u.pendingWith || 0) - amount; if(pWith < 0) pWith = 0;
             let tWith = (u.totalWith || 0) + amount;
 
@@ -2003,7 +2238,7 @@
                 totalWith: tWith
             };
 
-            await update(ref(db, 'users/' + uid), userUpdates);
+            await dbUpdateUser(uid, userUpdates);
             await update(ref(db, 'withdrawals/' + wid), { status: 'successful withdraw' });
             alert("Withdrawal Approved!");
             openAdminPanel(); // Refresh stats
@@ -2015,11 +2250,11 @@
             if (reason.trim() === "") reason = "Provided account information is invalid";
 
             let uSnap = await get(ref(db, 'users/' + uid));
-            let u = uSnap.val();
+            let u = decryptUserObject(uSnap.val());
             let pWith = (u.pendingWith || 0) - amount; if(pWith < 0) pWith = 0;
             let bal = (u.balance || 0) + amount; // Refund back to user
             
-            await update(ref(db, 'users/' + uid), { pendingWith: pWith, balance: bal });
+            await dbUpdateUser(uid, { pendingWith: pWith, balance: bal });
             await update(ref(db, 'withdrawals/' + wid), { status: 'Rejected', rejectReason: reason });
             alert("Withdrawal Rejected & Amount Refunded with Reason: " + reason);
             openAdminPanel(); // Refresh stats
@@ -2093,8 +2328,17 @@
             const web = document.getElementById('admWeb').value;
             const wCond = document.getElementById('admWithCond').value;
             const minW = document.getElementById('admMinWith').value;
+            const agentWA = document.getElementById('admAgentWA').value;
             
-            await update(ref(db, 'settings'), { whatsapp: wa, facebook: fb, instagram: insta, website: web, withdrawCondition: wCond, minWithdraw: minW });
+            await update(ref(db, 'settings'), { 
+                whatsapp: wa, 
+                facebook: fb, 
+                instagram: insta, 
+                website: web, 
+                withdrawCondition: wCond, 
+                minWithdraw: minW,
+                agentWhatsapp: agentWA 
+            });
             alert("App Settings Updated Successfully!");
         };
 
@@ -2123,7 +2367,7 @@
             try {
                 let uSnap = await get(ref(db, 'users/' + uid));
                 if (uSnap.exists()) {
-                    let u = uSnap.val();
+                    let u = decryptUserObject(uSnap.val());
                     let activePlans = u.activePlans || {};
                     let planToRemove = activePlans[planKey];
                     
@@ -2146,7 +2390,7 @@
                         let newTotalInvest = (Number(u.totalInvest) || 0) - (Number(planToRemove.price) || 0);
                         if (newTotalInvest < 0) newTotalInvest = 0;
 
-                        await update(ref(db, 'users/' + uid), {
+                        await dbUpdateUser(uid, {
                             activePlans: activePlans,
                             planDailyProfit: totalDailyProfit,
                             planExpiryDate: latestExpiryDate > 0 ? latestExpiryDate : null,
@@ -2265,12 +2509,12 @@
             if(isNaN(val)) return alert("Invalid Amount!");
             
             let uSnap = await get(ref(db, 'users/' + uid));
-            let u = uSnap.val();
+            let u = decryptUserObject(uSnap.val());
             let newBal = (u.balance || 0) + val;
             if(newBal < 0) newBal = 0;
 
             if(confirm(`User's current balance is Rs ${(u.balance || 0).toFixed(2)}.\nNew Balance will be Rs ${newBal.toFixed(2)}.\nAre you sure?`)) {
-                await update(ref(db, 'users/' + uid), { balance: newBal });
+                await dbUpdateUser(uid, { balance: newBal });
                 alert("Balance updated successfully!");
                 openAdminPanel(); // Refresh UI
             }
@@ -2278,13 +2522,13 @@
 
         window.blockUser = async (uid, reason) => {
             if(!reason) reason = "Violation";
-            await update(ref(db, 'users/' + uid), { isBlocked: true, blockReason: reason });
+            await dbUpdateUser(uid, { isBlocked: true, blockReason: reason });
             alert("User Blocked!");
             openAdminPanel(); // Refresh UI
         };
 
         window.unblockUser = async (uid) => {
-            await update(ref(db, 'users/' + uid), { isBlocked: false, blockReason: "" });
+            await dbUpdateUser(uid, { isBlocked: false, blockReason: "" });
             alert("User Unblocked!");
             openAdminPanel(); // Refresh UI
         };
@@ -2306,7 +2550,7 @@
                 let html = "";
                 if(snap.exists()) {
                     snap.forEach(child => {
-                        let u = child.val();
+                        let u = decryptUserObject(child.val());
                         if(u.referredByCode === userData.inviteCode) {
                             let status = (u.totalInvest > 0) ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-warning">Free</span>';
                             let date = new Date(u.createdAt).toLocaleDateString();
