@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Google Search Console Verification -->
     <meta name="google-site-verification" content="7JSMj3OkYuq58YVdeR59OqxUc-0z4rsEgsZTIpwuPAQ" />
+    
+    <!-- Meta Tags for SEO and Sharing (WhatsApp, Meta/Facebook link previews) -->
+    <meta name="description" content="Global Invest Platform - High-yield advertising network and secure daily micro-investments.">
+    <meta name="keywords" content="global invest, earn money online, daily ads, passive income">
+    <meta name="author" content="Global Invest Platform">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Global Invest Platform - Official Portal">
+    <meta property="og:description" content="Activate VIP packages to secure daily monetization dividends and manage payouts smoothly.">
+    <meta property="og:image" content="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/chart-line.svg">
+    <meta property="og:url" content="https://global-invest-no-1-platfrom.github.io/global-invest.com/">
+    <meta name="twitter:card" content="summary_large_image">
+
     <title>Global invest PLATFORM</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,7 +41,7 @@
         #app-layout { padding-bottom: 70px; }
 
         header { background: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .logo { font-size: 18px; font-weight: 800; color: var(--primary); letter-spacing: 1px; cursor: pointer; }
+        .logo { font-size: 18px; font-weight: 800; color: var(--primary); letter-spacing: 1px; cursor: pointer; display: flex; align-items: center; }
 
         .auth-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(135deg, var(--primary), var(--accent)); }
         .auth-box { background: var(--white); width: 100%; max-width: 400px; padding: 30px 20px; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.2); text-align: center; }
@@ -273,7 +285,7 @@
     <div id="app-layout" class="hidden">
         
         <header>
-            <div class="logo">Global invest </div>
+            <div class="logo">Global invest <span id="rainbowTimer" class="hidden" style="margin-left: 8px; font-size: 11px; border: 2px solid #ff1744; color: #ff1744; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; vertical-align: middle; transition: none; line-height: 1;">30</span></div>
             <div>
                 <!-- Dynamic Theme Switchers -->
                 <i id="themeToggle" class="fa-solid fa-moon" style="color:var(--gray); font-size: 20px; margin-right: 15px; cursor: pointer;" onclick="toggleTheme()"></i>
@@ -412,7 +424,7 @@
         <div id="aboutPage" class="page hidden">
             <div class="section-title">About Platform</div>
             <div class="card" style="text-align:justify;">
-                <h2 style="color:var(--primary); margin-bottom:15px; text-align:center;">Global invest PLATFORM v4.3.8</h2>
+                <h2 style="color:var(--primary); margin-bottom:15px; text-align:center;">Global invest PLATFORM v5.3.8</h2>
                 <!-- About Platform expanded to exactly 251 words as requested -->
                 <p style="font-size:13px; color:#555; line-height: 1.7; margin-bottom: 10px;">
                     Global Invest Platform is an advanced and highly secure financial technology ecosystem established to provide sustainable wealth-generation pathways for global investors. By leveraging a state-of-the-art advertising and digital monetization network, our platform creates a bridge between international advertisement agencies and active micro-investors. Once you register and activate one of our premium VIP packages (ranging from VIP 1 to VIP 11), your account is granted daily access to high-yield sponsored video advertisements. Watching these daily ads unlocks guaranteed real-time dividends that are credited directly to your secure user wallet. Our system is meticulously optimized to maintain a balanced, transparent, and user-centric economy. Beyond active advertisement viewing, Global Invest Platform incorporates an exceptionally rewarding affiliate referral program. By sharing your unique invitation link with friends and colleagues, you can unlock a highly lucrative passive commission structure of up to 6% on direct deposits. This incentivizes community-driven growth and strengthens the active team network necessary for structural withdrawal eligibility. We prioritize the absolute safety of your capital and data. Every account is reinforced with dynamic security binds, including strictly validated phone verification to prevent bot actions and unauthorized logins. Our company is committed to operational excellence and financial stability, ensuring that withdrawals processed via trusted gateways like Easypaisa and JazzCash are disbursed seamlessly. Join Global Invest Platform today to navigate the digital economy, expand your financial horizons, and elevate your personal wealth through structured, automated, and secure daily earnings.
@@ -479,7 +491,7 @@
             <div class="card">
                 <p style="font-size:12px; color:var(--gray); text-align:center; margin-bottom:10px;">Please send exact amount to the following account to activate <b id="d_planName">VIP X</b></p>
                 
-                <!-- Deposit Method Option Selector [1] -->
+                <!-- Deposit Method Option Selector -->
                 <div class="input-group">
                     <label>Select Deposit Method</label>
                     <select id="depMethod" onchange="toggleDepMethodUI(this.value)">
@@ -491,11 +503,11 @@
                 <div class="payment-info" style="background: #fff3e0; border: 1px dashed var(--warning); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: center;">
                     <p style="font-size:12px; font-weight:700; color:#333;">SEND AMOUNT: <span style="color:var(--primary)">Rs <span id="d_amount">0</span></span></p>
                     
-                    <!-- Dynamic Account Number / IBAN with Copy Button [1] -->
+                    <!-- Dynamic Account Number / IBAN with Copy Button -->
                     <p style="font-size:12px; margin-top:10px;" id="clientPayMethod">EASYPAISA ACCOUNT NUMBER</p>
                     <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin: 5px 0; max-width: 100%;">
                         <h3 id="adminAccountNumber" style="color: #e65100; margin: 0; word-break: break-all; text-align: left;">03001234567</h3>
-                        <!-- Small copy button styled elegantly in blue [1] -->
+                        <!-- Small copy button styled elegantly in blue -->
                         <button onclick="copyAdminNumber()" style="background: #1565c0; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><i class="fa-solid fa-copy"></i> Copy</button>
                     </div>
 
@@ -744,8 +756,9 @@
             }
         };
 
-        // Dynamic 30-Second Rainbow Cycling Theme [New Feature]
+        // Dynamic 30-Second Rainbow Cycling Theme
         let rainbowInterval = null;
+        let countdownInterval = null;
         let currentRainbowIndex = 0;
         const rainbowThemes = [
             { bg: "#e3f2fd", white: "#ffffff", text: "#0d47a1", primary: "#1565c0", gray: "#555" }, // Soft Blue
@@ -758,11 +771,17 @@
 
         window.toggleRainbowTheme = () => {
             const rIcon = document.getElementById('rainbowToggle');
+            const rTimer = document.getElementById('rainbowTimer');
             if (rainbowInterval) {
                 // Clear Interval / Deactivate rainbow cycling
                 clearInterval(rainbowInterval);
                 rainbowInterval = null;
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                }
                 rIcon.style.color = 'var(--gray)';
+                rTimer.classList.add('hidden');
                 
                 // Remove dynamic styling overrides and restore user preferred mode
                 document.documentElement.removeAttribute('style');
@@ -774,6 +793,10 @@
             } else {
                 // Start Color Cycle immediately
                 rIcon.style.color = '#ff1744'; // Bright magenta active sign
+                rTimer.classList.remove('hidden');
+                
+                let secondsLeft = 30;
+                rTimer.innerText = secondsLeft;
                 
                 const applyTheme = (theme) => {
                     document.documentElement.style.setProperty('--bg', theme.bg);
@@ -797,11 +820,22 @@
                 rainbowInterval = setInterval(() => {
                     applyTheme(rainbowThemes[currentRainbowIndex]);
                     currentRainbowIndex = (currentRainbowIndex + 1) % rainbowThemes.length;
+                    secondsLeft = 30;
+                    rTimer.innerText = secondsLeft;
                 }, 30000);
+
+                // Setup 1-second countdown loop
+                countdownInterval = setInterval(() => {
+                    secondsLeft--;
+                    if (secondsLeft < 0) {
+                        secondsLeft = 29;
+                    }
+                    rTimer.innerText = secondsLeft;
+                }, 1000);
             }
         };
 
-        // Agent support whatsapp link function [New Feature]
+        // Agent support whatsapp link function
         window.openAgentWhatsapp = () => {
             window.open("https://wa.me/923047374445", "_blank");
         };
@@ -852,7 +886,7 @@
             }
         };
 
-        // Dynamic toggling of Deposit Methods [1]
+        // Dynamic toggling of Deposit Methods
         window.toggleDepMethodUI = (method) => {
             let pay = globalSettings.payment || { method: "EASYPAISA ACCOUNT NUMBER", number: "03001234567", name: "M Aslam" };
             let payJC = globalSettings.payment_jazzcash || { number: "03000000000", name: "JazzCash Holder" };
@@ -982,7 +1016,7 @@
             if(snap.exists()) {
                 globalSettings = snap.val();
                 
-                // Dynamic plan merging: Saves only modified plans to DB, fallbacks seamlessly to local default for other plans [1].
+                // Dynamic plan merging: Saves only modified plans to DB, fallbacks seamlessly to local default for other plans.
                 let rawPlans = globalSettings.plans || {};
                 currentPlans = [];
                 for (let i = 0; i < defaultPlans.length; i++) {
@@ -1000,7 +1034,7 @@
                     document.getElementById('w_minLimitText').innerText = minLimit;
                 }
 
-                // Sync editable Deposit Account configurations dynamically [1]
+                // Sync editable Deposit Account configurations dynamically
                 let pay = globalSettings.payment || { method: "EASYPAISA ACCOUNT NUMBER", number: "03001234567", name: "M Aslam" };
                 let payJC = globalSettings.payment_jazzcash || { number: "03000000000", name: "JazzCash Holder" };
                 
@@ -1345,7 +1379,7 @@
             if(amt > 50000) return alert("Maximum withdrawal is Rs 50,000");
             if(amt > (userData.balance || 0)) return alert("Insufficient Balance!");
             
-            // Validation block for active team members is active [1]
+            // Validation block for active team members is active
             let reqCondition = globalSettings.withdrawCondition ? parseInt(globalSettings.withdrawCondition) : 5;
             if((userData.teamActive || 0) < reqCondition) {
                 return alert("WITHDRAWAL FAILED!\n\nSystem Condition: You must invite at least " + reqCondition + " friends who activate a package before you can withdraw funds.");
@@ -1502,7 +1536,7 @@
             selectedPlan = { name: planName, price: Number(price), daily: Number(daily) };
             document.getElementById('d_planName').innerText = planName;
             document.getElementById('d_amount').innerText = price;
-            // Reset selection to Easypaisa when loading form [1]
+            // Reset selection to Easypaisa when loading form
             if (document.getElementById('depMethod')) {
                 document.getElementById('depMethod').value = 'Easypaisa';
             }
@@ -1514,7 +1548,7 @@
             const sName = document.getElementById('depSenderName').value;
             const sNum = document.getElementById('depSenderNum').value;
             const trx = document.getElementById('depTrxId').value;
-            const depMethod = document.getElementById('depMethod').value; // Save dynamic deposit method [1]
+            const depMethod = document.getElementById('depMethod').value; // Save dynamic deposit method
             if(!sName || !sNum || !trx) return alert("Fill all payment details!");
             loader.classList.remove('hidden');
             try {
@@ -1526,7 +1560,7 @@
                     senderName: sName, 
                     senderNumber: sNum, 
                     trxId: trx, 
-                    depMethod: depMethod, // Save method selected by user [1]
+                    depMethod: depMethod, // Save method selected by user
                     status: "Pending", 
                     timestamp: Date.now() 
                 });
@@ -1724,17 +1758,17 @@
                     let uName = (allUsersCache[d.uid] && allUsersCache[d.uid].name) ? allUsersCache[d.uid].name : 'Unknown User';
                     
                     if(d.status === 'Pending') {
-                        let methodLabel = d.depMethod || 'Easypaisa'; // Support showing selected method in admin panel [1]
+                        let methodLabel = d.depMethod || 'Easypaisa'; // Support showing selected method in admin panel
                         html += `
                         <div class="user-row" style="border-left: 4px solid #00c853;">
                             <p><b>User:</b> ${uName}</p>
-                            <p><b>Method:</b> ${methodLabel}</p> <!-- Display selected deposit method [1] -->
+                            <p><b>Method:</b> ${methodLabel}</p> <!-- Display selected deposit method -->
                             <p><b>Plan:</b> ${d.planName} (Rs ${d.amount})</p>
                             <p><b>Sender:</b> ${d.senderName} (${d.senderNumber})</p>
                             <p><b>Trx ID:</b> ${d.trxId}</p>
                             <div style="margin-top:10px; display:flex; gap:10px;">
                                 <button onclick="approveDeposit('${did}', '${d.uid}', ${d.amount}, ${d.planDaily}, '${d.planName}')" style="background:green;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Approve</button>
-                                <button onclick="rejectDeposit('${did}', '${d.uid}', ${d.amount})" style="background:red;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Reject</button>
+                                <button onclick="rejectDeposit('${did}', '${d.uid}', ${d.amount}')" style="background:red;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Reject</button>
                             </div>
                         </div>`;
                     }
@@ -1818,14 +1852,17 @@
         };
 
         window.rejectDeposit = async (did, uid, amount) => {
-            if(!confirm("Reject this deposit?")) return;
+            let reason = prompt("Enter rejection reason for this deposit:");
+            if (reason === null) return; // Cancel request
+            if (reason.trim() === "") reason = "Verification details mismatch";
+
             let uSnap = await get(ref(db, 'users/' + uid));
             let u = uSnap.val();
             let pDep = (u.pendingDep || 0) - amount; if(pDep < 0) pDep = 0;
             
             await update(ref(db, 'users/' + uid), { pendingDep: pDep });
-            await update(ref(db, 'deposits/' + did), { status: 'Rejected' });
-            alert("Deposit Rejected!");
+            await update(ref(db, 'deposits/' + did), { status: 'Rejected', rejectReason: reason });
+            alert("Deposit Rejected with Reason: " + reason);
             openAdminPanel(); // Refresh stats
         };
 
@@ -1881,15 +1918,18 @@
         };
 
         window.rejectWithdraw = async (wid, uid, amount) => {
-            if(!confirm("Reject this withdrawal and refund the user?")) return;
+            let reason = prompt("Enter rejection reason for this withdrawal:");
+            if (reason === null) return; // Cancel request
+            if (reason.trim() === "") reason = "Provided account information is invalid";
+
             let uSnap = await get(ref(db, 'users/' + uid));
             let u = uSnap.val();
             let pWith = (u.pendingWith || 0) - amount; if(pWith < 0) pWith = 0;
             let bal = (u.balance || 0) + amount; // Refund back to user
             
             await update(ref(db, 'users/' + uid), { pendingWith: pWith, balance: bal });
-            await update(ref(db, 'withdrawals/' + wid), { status: 'Rejected' });
-            alert("Withdrawal Rejected & Amount Refunded!");
+            await update(ref(db, 'withdrawals/' + wid), { status: 'Rejected', rejectReason: reason });
+            alert("Withdrawal Rejected & Amount Refunded with Reason: " + reason);
             openAdminPanel(); // Refresh stats
         };
 
@@ -2177,7 +2217,8 @@
                         let d = child.val();
                         if(d.uid === currentUser.uid) {
                             let color = d.status === 'Pending' ? 'bg-warning' : d.status === 'Rejected' ? 'bg-warning' : 'bg-success';
-                            html += `<div class="h-item"><div><h4>${d.planName}</h4><p>${new Date(d.timestamp).toLocaleDateString()} | Trx: ${d.trxId}</p></div><div style="text-align:right;"><h4 style="color:var(--primary);">Rs ${d.amount}</h4><span class="badge ${color}" ${d.status === 'Rejected' ? 'style="background:red;"' : ''}>${d.status}</span></div></div>`;
+                            let reasonText = (d.status === 'Rejected' && d.rejectReason) ? `<br><small style="color:#e53935; font-weight:bold;">Reason: ${d.rejectReason}</small>` : '';
+                            html += `<div class="h-item"><div><h4>${d.planName}</h4><p>${new Date(d.timestamp).toLocaleDateString()} | Trx: ${d.trxId}${reasonText}</p></div><div style="text-align:right;"><h4 style="color:var(--primary);">Rs ${d.amount}</h4><span class="badge ${color}" ${d.status === 'Rejected' ? 'style="background:#e53935;"' : ''}>${d.status}</span></div></div>`;
                         }
                     });
                 }
@@ -2191,7 +2232,8 @@
                         let w = child.val();
                         if(w.uid === currentUser.uid) {
                             let color = w.status === 'Pending' ? 'bg-warning' : w.status === 'Rejected' ? 'bg-warning' : 'bg-success';
-                            html += `<div class="h-item"><div><h4>${w.method}</h4><p>${new Date(w.time).toLocaleDateString()} | Acc: ${w.accNum}</p></div><div style="text-align:right;"><h4 style="color:red;">- Rs ${w.amount}</h4><span class="badge ${color}" ${w.status === 'Rejected' ? 'style="background:red;"' : ''}>${w.status}</span></div></div>`;
+                            let reasonText = (w.status === 'Rejected' && w.rejectReason) ? `<br><small style="color:#e53935; font-weight:bold;">Reason: ${w.rejectReason}</small>` : '';
+                            html += `<div class="h-item"><div><h4>${w.method}</h4><p>${new Date(w.time).toLocaleDateString()} | Acc: ${w.accNum}${reasonText}</p></div><div style="text-align:right;"><h4 style="color:red;">- Rs ${w.amount}</h4><span class="badge ${color}" ${w.status === 'Rejected' ? 'style="background:#e53935;"' : ''}>${w.status}</span></div></div>`;
                         }
                     });
                 }
