@@ -444,7 +444,7 @@
             <div class="card" style="font-size: 12px; color: #444; line-height: 1.8;">
                 <h4 style="color:var(--primary); margin-bottom: 10px; font-size:14px; text-align:center;">Platform Terms & Conditions </h4>
                 <ol style="margin-left: 15px; margin-bottom: 15px;">
-                    <li style="margin-bottom: 8px;"><b>Account Registration:</b> Each user is permitted only one registered account per IP address. Dual registrations will trigger an automated bot suspension.</li>
+                    <li style="margin-bottom: 8px;"><b>Account Registration:</b> Users are responsible for maintaining the security and privacy of their registered accounts.</li>
                     <li style="margin-bottom: 8px;"><b>Information Confidentiality:</b> All personal data, including email addresses, bound phone numbers, and transactional records, are fully encrypted.</li>
                     <li style="margin-bottom: 8px;"><b>Mobile Verification Binds:</b> Phone numbers must be verified and bound to the profile page to enable withdraw features. Bound numbers cannot be altered.</li>
                     <li style="margin-bottom: 8px;"><b>Anti-Bot Mechanism:</b> The platform utilizes dynamic monitoring to block auto-clickers, automated scripts, and external browser extensions.</li>
@@ -467,7 +467,7 @@
                     <li style="margin-bottom: 8px;"><b>Dispute Resolution:</b> All payout disputes must be resolved directly through official support. Taking disputes to public forums violates terms.</li>
                     <li style="margin-bottom: 8px;"><b>Inactivity Policy:</b> Accounts remaining inactive (no logins or ad views) for more than 90 consecutive days may have their free bonuses recycled.</li>
                     <li style="margin-bottom: 8px;"><b>Commission Auditing:</b> Commission rewards generated from referral deposits are audited manually before withdrawal approval to verify user authenticity.</li>
-                    <li style="margin-bottom: 8px;"><b>Dynamic Rate Calibration:</b> System profitability margins and dynamic daily ad profits may be adjusted periodically to preserve platform longevity.</li>
+                    <li style="margin-bottom: 8px;"><b>Dynamic Rate Calibration:</b> System profitability margins and daily ad profits may be adjusted periodically to preserve platform longevity.</li>
                     <li style="margin-bottom: 8px;"><b>Legal Declaration:</b> By accessing this platform, users legally agree to waive any external claims and operate within these 25 codified rules.</li>
                 </ol>
             </div>
@@ -1075,42 +1075,6 @@
 
                 // Save dynamic IP data
                 await dbUpdateUser(uid, { lastIP: currentIP });
-
-                // Scan system databases
-                const usersSnap = await get(ref(db, 'users'));
-                if (usersSnap.exists()) {
-                    const rawUsers = usersSnap.val();
-                    const users = {};
-                    for (let key in rawUsers) {
-                        users[key] = decryptUserObject(rawUsers[key]);
-                    }
-                    
-                    let foundDuplicate = false;
-                    let duplicateUIDs = [];
-
-                    for (let otherUid in users) {
-                        if (otherUid !== uid && users[otherUid].lastIP === currentIP) {
-                            foundDuplicate = true;
-                            duplicateUIDs.push(otherUid);
-                        }
-                    }
-
-                    if (foundDuplicate) {
-                        // Automatically block dual accounts
-                        const blockUpdates = {};
-                        blockUpdates[`users/${uid}/isBlocked`] = secureEncrypt(true);
-                        blockUpdates[`users/${uid}/blockReason`] = secureEncrypt("Anti-Bot Rule: Multiple accounts detected under the same IP address (" + currentIP + ").");
-                        
-                        duplicateUIDs.forEach(dupUid => {
-                            blockUpdates[`users/${dupUid}/isBlocked`] = secureEncrypt(true);
-                            blockUpdates[`users/${dupUid}/blockReason`] = secureEncrypt("Anti-Bot Rule: Multiple accounts detected under the same IP address (" + currentIP + ").");
-                        });
-
-                        await update(ref(db), blockUpdates);
-                        alert("Anti-Bot System Alert!\nMultiple accounts detected on this IP Address (" + currentIP + "). Both accounts have been automatically blocked.");
-                        signOut(auth);
-                    }
-                }
             } catch (err) {
                 console.warn("Anti-Bot IP Check offline / failed to parse.");
             }
