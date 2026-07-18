@@ -1783,7 +1783,7 @@
             }
         };
 
-        // USER SECURITY-CHECKED RESET PASSWORD (VIA BOUND EMAIL + BOUND MOBILE)
+        // USER SECURITY-CHECKED RESET PASSWORD (VIA BOUND EMAIL + BOUND MOBILE) - FIX: Numeric standard string normalize comparison
         window.resetLoginPassword = async () => {
             const email = document.getElementById('resetEmail').value.trim();
             const phone = document.getElementById('resetPhone').value.trim();
@@ -1814,7 +1814,7 @@
 
                 snap.forEach(child => {
                     let u = decryptUserObject(child.val());
-                    if(u.email && u.email.toLowerCase() === email.toLowerCase()) {
+                    if(u.email && String(u.email).trim().toLowerCase() === email.toLowerCase()) {
                         targetUserUid = child.key;
                         targetUserData = u;
                     }
@@ -1826,9 +1826,12 @@
                     return alert("Wrong information!");
                 }
 
-                // Verify bound phone matches database entry strictly
-                const boundPhone = targetUserData.phone || "";
-                if(!boundPhone || boundPhone !== phone) {
+                // Verify bound phone matches database entry strictly (normalizing leading zeros/country codes to prevent strict numeric-vs-string type mismatch)
+                const boundPhone = targetUserData.phone !== undefined ? targetUserData.phone : "";
+                const cleanBoundPhone = String(boundPhone).trim().replace(/^(0|92)/, '');
+                const cleanInputPhone = String(phone).trim().replace(/^(0|92)/, '');
+
+                if(!cleanBoundPhone || cleanBoundPhone !== cleanInputPhone) {
                     loader.classList.add('hidden');
                     return alert("Wrong information!");
                 }
@@ -2284,110 +2287,6 @@
             } finally {
                 loader.classList.add('hidden');
             }
-        };
-
-        // SUBMIT SUPPORT TICKET (USER SIDE)
-        window.submitSupportTicket = async () => {
-            const cat = document.getElementById('supCategory').value;
-            const msg = document.getElementById('supMessage').value.trim();
-            if(!msg) return alert("Please fill details in the message box!");
-
-            loader.classList.remove('hidden');
-            try {
-                await set(push(ref(db, 'support_tickets')), {
-                    uid: currentUser.uid,
-                    category: cat,
-                    message: msg,
-                    reply: "",
-                    status: "Pending",
-                    timestamp: Date.now()
-                });
-                document.getElementById('supMessage').value = "";
-                alert("Your support request has been submitted successfully! Admin will respond soon.");
-                loadUserTickets();
-            } catch (e) {
-                alert("Error: " + e.message);
-            } finally {
-                loader.classList.add('hidden');
-            }
-        };
-
-        // LOAD USER SUPPORT TICKETS (USER SIDE)
-        window.loadUserTickets = () => {
-            get(ref(db, 'support_tickets')).then((snap) => {
-                let html = "";
-                if(snap.exists()){
-                    snap.forEach(child => {
-                        let t = child.val();
-                        if(t.uid === currentUser.uid) {
-                            let badgeClass = t.status === 'Pending' ? 'bg-warning' : 'bg-success';
-                            let replyHtml = t.reply ? `<div style="margin-top: 8px; padding: 10px; background: #e3f2fd; border-radius: 8px; color: #333; font-size:12px; border-left:3px solid var(--primary);"><b>Admin Answer:</b> ${t.reply}</div>` : '';
-                            html += `
-                            <div class="h-item" style="flex-direction: column; align-items: stretch; border-bottom: 1px solid #ddd; padding: 12px 0;">
-                                <div style="display:flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <span style="font-weight:bold; color:var(--primary); font-size:13px;">[Category: ${t.category}]</span>
-                                        <p style="font-size:12px; margin-top:4px; color:#555;">${t.message}</p>
-                                    </div>
-                                    <span class="badge ${badgeClass}">${t.status}</span>
-                                </div>
-                                ${replyHtml}
-                            </div>`;
-                        }
-                    });
-                }
-                document.getElementById('userTicketsList').innerHTML = html || `<p style="font-size:12px;text-align:center;color:#888;">No support tickets submitted yet.</p>`;
-            });
-        };
-
-        // REQUEST EMAIL CHANGE (USER SIDE)
-        window.submitEmailChangeRequest = async () => {
-            const oldE = document.getElementById('oldEmail').value.trim();
-            const newE = document.getElementById('newEmail').value.trim();
-            const newCE = document.getElementById('newCEmail').value.trim();
-            
-            if(!oldE || !newE || !newCE) return alert("Please fill all the email fields!");
-            if(newE !== newCE) return alert("New Email inputs do not match!");
-            if(oldE !== userData.email) return alert("The Old Email address you entered does not match your registered email!");
-            
-            loader.classList.remove('hidden');
-            try {
-                // Set request per user UID (Overwrites any existing request)
-                await set(ref(db, 'email_changes/' + currentUser.uid), {
-                    uid: currentUser.uid,
-                    oldEmail: oldE,
-                    newEmail: newE,
-                    status: "Pending",
-                    timestamp: Date.now()
-                });
-                document.getElementById('oldEmail').value = '';
-                document.getElementById('newEmail').value = '';
-                document.getElementById('newCEmail').value = '';
-                alert("Email change request submitted! It will update once approved by the Admin.");
-                loadEmailChangeStatus();
-            } catch(e) {
-                alert("Error: " + e.message);
-            } finally {
-                loader.classList.add('hidden');
-            }
-        };
-
-        // EMAIL CHANGE STATUS (USER SIDE)
-        window.loadEmailChangeStatus = () => {
-            get(ref(db, 'email_changes/' + currentUser.uid)).then((snap) => {
-                let statusEl = document.getElementById('emailRequestStatus');
-                statusEl.innerHTML = "";
-                if(snap.exists()) {
-                    let r = snap.val();
-                    if(r.status === 'Pending') {
-                        statusEl.innerHTML = `<span style="color:var(--warning);">Status: Pending Admin Approval</span>`;
-                    } else if(r.status === 'Approved') {
-                        statusEl.innerHTML = `<span style="color:var(--success);">Status: Successful change!</span>`;
-                    } else if(r.status === 'Rejected') {
-                        statusEl.innerHTML = `<span style="color:#e53935;">Status: Request Rejected</span>`;
-                    }
-                }
-            });
         };
 
         // ADMIN AREA ==========================
