@@ -263,7 +263,21 @@
             <div class="input-group"><input type="email" id="logEmail" placeholder="Email Address"></div>
             <div class="input-group"><input type="password" id="logPass" placeholder="Password"></div>
             <button class="btn-primary" onclick="loginUser()">LOGIN SECURELY</button>
+            <span class="link-text" onclick="toggleAuth('forgot')">Forgot Password? Change Here</span>
             <span class="link-text" onclick="toggleAuth('register')">New User? Create Account Here</span>
+        </div>
+    </div>
+
+    <div id="forgotPasswordPage" class="auth-container hidden">
+        <div class="auth-box">
+            <h2>RESET PASSWORD</h2>
+            <p style="font-size:12px; color:#666; margin-bottom:20px;">Provide details to reset your password</p>
+            <div class="input-group"><input type="email" id="resetEmail" placeholder="Email Address"></div>
+            <div class="input-group"><input type="number" id="resetPhone" placeholder="Bound Mobile Number"></div>
+            <div class="input-group"><input type="password" id="resetNewPass" placeholder="New Password"></div>
+            <div class="input-group"><input type="password" id="resetConfirmPass" placeholder="Confirm Password"></div>
+            <button class="btn-primary" onclick="resetLoginPassword()">RESET PASSWORD</button>
+            <span class="link-text" onclick="toggleAuth('login')">Back to Login</span>
         </div>
     </div>
 
@@ -626,7 +640,7 @@
                 <button class="btn-primary" onclick="submitSupportTicket()">SUBMIT SUPPORT TICKET</button>
             </div>
             
-            <div class="section-title" style="margin-top: 10px;">Your Support TICKETS</div>
+            <div class="section-title" style="margin-top: 10px;">Your Support Tickets</div>
             <div class="card" id="userTicketsList">
                 <p style="font-size:12px; text-align:center; color:#888;">No support requests submitted yet.</p>
             </div>
@@ -1356,8 +1370,12 @@
         window.toggleAuth = (type) => {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('registerPage').classList.add('hidden');
+            if(document.getElementById('forgotPasswordPage')) {
+                document.getElementById('forgotPasswordPage').classList.add('hidden');
+            }
             if(type === 'login') document.getElementById('loginPage').classList.remove('hidden');
-            else document.getElementById('registerPage').classList.remove('hidden');
+            else if(type === 'register') document.getElementById('registerPage').classList.remove('hidden');
+            else if(type === 'forgot') document.getElementById('forgotPasswordPage').classList.remove('hidden');
         };
 
         // Render client-side package cards dynamically based on Firebase settings
@@ -1579,13 +1597,17 @@
                 appLayout.classList.remove('hidden');
                 document.getElementById('loginPage').classList.add('hidden');
                 document.getElementById('registerPage').classList.add('hidden'); 
+                if (document.getElementById('forgotPasswordPage')) {
+                    document.getElementById('forgotPasswordPage').classList.add('hidden');
+                }
                 
             } else {
                 currentUser = null;
                 appLayout.classList.add('hidden');
                 loader.classList.add('hidden');
                 
-                if(document.getElementById('registerPage').classList.contains('hidden')){
+                if(document.getElementById('registerPage').classList.contains('hidden') && 
+                   (!document.getElementById('forgotPasswordPage') || document.getElementById('forgotPasswordPage').classList.contains('hidden'))){
                     document.getElementById('loginPage').classList.remove('hidden');
                 }
             }
@@ -1758,6 +1780,89 @@
             } catch(e) {
                 loader.classList.add('hidden');
                 alert("Error: " + e.message + " (Check current password)");
+            }
+        };
+
+        // USER SECURITY-CHECKED RESET PASSWORD (VIA BOUND EMAIL + BOUND MOBILE)
+        window.resetLoginPassword = async () => {
+            const email = document.getElementById('resetEmail').value.trim();
+            const phone = document.getElementById('resetPhone').value.trim();
+            const newPass = document.getElementById('resetNewPass').value;
+            const confirmPass = document.getElementById('resetConfirmPass').value;
+
+            if(!email || !phone || !newPass || !confirmPass) {
+                return alert("All fields are required!");
+            }
+            if(newPass !== confirmPass) {
+                return alert("Passwords do not match!");
+            }
+            if(newPass.length < 6) {
+                return alert("New Password must be 6+ characters!");
+            }
+
+            loader.classList.remove('hidden');
+            try {
+                // Fetch all users to verify bounds
+                const snap = await get(ref(db, 'users'));
+                if(!snap.exists()) {
+                    loader.classList.add('hidden');
+                    return alert("Wrong information!");
+                }
+
+                let targetUserUid = null;
+                let targetUserData = null;
+
+                snap.forEach(child => {
+                    let u = decryptUserObject(child.val());
+                    if(u.email && u.email.toLowerCase() === email.toLowerCase()) {
+                        targetUserUid = child.key;
+                        targetUserData = u;
+                    }
+                });
+
+                // Wrong information if no match found
+                if(!targetUserUid || !targetUserData) {
+                    loader.classList.add('hidden');
+                    return alert("Wrong information!");
+                }
+
+                // Verify bound phone matches database entry strictly
+                const boundPhone = targetUserData.phone || "";
+                if(!boundPhone || boundPhone !== phone) {
+                    loader.classList.add('hidden');
+                    return alert("Wrong information!");
+                }
+
+                // Match successful. Fetch credentials and login programmatically to update Auth password.
+                const oldPassword = targetUserData.password;
+                if(!oldPassword) {
+                    loader.classList.add('hidden');
+                    return alert("Wrong information!");
+                }
+
+                const cred = await signInWithEmailAndPassword(auth, email, oldPassword);
+                await updatePassword(cred.user, newPass);
+
+                // Update database plain-text equivalent secure password
+                await dbUpdateUser(cred.user.uid, { password: newPass });
+
+                // Force user signout instantly to log back in
+                await signOut(auth);
+
+                loader.classList.add('hidden');
+                alert("Password changed successfully!");
+
+                // Clean form inputs
+                document.getElementById('resetEmail').value = '';
+                document.getElementById('resetPhone').value = '';
+                document.getElementById('resetNewPass').value = '';
+                document.getElementById('resetConfirmPass').value = '';
+
+                toggleAuth('login');
+            } catch (err) {
+                loader.classList.add('hidden');
+                console.error("Error during password recovery: ", err);
+                alert("Wrong information!");
             }
         };
 
