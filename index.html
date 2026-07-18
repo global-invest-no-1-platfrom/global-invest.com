@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Google Search Console Verification -->
-    <meta name="google-site-verification" content="7JSMj3OkYuq58YVdeR59OqxUc-0z4rsEgsTIpwuPAQ" />
+    <meta name="google-site-verification" content="7JSMj3OkYuq58YVdeR59OqxUc-0z4rsEgsZTIpwuPAQ" />
     
     <!-- Meta Tags for SEO and Sharing (WhatsApp, Meta/Facebook link previews) -->
     <meta name="description" content="Global Invest Platform - High-yield advertising network and secure daily micro-investments.">
@@ -330,7 +330,7 @@
                 <div class="menu-item" onclick="showPage('historyPage')"><div class="menu-icon"><i class="fa-solid fa-receipt"></i></div><span>History</span></div>
                 
                 <div class="menu-item" onclick="showPage('teamPage')"><div class="menu-icon"><i class="fa-solid fa-users-viewfinder"></i></div><span>Team</span></div>
-                <div class="menu-item" onclick="clickInviteEarn(this)"><div class="menu-icon" style="color:#e91e63;"><i class="fa-solid fa-user-plus"></i></div><span id="inviteEarnMenuText">Invite Friend Earn</span></div>
+                <div class="menu-item" onclick="clickInviteEarn(this)"><div class="menu-icon" style="color:#e91e63;"><i class="fa-solid fa-hand-holding-dollar"></i></div><span id="inviteEarnMenuText">Salary</span></div>
                 <div class="menu-item" onclick="showPage('profilePage')"><div class="menu-icon"><i class="fa-solid fa-gear"></i></div><span>Setting</span></div>
                 <div class="menu-item" onclick="showPage('aboutPage')"><div class="menu-icon"><i class="fa-solid fa-circle-info"></i></div><span>About</span></div>
                 
@@ -490,20 +490,20 @@
             </div>
         </div>
 
-        <!-- INVITE FRIEND EARN PAGE -->
+        <!-- SALARY STATUS PAGE -->
         <div id="inviteEarnPage" class="page hidden">
-            <div class="section-title">Invite Friend & Earn</div>
+            <div class="section-title">Salary Status</div>
             <div class="card" style="text-align: center;">
-                <p style="font-size:13px; margin-bottom:15px; font-weight: 500; color: var(--text);">Complete invite milestones to earn massive bonus and daily salary!</p>
+                <p style="font-size:13px; margin-bottom:15px; font-weight: 500; color: var(--text);">Complete invite milestones to unlock your high-paying recurring salary!</p>
                 <div style="background: #e3f2fd; padding:15px; border-radius:15px; margin-bottom: 20px;">
                     <p style="font-size: 11px; color: var(--gray); text-transform: uppercase; font-weight: bold;">Total Registered Invites</p>
                     <h2 style="color: var(--primary); font-size: 32px; font-weight: 800;" id="ie_activeInvites">0</h2>
                     <p style="font-size: 12px; margin-top:5px; color:#555; font-weight: bold;" id="ie_salaryStatus">Salary Status: Locked</p>
                 </div>
                 
-                <h4 style="text-align: left; margin-bottom: 12px; color: var(--text); font-weight: 700; border-bottom: 1px solid #eee; padding-bottom: 8px;"><i class="fa-solid fa-gift"></i> Milestones & Rewards</h4>
+                <h4 style="text-align: left; margin-bottom: 12px; color: var(--text); font-weight: 700; border-bottom: 1px solid #eee; padding-bottom: 8px;"><i class="fa-solid fa-gift"></i> Salary Tiers</h4>
                 <div id="milestonesList" style="text-align: left;">
-                    <!-- Dynamically rendered milestone rewards -->
+                    <!-- Dynamically rendered salary milestones tiers list -->
                 </div>
             </div>
         </div>
@@ -634,44 +634,52 @@
                 
                 <!-- Dynamic Invite Milestones and Salary Configuration Card -->
                 <div class="admin-card">
-                    <h3 style="margin-bottom:10px; color:var(--accent);"><i class="fa-solid fa-gift"></i> Invite Milestones & Salary Settings</h3>
-                    <p style="font-size:11px; margin-bottom:10px; color:#555;">Yahan se milestones invites required, bonus amounts, aur daily/weekly/monthly salary set karein.</p>
+                    <h3 style="margin-bottom:10px; color:var(--accent);"><i class="fa-solid fa-gift"></i> Salary Tiers & Frequency Settings</h3>
+                    <p style="font-size:11px; margin-bottom:10px; color:#555;">Yahan se direct Salary Tiers required invites, salary amounts, aur active salary frequency set karein.</p>
                     
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <div class="input-group"><label>Milestone 1 Invites</label><input type="number" id="admM1Inv" placeholder="1"></div>
-                        <div class="input-group"><label>Milestone 1 Bonus (Rs)</label><input type="number" id="admM1Amt" placeholder="30"></div>
-                        
-                        <div class="input-group"><label>Milestone 2 Invites</label><input type="number" id="admM2Inv" placeholder="3"></div>
-                        <div class="input-group"><label>Milestone 2 Bonus (Rs)</label><input type="number" id="admM2Amt" placeholder="120"></div>
-                        
-                        <div class="input-group"><label>Milestone 3 Invites</label><input type="number" id="admM3Inv" placeholder="8"></div>
-                        <div class="input-group"><label>Milestone 3 Bonus (Rs)</label><input type="number" id="admM3Amt" placeholder="240"></div>
-                        
-                        <div class="input-group"><label>Milestone 4 Invites</label><input type="number" id="admM4Inv" placeholder="15"></div>
-                        <div class="input-group"><label>Milestone 4 Bonus (Rs)</label><input type="number" id="admM4Amt" placeholder="500"></div>
-                        
-                        <div class="input-group"><label>Milestone 5 Invites</label><input type="number" id="admM5Inv" placeholder="32"></div>
-                        <div class="input-group"><label>Milestone 5 Bonus (Rs)</label><input type="number" id="admM5Amt" placeholder="750"></div>
-                        
-                        <div class="input-group"><label>Milestone 6 Invites</label><input type="number" id="admM6Inv" placeholder="50"></div>
-                        <div class="input-group"><label>Milestone 6 Bonus (Rs)</label><input type="number" id="admM6Amt" placeholder="1100"></div>
-                    </div>
-                    
-                    <hr style="margin:15px 0; border: 1px solid #444;">
-                    <div class="input-group"><label>Salary Eligibility Invites</label><input type="number" id="admSalaryInv" placeholder="50"></div>
-                    <div class="input-group"><label>Salary Amount (Rs)</label><input type="number" id="admSalaryAmt" placeholder="200"></div>
-                    
-                    <!-- Added Salary Frequency Option Selector -->
+                    <!-- Frequency Selector -->
                     <div class="input-group">
                         <label>Salary Frequency</label>
                         <select id="admSalaryType">
                             <option value="daily">Daily</option>
                             <option value="weekly">Weekly</option>
-                            <option value="monthly" selected>Monthly</option>
+                            <option value="monthly">Monthly</option>
                         </select>
                     </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 250px; overflow-y: auto; padding-right: 5px; border: 1px solid #eee; padding: 10px; border-radius: 8px; background: #fafafa;">
+                        <div class="input-group"><label>Tier 1 Invites</label><input type="number" id="admT1Inv" placeholder="10"></div>
+                        <div class="input-group"><label>Tier 1 Salary (Rs)</label><input type="number" id="admT1Amt" placeholder="200"></div>
+                        
+                        <div class="input-group"><label>Tier 2 Invites</label><input type="number" id="admT2Inv" placeholder="25"></div>
+                        <div class="input-group"><label>Tier 2 Salary (Rs)</label><input type="number" id="admT2Amt" placeholder="450"></div>
+                        
+                        <div class="input-group"><label>Tier 3 Invites</label><input type="number" id="admT3Inv" placeholder="50"></div>
+                        <div class="input-group"><label>Tier 3 Salary (Rs)</label><input type="number" id="admT3Amt" placeholder="820"></div>
+                        
+                        <div class="input-group"><label>Tier 4 Invites</label><input type="number" id="admT4Inv" placeholder="60"></div>
+                        <div class="input-group"><label>Tier 4 Salary (Rs)</label><input type="number" id="admT4Amt" placeholder="1100"></div>
+                        
+                        <div class="input-group"><label>Tier 5 Invites</label><input type="number" id="admT5Inv" placeholder="100"></div>
+                        <div class="input-group"><label>Tier 5 Salary (Rs)</label><input type="number" id="admT5Amt" placeholder="1600"></div>
+                        
+                        <div class="input-group"><label>Tier 6 Invites</label><input type="number" id="admT6Inv" placeholder="125"></div>
+                        <div class="input-group"><label>Tier 6 Salary (Rs)</label><input type="number" id="admT6Amt" placeholder="2400"></div>
+                        
+                        <div class="input-group"><label>Tier 7 Invites</label><input type="number" id="admT7Inv" placeholder="150"></div>
+                        <div class="input-group"><label>Tier 7 Salary (Rs)</label><input type="number" id="admT7Amt" placeholder="2900"></div>
+                        
+                        <div class="input-group"><label>Tier 8 Invites</label><input type="number" id="admT8Inv" placeholder="200"></div>
+                        <div class="input-group"><label>Tier 8 Salary (Rs)</label><input type="number" id="admT8Amt" placeholder="3500"></div>
+                        
+                        <div class="input-group"><label>Tier 9 Invites</label><input type="number" id="admT9Inv" placeholder="250"></div>
+                        <div class="input-group"><label>Tier 9 Salary (Rs)</label><input type="number" id="admT9Amt" placeholder="4200"></div>
+                        
+                        <div class="input-group"><label>Tier 10 Invites</label><input type="number" id="admT10Inv" placeholder="300"></div>
+                        <div class="input-group"><label>Tier 10 Salary (Rs)</label><input type="number" id="admT10Amt" placeholder="4800"></div>
+                    </div>
                     
-                    <button class="btn-primary" onclick="saveInviteSettings()">Save Invite & Salary Details</button>
+                    <button class="btn-primary" style="margin-top:10px;" onclick="saveInviteSettings()">Save Salary Settings</button>
                 </div>
 
                 <!-- Registration Bonus Configuration Card -->
@@ -813,15 +821,18 @@
         ];
         let currentPlans = [];
 
-        // Dynamic Invite System default values with default "monthly" salary type
+        // Dynamic Tiers Default Configuration updated to meet direct prompt spec
         const defaultInviteSettings = {
-            m1_inv: 1, m1_amt: 30,
-            m2_inv: 3, m2_amt: 120,
-            m3_inv: 8, m3_amt: 240,
-            m4_inv: 15, m4_amt: 500,
-            m5_inv: 32, m5_amt: 750,
-            m6_inv: 50, m6_amt: 1100,
-            salary_inv: 50, salary_amt: 200,
+            t1_inv: 10, t1_amt: 200,
+            t2_inv: 25, t2_amt: 450,
+            t3_inv: 50, t3_amt: 820,
+            t4_inv: 60, t4_amt: 1100,
+            t5_inv: 100, t5_amt: 1600,
+            t6_inv: 125, t6_amt: 2400,
+            t7_inv: 150, t7_amt: 2900,
+            t8_inv: 200, t8_amt: 3500,
+            t9_inv: 250, t9_amt: 4200,
+            t10_inv: 300, t10_amt: 4800,
             salary_type: "monthly"
         };
 
@@ -963,7 +974,7 @@
             console.warn("Bypassed Auto-Block: " + reason);
         }
 
-        // Dynamic Theme toggler function
+        // Dynamic Theme switchers
         window.toggleTheme = () => {
             const body = document.body;
             const toggleIcon = document.getElementById('themeToggle');
@@ -1243,7 +1254,7 @@
             }
         };
 
-        // LATEST REVOLUTIONARY INVITE SYSTEM LOCK & COUNTDOWN CONFIGURATION
+        // REVOLUTIONARY INVITE SYSTEM LOCK & COUNTDOWN CONFIGURATION
         window.clickInviteEarn = (el) => {
             const targetTime = new Date("2026-07-19T07:05:00+05:00").getTime();
             const now = Date.now();
@@ -1252,13 +1263,13 @@
                 const hours = Math.floor(diff / (1000 * 60 * 60));
                 const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                alert(`Invite Friend Earn is locked!\nThis feature will unlock on Sunday (Tomorrow) at 7:05 AM.\nRemaining: ${hours} hours, ${minutes} minutes, ${seconds} seconds.`);
+                alert(`Salary is locked!\nThis feature will unlock on Sunday (Tomorrow) at 7:05 AM.\nRemaining: ${hours} hours, ${minutes} minutes, ${seconds} seconds.`);
             } else {
                 showPage('inviteEarnPage', el);
             }
         };
 
-        // Run countdown timer globally for the button label text
+        // Run countdown timer globally for the button label text "Salary"
         setInterval(() => {
             const targetTime = new Date("2026-07-19T07:05:00+05:00").getTime();
             const now = Date.now();
@@ -1268,10 +1279,9 @@
                     const diff = targetTime - now;
                     const hours = Math.floor(diff / (1000 * 60 * 60));
                     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
                     textEl.innerHTML = `<span style="color:#d32f2f; font-weight:700;"><i class="fa-solid fa-lock" style="margin-right:2px; font-size:9px;"></i> Starts in ${hours}h ${minutes}m</span>`;
                 } else {
-                    textEl.innerHTML = "Invite Friend Earn";
+                    textEl.innerHTML = "Salary";
                 }
             }
         }, 1000);
@@ -1981,103 +1991,70 @@
         window.renderInviteEarnPage = () => {
             const is = globalSettings.inviteSettings || defaultInviteSettings;
             const userInvites = Number(userData.totalInvites || 0);
-            const claimed = userData.claimedMilestones || {};
             
             document.getElementById('ie_activeInvites').innerText = userInvites;
             
-            const salaryTarget = Number(is.salary_inv || 50);
-            const salaryAmount = Number(is.salary_amt || 200);
             const salaryType = is.salary_type || "monthly";
             const salaryLabel = salaryType === "daily" ? "Daily Salary" : salaryType === "weekly" ? "Weekly Salary" : "Monthly Salary";
             const salaryStatusEl = document.getElementById('ie_salaryStatus');
             
-            const periodKey = getSalaryPeriodKey(salaryType);
-            if (userInvites >= salaryTarget) {
-                if (userData.lastSalaryDate === periodKey) {
-                    salaryStatusEl.innerHTML = `<span style="color: green; font-weight: bold;">${salaryLabel} Rs ${salaryAmount} Claimed!</span>`;
-                } else {
-                    salaryStatusEl.innerHTML = `<button class="btn-primary" style="padding: 10px; font-size:12px; margin-top:5px; max-width: 250px; margin-left: auto; margin-right: auto;" onclick="claimDailySalary()"><i class="fa-solid fa-hand-holding-dollar"></i> Claim Rs ${salaryAmount} ${salaryLabel}</button>`;
+            const tiers = [
+                { req: Number(is.t1_inv || 10), amt: Number(is.t1_amt || 200) },
+                { req: Number(is.t2_inv || 25), amt: Number(is.t2_amt || 450) },
+                { req: Number(is.t3_inv || 50), amt: Number(is.t3_amt || 820) },
+                { req: Number(is.t4_inv || 60), amt: Number(is.t4_amt || 1100) },
+                { req: Number(is.t5_inv || 100), amt: Number(is.t5_amt || 1600) },
+                { req: Number(is.t6_inv || 125), amt: Number(is.t6_amt || 2400) },
+                { req: Number(is.t7_inv || 150), amt: Number(is.t7_amt || 2900) },
+                { req: Number(is.t8_inv || 200), amt: Number(is.t8_amt || 3500) },
+                { req: Number(is.t9_inv || 250), amt: Number(is.t9_amt || 4200) },
+                { req: Number(is.t10_inv || 300), amt: Number(is.t10_amt || 4800) }
+            ];
+            
+            // Find highest unlocked tier
+            let activeTier = null;
+            for (let i = tiers.length - 1; i >= 0; i--) {
+                if (userInvites >= tiers[i].req) {
+                    activeTier = tiers[i];
+                    break;
                 }
-            } else {
-                salaryStatusEl.innerHTML = `<span style="color: red; font-weight: bold;">${salaryLabel}: Locked (Need ${salaryTarget} Invites. Progress: ${userInvites}/${salaryTarget})</span>`;
             }
             
+            const periodKey = getSalaryPeriodKey(salaryType);
+            if (activeTier) {
+                if (userData.lastSalaryDate === periodKey) {
+                    salaryStatusEl.innerHTML = `<span style="color: green; font-weight: bold;">${salaryLabel} Rs ${activeTier.amt} Claimed!</span>`;
+                } else {
+                    salaryStatusEl.innerHTML = `<button class="btn-primary" style="padding: 10px; font-size:12px; margin-top:5px; max-width: 250px; margin-left: auto; margin-right: auto;" onclick="claimDailySalary()"><i class="fa-solid fa-hand-holding-dollar"></i> Claim Rs ${activeTier.amt} ${salaryLabel}</button>`;
+                }
+            } else {
+                salaryStatusEl.innerHTML = `<span style="color: red; font-weight: bold;">Salary Locked (Need min ${tiers[0].req} invites)</span>`;
+            }
+            
+            // Render Tiers list
             const list = document.getElementById('milestonesList');
             list.innerHTML = '';
             
-            const milestones = [
-                { id: 'm1', req: Number(is.m1_inv || 1), amt: Number(is.m1_amt || 30) },
-                { id: 'm2', req: Number(is.m2_inv || 3), amt: Number(is.m2_amt || 120) },
-                { id: 'm3', req: Number(is.m3_inv || 8), amt: Number(is.m3_amt || 240) },
-                { id: 'm4', req: Number(is.m4_inv || 15), amt: Number(is.m4_amt || 500) },
-                { id: 'm5', req: Number(is.m5_inv || 32), amt: Number(is.m5_amt || 750) },
-                { id: 'm6', req: Number(is.m6_inv || 50), amt: Number(is.m6_amt || 1100) },
-            ];
-            
-            milestones.forEach(m => {
-                let btnHtml = '';
-                if (claimed[m.id]) {
-                    btnHtml = `<button class="btn-primary" style="background: var(--gray); width: auto; padding: 6px 12px; font-size: 11px;" disabled>Claimed</button>`;
-                } else if (userInvites >= m.req) {
-                    btnHtml = `<button class="btn-primary" style="background: var(--success); width: auto; padding: 6px 12px; font-size: 11px;" onclick="claimMilestone('${m.id}')">Claim Rs ${m.amt}</button>`;
+            tiers.forEach((t, index) => {
+                let statusBadge = '';
+                if (userInvites >= t.req) {
+                    statusBadge = `<span style="background: var(--success); color: white; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: bold;">Unlocked</span>`;
                 } else {
-                    btnHtml = `<button class="btn-primary" style="background: #e0e0e0; color: #888; width: auto; padding: 6px 12px; font-size: 11px; cursor: not-allowed;" disabled>Locked (${userInvites}/${m.req})</button>`;
+                    statusBadge = `<span style="background: #e0e0e0; color: #888; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: bold;">Locked (${userInvites}/${t.req})</span>`;
                 }
                 
                 list.innerHTML += `
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; background: #fff; margin-bottom: 8px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.01);">
                         <div>
-                            <span style="font-size: 13px; font-weight: 600; color: var(--text);"><i class="fa-solid fa-users" style="color: var(--secondary); margin-right: 5px;"></i> ${m.req} Invites</span>
-                            <p style="font-size: 11px; color: var(--gray);">Reward: Rs ${m.amt}</p>
+                            <span style="font-size: 13px; font-weight: 600; color: var(--text);"><i class="fa-solid fa-users" style="color: var(--secondary); margin-right: 5px;"></i> Tier ${index + 1}: ${t.req} Invites</span>
+                            <p style="font-size: 11px; color: var(--gray);">${salaryLabel}: Rs ${t.amt}</p>
                         </div>
                         <div>
-                            ${btnHtml}
+                            ${statusBadge}
                         </div>
                     </div>
                 `;
             });
-        };
-
-        // CLAIM BONUS MILESTONE
-        window.claimMilestone = async (mId) => {
-            if (!executeFirewallChain("claim_milestone", mId)) return;
-            
-            const is = globalSettings.inviteSettings || defaultInviteSettings;
-            let reqCount = 0;
-            let bonusAmt = 0;
-            
-            if (mId === 'm1') { reqCount = Number(is.m1_inv || 1); bonusAmt = Number(is.m1_amt || 30); }
-            else if (mId === 'm2') { reqCount = Number(is.m2_inv || 3); bonusAmt = Number(is.m2_amt || 120); }
-            else if (mId === 'm3') { reqCount = Number(is.m3_inv || 8); bonusAmt = Number(is.m3_amt || 240); }
-            else if (mId === 'm4') { reqCount = Number(is.m4_inv || 15); bonusAmt = Number(is.m4_amt || 500); }
-            else if (mId === 'm5') { reqCount = Number(is.m5_inv || 32); bonusAmt = Number(is.m5_amt || 750); }
-            else if (mId === 'm6') { reqCount = Number(is.m6_inv || 50); bonusAmt = Number(is.m6_amt || 1100); }
-            
-            let userInvites = Number(userData.totalInvites || 0);
-            if (userInvites < reqCount) {
-                return alert("You need at least " + reqCount + " invites to claim this bonus!");
-            }
-            
-            let claimed = userData.claimedMilestones || {};
-            if (claimed[mId]) {
-                return alert("You have already claimed this milestone bonus!");
-            }
-            
-            loader.classList.remove('hidden');
-            try {
-                claimed[mId] = true;
-                let newBal = (userData.balance || 0) + bonusAmt;
-                await dbUpdateUser(currentUser.uid, {
-                    balance: newBal,
-                    claimedMilestones: claimed
-                });
-                alert("SUCCESS! Rs " + bonusAmt + " Milestone Bonus added to your balance!");
-                renderInviteEarnPage();
-            } catch (err) {
-                alert("Error claiming reward: " + err.message);
-            } finally {
-                loader.classList.add('hidden');
-            }
         };
 
         // CLAIM SALARY BASED ON SELECTION PERIOD
@@ -2085,29 +2062,50 @@
             if (!executeFirewallChain("claim_salary")) return;
             
             const is = globalSettings.inviteSettings || defaultInviteSettings;
-            const reqInvites = Number(is.salary_inv || 50);
-            const salaryAmt = Number(is.salary_amt || 200);
             const salaryType = is.salary_type || "monthly";
             const salaryLabel = salaryType === "daily" ? "Daily Salary" : salaryType === "weekly" ? "Weekly Salary" : "Monthly Salary";
             
+            const tiers = [
+                { req: Number(is.t1_inv || 10), amt: Number(is.t1_amt || 200) },
+                { req: Number(is.t2_inv || 25), amt: Number(is.t2_amt || 450) },
+                { req: Number(is.t3_inv || 50), amt: Number(is.t3_amt || 820) },
+                { req: Number(is.t4_inv || 60), amt: Number(is.t4_amt || 1100) },
+                { req: Number(is.t5_inv || 100), amt: Number(is.t5_amt || 1600) },
+                { req: Number(is.t6_inv || 125), amt: Number(is.t6_amt || 2400) },
+                { req: Number(is.t7_inv || 150), amt: Number(is.t7_amt || 2900) },
+                { req: Number(is.t8_inv || 200), amt: Number(is.t8_amt || 3500) },
+                { req: Number(is.t9_inv || 250), amt: Number(is.t9_amt || 4200) },
+                { req: Number(is.t10_inv || 300), amt: Number(is.t10_amt || 4800) }
+            ];
+
             let userInvites = Number(userData.totalInvites || 0);
-            if (userInvites < reqInvites) {
-                return alert("You need " + reqInvites + " invites to unlock " + salaryLabel + "!");
+            
+            // Find highest unlocked tier
+            let activeTier = null;
+            for (let i = tiers.length - 1; i >= 0; i--) {
+                if (userInvites >= tiers[i].req) {
+                    activeTier = tiers[i];
+                    break;
+                }
+            }
+            
+            if (!activeTier) {
+                return alert(`You need at least ${tiers[0].req} invites to claim salary!`);
             }
             
             const periodKey = getSalaryPeriodKey(salaryType);
             if (userData.lastSalaryDate === periodKey) {
-                return alert("You have already claimed this period's salary! Please wait for the next period.");
+                return alert(`You have already claimed this period's salary! Please wait for the next period.`);
             }
             
             loader.classList.remove('hidden');
             try {
-                let newBal = (userData.balance || 0) + salaryAmt;
+                let newBal = (userData.balance || 0) + activeTier.amt;
                 await dbUpdateUser(currentUser.uid, {
                     balance: newBal,
                     lastSalaryDate: periodKey
                 });
-                alert("SUCCESS! Rs " + salaryAmt + " " + salaryLabel + " credited to your account!");
+                alert(`SUCCESS! Rs ${activeTier.amt} ${salaryLabel} credited to your account!`);
                 renderInviteEarnPage();
             } catch (err) {
                 alert("Error claiming salary: " + err.message);
@@ -2149,20 +2147,26 @@
 
             // Populate Invite settings in admin panel
             let is = globalSettings.inviteSettings || defaultInviteSettings;
-            document.getElementById('admM1Inv').value = is.m1_inv || 1;
-            document.getElementById('admM1Amt').value = is.m1_amt || 30;
-            document.getElementById('admM2Inv').value = is.m2_inv || 3;
-            document.getElementById('admM2Amt').value = is.m2_amt || 120;
-            document.getElementById('admM3Inv').value = is.m3_inv || 8;
-            document.getElementById('admM3Amt').value = is.m3_amt || 240;
-            document.getElementById('admM4Inv').value = is.m4_inv || 15;
-            document.getElementById('admM4Amt').value = is.m4_amt || 500;
-            document.getElementById('admM5Inv').value = is.m5_inv || 32;
-            document.getElementById('admM5Amt').value = is.m5_amt || 750;
-            document.getElementById('admM6Inv').value = is.m6_inv || 50;
-            document.getElementById('admM6Amt').value = is.m6_amt || 1100;
-            document.getElementById('admSalaryInv').value = is.salary_inv || 50;
-            document.getElementById('admSalaryAmt').value = is.salary_amt || 200;
+            document.getElementById('admT1Inv').value = is.t1_inv || 10;
+            document.getElementById('admT1Amt').value = is.t1_amt || 200;
+            document.getElementById('admT2Inv').value = is.t2_inv || 25;
+            document.getElementById('admT2Amt').value = is.t2_amt || 450;
+            document.getElementById('admT3Inv').value = is.t3_inv || 50;
+            document.getElementById('admT3Amt').value = is.t3_amt || 820;
+            document.getElementById('admT4Inv').value = is.t4_inv || 60;
+            document.getElementById('admT4Amt').value = is.t4_amt || 1100;
+            document.getElementById('admT5Inv').value = is.t5_inv || 100;
+            document.getElementById('admT5Amt').value = is.t5_amt || 1600;
+            document.getElementById('admT6Inv').value = is.t6_inv || 125;
+            document.getElementById('admT6Amt').value = is.t6_amt || 2400;
+            document.getElementById('admT7Inv').value = is.t7_inv || 150;
+            document.getElementById('admT7Amt').value = is.t7_amt || 2900;
+            document.getElementById('admT8Inv').value = is.t8_inv || 200;
+            document.getElementById('admT8Amt').value = is.t8_amt || 3500;
+            document.getElementById('admT9Inv').value = is.t9_inv || 250;
+            document.getElementById('admT9Amt').value = is.t9_amt || 4200;
+            document.getElementById('admT10Inv').value = is.t10_inv || 300;
+            document.getElementById('admT10Amt').value = is.t10_amt || 4800;
             document.getElementById('admSalaryType').value = is.salary_type || "monthly";
 
             // Set values in Rulebook Inputs
@@ -2188,36 +2192,45 @@
 
         // ADMIN INVITE & SALARY SETTINGS SAVE
         window.saveInviteSettings = async () => {
-            const m1_inv = parseInt(document.getElementById('admM1Inv').value) || 1;
-            const m1_amt = parseInt(document.getElementById('admM1Amt').value) || 30;
-            const m2_inv = parseInt(document.getElementById('admM2Inv').value) || 3;
-            const m2_amt = parseInt(document.getElementById('admM2Amt').value) || 120;
-            const m3_inv = parseInt(document.getElementById('admM3Inv').value) || 8;
-            const m3_amt = parseInt(document.getElementById('admM3Amt').value) || 240;
-            const m4_inv = parseInt(document.getElementById('admM4Inv').value) || 15;
-            const m4_amt = parseInt(document.getElementById('admM4Amt').value) || 500;
-            const m5_inv = parseInt(document.getElementById('admM5Inv').value) || 32;
-            const m5_amt = parseInt(document.getElementById('admM5Amt').value) || 750;
-            const m6_inv = parseInt(document.getElementById('admM6Inv').value) || 50;
-            const m6_amt = parseInt(document.getElementById('admM6Amt').value) || 1100;
+            const t1_inv = parseInt(document.getElementById('admT1Inv').value) || 10;
+            const t1_amt = parseInt(document.getElementById('admT1Amt').value) || 200;
+            const t2_inv = parseInt(document.getElementById('admT2Inv').value) || 25;
+            const t2_amt = parseInt(document.getElementById('admT2Amt').value) || 450;
+            const t3_inv = parseInt(document.getElementById('admT3Inv').value) || 50;
+            const t3_amt = parseInt(document.getElementById('admT3Amt').value) || 820;
+            const t4_inv = parseInt(document.getElementById('admT4Inv').value) || 60;
+            const t4_amt = parseInt(document.getElementById('admT4Amt').value) || 1100;
+            const t5_inv = parseInt(document.getElementById('admT5Inv').value) || 100;
+            const t5_amt = parseInt(document.getElementById('admT5Amt').value) || 1600;
+            const t6_inv = parseInt(document.getElementById('admT6Inv').value) || 125;
+            const t6_amt = parseInt(document.getElementById('admT6Amt').value) || 2400;
+            const t7_inv = parseInt(document.getElementById('admT7Inv').value) || 150;
+            const t7_amt = parseInt(document.getElementById('admT7Amt').value) || 2900;
+            const t8_inv = parseInt(document.getElementById('admT8Inv').value) || 200;
+            const t8_amt = parseInt(document.getElementById('admT8Amt').value) || 3500;
+            const t9_inv = parseInt(document.getElementById('admT9Inv').value) || 250;
+            const t9_amt = parseInt(document.getElementById('admT9Amt').value) || 4200;
+            const t10_inv = parseInt(document.getElementById('admT10Inv').value) || 300;
+            const t10_amt = parseInt(document.getElementById('admT10Amt').value) || 4800;
             
-            const salary_inv = parseInt(document.getElementById('admSalaryInv').value) || 50;
-            const salary_amt = parseInt(document.getElementById('admSalaryAmt').value) || 200;
             const salary_type = document.getElementById('admSalaryType').value || "monthly";
             
             loader.classList.remove('hidden');
             try {
                 await update(ref(db, 'settings/inviteSettings'), {
-                    m1_inv, m1_amt,
-                    m2_inv, m2_amt,
-                    m3_inv, m3_amt,
-                    m4_inv, m4_amt,
-                    m5_inv, m5_amt,
-                    m6_inv, m6_amt,
-                    salary_inv, salary_amt,
+                    t1_inv, t1_amt,
+                    t2_inv, t2_amt,
+                    t3_inv, t3_amt,
+                    t4_inv, t4_amt,
+                    t5_inv, t5_amt,
+                    t6_inv, t6_amt,
+                    t7_inv, t7_amt,
+                    t8_inv, t8_amt,
+                    t9_inv, t9_amt,
+                    t10_inv, t10_amt,
                     salary_type
                 });
-                alert("Invite Milestones & Salary Settings Updated Successfully!");
+                alert("Salary Tiers & Frequency Settings Updated Successfully!");
             } catch(e) {
                 alert(e.message);
             } finally {
