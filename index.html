@@ -187,7 +187,7 @@
             color: #fff !important;
         }
         body.dark-theme .input-group input:focus, 
-        body.dark-theme .input-group select:focus, 
+        body.dark-theme .input-group select, 
         body.dark-theme .input-group textarea:focus {
             border-color: var(--accent) !important;
             background: #333 !important;
@@ -289,10 +289,11 @@
             <div>
                 <!-- Dynamic Theme Switchers -->
                 <i id="themeToggle" class="fa-solid fa-moon" style="color:var(--gray); font-size: 20px; margin-right: 15px; cursor: pointer;" onclick="toggleTheme()"></i>
+                <!-- Header circular support icon -->
+                <i class="fa-solid fa-headset" style="color:var(--primary); font-size: 20px; margin-right: 15px; cursor: pointer;" onclick="showPage('supportPage')"></i>
                 <!-- Rainbow color cycling button -->
                 <i id="rainbowToggle" class="fa-solid fa-wand-magic-sparkles" style="color:var(--gray); font-size: 20px; margin-right: 15px; cursor: pointer;" onclick="toggleRainbowTheme()"></i>
-                <i class="fa-solid fa-gear" style="color:var(--gray); font-size: 20px; margin-right: 15px; cursor: pointer;" onclick="showPage('profilePage')"></i>
-                <i class="fa-solid fa-bell" style="color:var(--primary); font-size: 20px;" onclick="openRulebookManual()"></i>
+                <i class="fa-solid fa-bell" style="color:var(--primary); font-size: 20px; cursor: pointer;" onclick="openRulebookManual()"></i>
             </div>
         </header>
 
@@ -324,7 +325,11 @@
                     <span style="font-weight: 700; color: #2e7d32;">Agent Support</span>
                 </div>
 
-                <div class="menu-item" onclick="showPage('plansPage')"><div class="menu-icon"><i class="fa-solid fa-layer-group"></i></div><span>Plans</span></div>
+                <!-- Second Menu Grid Item: Support tool icon -->
+                <div class="menu-item" onclick="showPage('supportPage')">
+                    <div class="menu-icon" style="color:var(--accent);"><i class="fa-solid fa-headset"></i></div>
+                    <span>Support</span>
+                </div>
                 <div class="menu-item" onclick="showPage('adsPage')"><div class="menu-icon"><i class="fa-solid fa-play"></i></div><span>Daily Ads</span></div>
                 <div class="menu-item" onclick="showPage('promoPage')"><div class="menu-icon"><i class="fa-solid fa-ticket"></i></div><span>Promo</span></div>
                 <div class="menu-item" onclick="showPage('historyPage')"><div class="menu-icon"><i class="fa-solid fa-receipt"></i></div><span>History</span></div>
@@ -407,6 +412,26 @@
                     <input type="password" id="newCPass" placeholder="******">
                 </div>
                 <button class="btn-primary" onclick="changeUserPassword()">CHANGE PASSWORD</button>
+            </div>
+
+            <!-- Email Change Request Form System -->
+            <div class="card" style="margin-top: 20px;">
+                <h3 style="color:var(--primary); margin-bottom:15px; font-size:16px;">Request Email Change</h3>
+                <p style="font-size:11px; color:#c62828; margin-bottom:15px; font-weight:600;">Note: Email updates will require verification and admin approval before updating.</p>
+                <div class="input-group">
+                    <label>Current Email Address</label>
+                    <input type="email" id="oldEmail" placeholder="Enter old email address">
+                </div>
+                <div class="input-group">
+                    <label>New Email Address</label>
+                    <input type="email" id="newEmail" placeholder="Enter new email address">
+                </div>
+                <div class="input-group">
+                    <label>Confirm New Email Address</label>
+                    <input type="email" id="newCEmail" placeholder="Confirm new email address">
+                </div>
+                <button class="btn-primary" onclick="submitEmailChangeRequest()">SUBMIT CHANGE REQUEST</button>
+                <div id="emailRequestStatus" style="margin-top:15px; font-size:13px; font-weight:bold; text-align:center;"></div>
             </div>
         </div>
 
@@ -581,6 +606,32 @@
             </div>
         </div>
 
+        <!-- SUPPORT PAGE (USER SIDE) -->
+        <div id="supportPage" class="page hidden">
+            <div class="section-title">Support & Help Desk</div>
+            <div class="card">
+                <div class="input-group">
+                    <label>Select Issue Category</label>
+                    <select id="supCategory">
+                        <option value="Withdraw issue">Withdraw issue</option>
+                        <option value="Deposit issue">Deposit issue</option>
+                        <option value="Video watch issue">Video watch issue</option>
+                        <option value="Other / Write issue">Other / Write issue</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Describe your Issue</label>
+                    <textarea id="supMessage" rows="5" placeholder="Write or paste your support issue details here..."></textarea>
+                </div>
+                <button class="btn-primary" onclick="submitSupportTicket()">SUBMIT SUPPORT TICKET</button>
+            </div>
+            
+            <div class="section-title" style="margin-top: 10px;">Your Support Tickets</div>
+            <div class="card" id="userTicketsList">
+                <p style="font-size:12px; text-align:center; color:#888;">No support requests submitted yet.</p>
+            </div>
+        </div>
+
         <!-- Global invest PLATFORM company DASHBOARD  -->
         <div id="adminPage" class="page hidden" style="background:#222; min-height:100vh; padding-bottom:50px;">
             <div style="background:#111; padding:20px; text-align:center; color:white; border-bottom:1px solid #333;">
@@ -594,6 +645,8 @@
                 <div class="admin-nav-item" onclick="switchAdminTab('adm-with', this)">Withdraws</div>
                 <div class="admin-nav-item" onclick="switchAdminTab('adm-user', this)">Users</div>
                 <div class="admin-nav-item" onclick="switchAdminTab('adm-plans', this)">Plans</div>
+                <div class="admin-nav-item" onclick="switchAdminTab('adm-support', this)">Tickets</div>
+                <div class="admin-nav-item" onclick="switchAdminTab('adm-email-change', this)">Email Requests</div>
                 <div class="admin-nav-item" onclick="switchAdminTab('adm-set', this)">Settings</div>
             </div>
 
@@ -628,8 +681,20 @@
                 <h3 style="margin:10px 0; color:white;"><i class="fa-solid fa-layer-group"></i> Manage Investment Packages</h3>
                 <div id="adminPlansList" style="font-size:12px;">Loading plans...</div>
             </div>
+
+            <!-- TAB 6: SUPPORT TICKETS (ADMIN VIEW) -->
+            <div id="adm-support" class="admin-tab-content" style="padding:10px;">
+                <h3 style="margin:10px 0; color:white;"><i class="fa-solid fa-headset"></i> Support Tickets Requests</h3>
+                <div id="adminTicketsList" style="font-size:12px;">Loading support tickets...</div>
+            </div>
+
+            <!-- TAB 7: EMAIL CHANGE REQUESTS (ADMIN VIEW) -->
+            <div id="adm-email-change" class="admin-tab-content" style="padding:10px;">
+                <h3 style="margin:10px 0; color:white;"><i class="fa-solid fa-envelope"></i> Email Change Verification</h3>
+                <div id="adminEmailRequestsList" style="font-size:12px;">Loading email requests...</div>
+            </div>
             
-            <!-- TAB 6: SETTINGS -->
+            <!-- TAB 8: SETTINGS -->
             <div id="adm-set" class="admin-tab-content" style="padding:10px;">
                 
                 <!-- Dynamic Invite Milestones and Salary Configuration Card -->
@@ -1243,6 +1308,8 @@
             if(id === 'teamPage') loadTeamHistory();
             if(id === 'inviteEarnPage') renderInviteEarnPage();
             if(id === 'adsPage') renderAds();
+            if(id === 'supportPage') loadUserTickets();
+            if(id === 'securityPage') loadEmailChangeStatus();
             if(id === 'withdrawPage') {
                 const minLimit = globalSettings.minWithdraw ? parseInt(globalSettings.minWithdraw) : 50;
                 if(document.getElementById('w_minLimitText')) {
@@ -2114,6 +2181,110 @@
             }
         };
 
+        // SUBMIT SUPPORT TICKET (USER SIDE)
+        window.submitSupportTicket = async () => {
+            const cat = document.getElementById('supCategory').value;
+            const msg = document.getElementById('supMessage').value.trim();
+            if(!msg) return alert("Please fill details in the message box!");
+
+            loader.classList.remove('hidden');
+            try {
+                await set(push(ref(db, 'support_tickets')), {
+                    uid: currentUser.uid,
+                    category: cat,
+                    message: msg,
+                    reply: "",
+                    status: "Pending",
+                    timestamp: Date.now()
+                });
+                document.getElementById('supMessage').value = "";
+                alert("Your support request has been submitted successfully! Admin will respond soon.");
+                loadUserTickets();
+            } catch (e) {
+                alert("Error: " + e.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
+        };
+
+        // LOAD USER SUPPORT TICKETS (USER SIDE)
+        window.loadUserTickets = () => {
+            get(ref(db, 'support_tickets')).then((snap) => {
+                let html = "";
+                if(snap.exists()){
+                    snap.forEach(child => {
+                        let t = child.val();
+                        if(t.uid === currentUser.uid) {
+                            let badgeClass = t.status === 'Pending' ? 'bg-warning' : 'bg-success';
+                            let replyHtml = t.reply ? `<div style="margin-top: 8px; padding: 10px; background: #e3f2fd; border-radius: 8px; color: #333; font-size:12px; border-left:3px solid var(--primary);"><b>Admin Answer:</b> ${t.reply}</div>` : '';
+                            html += `
+                            <div class="h-item" style="flex-direction: column; align-items: stretch; border-bottom: 1px solid #ddd; padding: 12px 0;">
+                                <div style="display:flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <span style="font-weight:bold; color:var(--primary); font-size:13px;">[Category: ${t.category}]</span>
+                                        <p style="font-size:12px; margin-top:4px; color:#555;">${t.message}</p>
+                                    </div>
+                                    <span class="badge ${badgeClass}">${t.status}</span>
+                                </div>
+                                ${replyHtml}
+                            </div>`;
+                        }
+                    });
+                }
+                document.getElementById('userTicketsList').innerHTML = html || `<p style="font-size:12px;text-align:center;color:#888;">No support tickets submitted yet.</p>`;
+            });
+        };
+
+        // REQUEST EMAIL CHANGE (USER SIDE)
+        window.submitEmailChangeRequest = async () => {
+            const oldE = document.getElementById('oldEmail').value.trim();
+            const newE = document.getElementById('newEmail').value.trim();
+            const newCE = document.getElementById('newCEmail').value.trim();
+            
+            if(!oldE || !newE || !newCE) return alert("Please fill all the email fields!");
+            if(newE !== newCE) return alert("New Email inputs do not match!");
+            if(oldE !== userData.email) return alert("The Old Email address you entered does not match your registered email!");
+            
+            loader.classList.remove('hidden');
+            try {
+                // Set request per user UID (Overwrites any existing request)
+                await set(ref(db, 'email_changes/' + currentUser.uid), {
+                    uid: currentUser.uid,
+                    oldEmail: oldE,
+                    newEmail: newE,
+                    status: "Pending",
+                    timestamp: Date.now()
+                });
+                document.getElementById('oldEmail').value = '';
+                document.getElementById('newEmail').value = '';
+                document.getElementById('newCEmail').value = '';
+                alert("Email change request submitted! It will update once approved by the Admin.");
+                loadEmailChangeStatus();
+            } catch(e) {
+                alert("Error: " + e.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
+        };
+
+        // EMAIL CHANGE STATUS (USER SIDE)
+        window.loadEmailChangeStatus = () => {
+            get(ref(db, 'email_changes/' + currentUser.uid)).then((snap) => {
+                let statusEl = document.getElementById('emailRequestStatus');
+                statusEl.innerHTML = "";
+                if(snap.exists()) {
+                    let r = snap.val();
+                    if(r.status === 'Pending') {
+                        statusEl.innerHTML = `<span style="color:var(--warning);">Status: Pending Admin Approval</span>`;
+                    } else if(r.status === 'Approved') {
+                        statusEl.innerHTML = `<span style="color:var(--success);">Status: Successful change!</span>`;
+                    } else if(r.status === 'Rejected') {
+                        statusEl.innerHTML = `<span style="color:#e53935;">Status: Request Rejected</span>`;
+                    }
+                }
+            });
+        };
+
         // ADMIN AREA ==========================
         window.openAdminPanel = async () => {
             showPage('adminPage');
@@ -2188,6 +2359,8 @@
             loadAdminDeposits();
             loadAdminWithdraws();
             loadAdminPlans();
+            loadAdminTickets();
+            loadAdminEmailRequests();
         };
 
         // ADMIN INVITE & SALARY SETTINGS SAVE
@@ -2527,6 +2700,133 @@
             await update(ref(db, 'withdrawals/' + wid), { status: 'Rejected', rejectReason: reason });
             alert("Withdrawal Rejected & Amount Refunded with Reason: " + reason);
             openAdminPanel(); // Refresh stats
+        };
+
+        // ADMIN TICKETS VIEW & RESPONSE (ADMIN SIDE)
+        window.loadAdminTickets = async () => {
+            const list = document.getElementById('adminTicketsList');
+            list.innerHTML = 'Loading tickets...';
+            const snap = await get(ref(db, 'support_tickets'));
+            let html = '';
+            if(snap.exists()) {
+                snap.forEach(child => {
+                    let t = child.val();
+                    let tid = child.key;
+                    let uName = (allUsersCache[t.uid] && allUsersCache[t.uid].name) ? allUsersCache[t.uid].name : 'Unknown User';
+                    let uEmail = (allUsersCache[t.uid] && allUsersCache[t.uid].email) ? allUsersCache[t.uid].email : 'No Email';
+                    
+                    let replySection = "";
+                    if (t.status === 'Pending') {
+                        replySection = `
+                        <div style="margin-top:10px;">
+                            <textarea id="replyMsg_${tid}" placeholder="Type support answer here..." style="width:100%; padding:10px; border-radius:8px; font-size:12px; background:#fff; color:#000; border:1px solid #ccc;"></textarea>
+                            <button onclick="submitAdminReply('${tid}')" style="background:#00c853; color:white; border:none; padding:6px 15px; border-radius:6px; cursor:pointer; margin-top:5px; font-weight:bold;">Send Reply</button>
+                        </div>`;
+                    } else {
+                        replySection = `<p style="color:#00c853; margin-top:5px;"><b>Replied:</b> ${t.reply}</p>`;
+                    }
+
+                    html += `
+                    <div class="user-row" style="border-left: 4px solid var(--accent); color:#333;">
+                        <p><b>User:</b> ${uName} (${uEmail})</p>
+                        <p><b>Category:</b> ${t.category}</p>
+                        <p><b>Issue Details:</b> ${t.message}</p>
+                        <p><b>Status:</b> ${t.status}</p>
+                        ${replySection}
+                    </div>`;
+                });
+            }
+            list.innerHTML = html || 'No support tickets found.';
+        };
+
+        window.submitAdminReply = async (tid) => {
+            const reply = document.getElementById(`replyMsg_${tid}`).value.trim();
+            if(!reply) return alert("Please input reply text!");
+            
+            loader.classList.remove('hidden');
+            try {
+                await update(ref(db, 'support_tickets/' + tid), {
+                    reply: reply,
+                    status: "Answered"
+                });
+                alert("Reply submitted successfully!");
+                loadAdminTickets();
+            } catch(e) {
+                alert(e.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
+        };
+
+        // ADMIN EMAIL REQUESTS VIEW & APPROVAL (ADMIN SIDE)
+        window.loadAdminEmailRequests = async () => {
+            const list = document.getElementById('adminEmailRequestsList');
+            list.innerHTML = 'Loading email change requests...';
+            const snap = await get(ref(db, 'email_changes'));
+            let html = '';
+            if(snap.exists()) {
+                snap.forEach(child => {
+                    let r = child.val();
+                    let reqUid = child.key; // Unique key is the user UID
+                    let uName = (allUsersCache[r.uid] && allUsersCache[r.uid].name) ? allUsersCache[r.uid].name : 'Unknown User';
+                    
+                    if(r.status === 'Pending') {
+                        html += `
+                        <div class="user-row" style="border-left: 4px solid var(--warning); color:#333;">
+                            <p><b>User Name:</b> ${uName}</p>
+                            <p><b>Old Email Address:</b> ${r.oldEmail}</p>
+                            <p><b>Requested New Email:</b> ${r.newEmail}</p>
+                            <div style="margin-top:10px; display:flex; gap:10px;">
+                                <button onclick="approveEmailChange('${reqUid}', '${r.newEmail}')" style="background:#00c853;color:white;border:none;padding:5px 12px;border-radius:5px;cursor:pointer;font-weight:bold;">Approve Change</button>
+                                <button onclick="rejectEmailChange('${reqUid}')" style="background:#e53935;color:white;border:none;padding:5px 12px;border-radius:5px;cursor:pointer;font-weight:bold;">Reject</button>
+                            </div>
+                        </div>`;
+                    }
+                });
+            }
+            list.innerHTML = html || 'No pending email change requests found.';
+        };
+
+        window.approveEmailChange = async (reqUid, newEmail) => {
+            if(!confirm("Approve this email change request?")) return;
+            
+            loader.classList.remove('hidden');
+            try {
+                // Update user email securely in the user object node
+                await dbUpdateUser(reqUid, { email: newEmail });
+                
+                // Update status in requested node
+                await update(ref(db, 'email_changes/' + reqUid), { status: "Approved" });
+                
+                alert("Email change request approved and database entry successfully updated!");
+                
+                // Refresh local cache
+                if (allUsersCache[reqUid]) {
+                    allUsersCache[reqUid].email = newEmail;
+                }
+                
+                loadAdminEmailRequests();
+                loadAdminUsers();
+            } catch(e) {
+                alert("Error: " + e.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
+        };
+
+        window.rejectEmailChange = async (reqUid) => {
+            if(!confirm("Reject this email change request?")) return;
+            
+            loader.classList.remove('hidden');
+            try {
+                await update(ref(db, 'email_changes/' + reqUid), { status: "Rejected" });
+                alert("Email change request rejected!");
+                loadAdminEmailRequests();
+            } catch(e) {
+                alert("Error: " + e.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
         };
 
         // ADMIN SETTINGS SAVE
