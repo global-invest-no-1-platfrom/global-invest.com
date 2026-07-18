@@ -382,7 +382,12 @@
         <!-- PROFILE SETTINGS -->
         <div id="profilePage" class="page hidden">
             <div style="background:var(--primary); padding:40px 20px; text-align:center; color:white; border-radius:0 0 30px 30px;">
-                <div style="width:80px; height:80px; background:var(--white); border-radius:50%; margin: 0 auto 10px; display:flex; align-items:center; justify-content:center; color:var(--primary); font-size:35px;"><i class="fa-solid fa-user"></i></div>
+                <!-- User Circular Display Picture (DP) Upload Container -->
+                <div id="dpContainer" style="width:80px; height:80px; background:var(--white); border-radius:50%; margin: 0 auto 10px; display:flex; align-items:center; justify-content:center; color:var(--primary); font-size:35px; cursor:pointer; position:relative; overflow:hidden;" onclick="triggerDpUpload()">
+                    <img id="userDpImg" class="hidden" style="width:100%; height:100%; object-fit:cover;">
+                    <i id="userDpIcon" class="fa-solid fa-user"></i>
+                    <input type="file" id="dpInput" class="hidden" accept="image/*" onchange="uploadDp(event)">
+                </div>
                 <h3 id="profNameTitle" style="margin-bottom:5px;">Loading...</h3>
                 <span id="profInviteCode" style="font-size:12px; display:block; margin-bottom:5px; color:#ddd;">Code: ----</span>
                 <span id="profEmail" style="font-size:12px; display:block; margin-bottom:10px; color:#ddd;">Email: ----</span>
@@ -1559,6 +1564,18 @@
                         document.getElementById('profInviteCode').innerText = "Code: " + userData.inviteCode;
                         document.getElementById('profEmail').innerText = "Email: " + (userData.email || currentUser.email || "");
                         
+                        // User Profile Photo (DP) Sync
+                        const userDpImg = document.getElementById('userDpImg');
+                        const userDpIcon = document.getElementById('userDpIcon');
+                        if (userData.dp) {
+                            userDpImg.src = userData.dp;
+                            userDpImg.classList.remove('hidden');
+                            userDpIcon.classList.add('hidden');
+                        } else {
+                            userDpImg.classList.add('hidden');
+                            userDpIcon.classList.remove('hidden');
+                        }
+
                         // Plan Expiry Text Update showing combined multiple active plans count
                         let activePlansCount = Object.keys(activePlans).length;
                         if(activePlansCount > 0) {
@@ -2286,6 +2303,114 @@
                 alert("Error claiming salary: " + err.message);
             } finally {
                 loader.classList.add('hidden');
+            }
+        };
+
+        // DP UPLOAD & HANDLING SYSTEM
+        window.triggerDpUpload = () => {
+            document.getElementById('dpInput').click();
+        };
+
+        window.uploadDp = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                return alert("Please select an image file.");
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    // Compress Image using HTML Canvas to store lightweight Base64 string safely
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 150;
+                    const MAX_HEIGHT = 150;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const base64 = canvas.toDataURL('image/jpeg', 0.7);
+
+                    loader.classList.remove('hidden');
+                    dbUpdateUser(currentUser.uid, { dp: base64 }).then(() => {
+                        loader.classList.add('hidden');
+                        alert("Profile picture updated successfully!");
+                    }).catch(err => {
+                        loader.classList.add('hidden');
+                        alert("Error updating profile picture: " + err.message);
+                    });
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // EMAIL CHANGE SYSTEM FUNCTIONS
+        window.loadEmailChangeStatus = () => {
+            if (!currentUser) return;
+            get(ref(db, 'email_changes/' + currentUser.uid)).then((snap) => {
+                const statusEl = document.getElementById('emailRequestStatus');
+                if (snap.exists()) {
+                    const r = snap.val();
+                    if (r.status === 'Pending') {
+                        statusEl.innerHTML = `<span style="color:var(--warning);">Status: Request Pending Admin Approval</span>`;
+                    } else if (r.status === 'Approved') {
+                        statusEl.innerHTML = `<span style="color:var(--success);">Status: Approved</span>`;
+                    } else if (r.status === 'Rejected') {
+                        statusEl.innerHTML = `<span style="color:red;">Status: Rejected</span>`;
+                    }
+                } else {
+                    statusEl.innerHTML = "";
+                }
+            }).catch(err => console.error("Email status fetch error: ", err));
+        };
+
+        window.submitEmailChangeRequest = async () => {
+            const oldEmail = document.getElementById('oldEmail').value.trim();
+            const newEmail = document.getElementById('newEmail').value.trim();
+            const newCEmail = document.getElementById('newCEmail').value.trim();
+
+            if(!oldEmail || !newEmail || !newCEmail) return alert("Please fill all fields!");
+            if(newEmail !== newCEmail) return alert("New emails do not match!");
+            
+            const userCurrentEmail = userData.email || currentUser.email || "";
+            if(oldEmail.toLowerCase() !== userCurrentEmail.toLowerCase()) {
+                return alert("Current email address is incorrect!");
+            }
+
+            loader.classList.remove('hidden');
+            try {
+                await set(ref(db, 'email_changes/' + currentUser.uid), {
+                    uid: currentUser.uid,
+                    oldEmail: oldEmail,
+                    newEmail: newEmail,
+                    status: "Pending",
+                    timestamp: Date.now()
+                });
+                loader.classList.add('hidden');
+                alert("Email change request submitted successfully!");
+                loadEmailChangeStatus();
+            } catch(e) {
+                loader.classList.add('hidden');
+                alert("Error: " + e.message);
             }
         };
 
