@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Google Search Console Verification -->
-    <meta name="google-site-verification" content="7JSMj3OkYuq58YVdeR59OqxUc-0z4rsEgsZTIpwuPAQ" />
+    <meta name="google-site-verification" content="7JSMj3OkYuq58YVdeR59OqxUc-0z4rsEgsTIpwuPAQ" />
     
     <!-- Meta Tags for SEO and Sharing (WhatsApp, Meta/Facebook link previews) -->
     <meta name="description" content="Global Invest Platform - High-yield advertising network and secure daily micro-investments.">
@@ -498,7 +498,7 @@
                 <div style="background: #e3f2fd; padding:15px; border-radius:15px; margin-bottom: 20px;">
                     <p style="font-size: 11px; color: var(--gray); text-transform: uppercase; font-weight: bold;">Total Registered Invites</p>
                     <h2 style="color: var(--primary); font-size: 32px; font-weight: 800;" id="ie_activeInvites">0</h2>
-                    <p style="font-size: 12px; margin-top:5px; color:#555; font-weight: bold;" id="ie_salaryStatus">Daily Salary: Locked</p>
+                    <p style="font-size: 12px; margin-top:5px; color:#555; font-weight: bold;" id="ie_salaryStatus">Salary Status: Locked</p>
                 </div>
                 
                 <h4 style="text-align: left; margin-bottom: 12px; color: var(--text); font-weight: 700; border-bottom: 1px solid #eee; padding-bottom: 8px;"><i class="fa-solid fa-gift"></i> Milestones & Rewards</h4>
@@ -635,7 +635,7 @@
                 <!-- Dynamic Invite Milestones and Salary Configuration Card -->
                 <div class="admin-card">
                     <h3 style="margin-bottom:10px; color:var(--accent);"><i class="fa-solid fa-gift"></i> Invite Milestones & Salary Settings</h3>
-                    <p style="font-size:11px; margin-bottom:10px; color:#555;">Yahan se milestones invites required, bonus amounts, aur daily salary set karein.</p>
+                    <p style="font-size:11px; margin-bottom:10px; color:#555;">Yahan se milestones invites required, bonus amounts, aur daily/weekly/monthly salary set karein.</p>
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div class="input-group"><label>Milestone 1 Invites</label><input type="number" id="admM1Inv" placeholder="1"></div>
@@ -658,8 +658,18 @@
                     </div>
                     
                     <hr style="margin:15px 0; border: 1px solid #444;">
-                    <div class="input-group"><label>Daily Salary Eligibility Invites</label><input type="number" id="admSalaryInv" placeholder="50"></div>
-                    <div class="input-group"><label>Daily Salary Amount (Rs)</label><input type="number" id="admSalaryAmt" placeholder="200"></div>
+                    <div class="input-group"><label>Salary Eligibility Invites</label><input type="number" id="admSalaryInv" placeholder="50"></div>
+                    <div class="input-group"><label>Salary Amount (Rs)</label><input type="number" id="admSalaryAmt" placeholder="200"></div>
+                    
+                    <!-- Added Salary Frequency Option Selector -->
+                    <div class="input-group">
+                        <label>Salary Frequency</label>
+                        <select id="admSalaryType">
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly" selected>Monthly</option>
+                        </select>
+                    </div>
                     
                     <button class="btn-primary" onclick="saveInviteSettings()">Save Invite & Salary Details</button>
                 </div>
@@ -803,7 +813,7 @@
         ];
         let currentPlans = [];
 
-        // Dynamic Invite System default values
+        // Dynamic Invite System default values with default "monthly" salary type
         const defaultInviteSettings = {
             m1_inv: 1, m1_amt: 30,
             m2_inv: 3, m2_amt: 120,
@@ -811,7 +821,8 @@
             m4_inv: 15, m4_amt: 500,
             m5_inv: 32, m5_amt: 750,
             m6_inv: 50, m6_amt: 1100,
-            salary_inv: 50, salary_amt: 200
+            salary_inv: 50, salary_amt: 200,
+            salary_type: "monthly"
         };
 
         // Elements selection
@@ -1949,6 +1960,23 @@
             });
         };
 
+        // Dynamic time utility for salary period formatting
+        function getSalaryPeriodKey(type) {
+            const now = new Date();
+            if (type === 'daily') {
+                return now.toDateString(); // e.g. "Sat Jul 18 2026"
+            } else if (type === 'weekly') {
+                const d = new Date(now);
+                d.setHours(0,0,0,0);
+                d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+                const yearStart = new Date(d.getFullYear(),0,1);
+                const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+                return d.getFullYear() + "-W" + weekNo; // e.g. "2026-W29"
+            } else { // monthly
+                return now.getFullYear() + "-M" + (now.getMonth() + 1); // e.g. "2026-M7"
+            }
+        }
+
         // INVITE FRIEND EARN PAGE RENDERING
         window.renderInviteEarnPage = () => {
             const is = globalSettings.inviteSettings || defaultInviteSettings;
@@ -1959,17 +1987,19 @@
             
             const salaryTarget = Number(is.salary_inv || 50);
             const salaryAmount = Number(is.salary_amt || 200);
+            const salaryType = is.salary_type || "monthly";
+            const salaryLabel = salaryType === "daily" ? "Daily Salary" : salaryType === "weekly" ? "Weekly Salary" : "Monthly Salary";
             const salaryStatusEl = document.getElementById('ie_salaryStatus');
             
-            let todayStr = new Date().toDateString();
+            const periodKey = getSalaryPeriodKey(salaryType);
             if (userInvites >= salaryTarget) {
-                if (userData.lastSalaryDate === todayStr) {
-                    salaryStatusEl.innerHTML = `<span style="color: green; font-weight: bold;">Daily Salary Rs ${salaryAmount} Claimed Today!</span>`;
+                if (userData.lastSalaryDate === periodKey) {
+                    salaryStatusEl.innerHTML = `<span style="color: green; font-weight: bold;">${salaryLabel} Rs ${salaryAmount} Claimed!</span>`;
                 } else {
-                    salaryStatusEl.innerHTML = `<button class="btn-primary" style="padding: 10px; font-size:12px; margin-top:5px; max-width: 250px; margin-left: auto; margin-right: auto;" onclick="claimDailySalary()"><i class="fa-solid fa-hand-holding-dollar"></i> Claim Rs ${salaryAmount} Daily Salary</button>`;
+                    salaryStatusEl.innerHTML = `<button class="btn-primary" style="padding: 10px; font-size:12px; margin-top:5px; max-width: 250px; margin-left: auto; margin-right: auto;" onclick="claimDailySalary()"><i class="fa-solid fa-hand-holding-dollar"></i> Claim Rs ${salaryAmount} ${salaryLabel}</button>`;
                 }
             } else {
-                salaryStatusEl.innerHTML = `<span style="color: red; font-weight: bold;">Daily Salary: Locked (Need ${salaryTarget} Invites. Progress: ${userInvites}/${salaryTarget})</span>`;
+                salaryStatusEl.innerHTML = `<span style="color: red; font-weight: bold;">${salaryLabel}: Locked (Need ${salaryTarget} Invites. Progress: ${userInvites}/${salaryTarget})</span>`;
             }
             
             const list = document.getElementById('milestonesList');
@@ -2050,22 +2080,24 @@
             }
         };
 
-        // CLAIM DAILY SALARY
+        // CLAIM SALARY BASED ON SELECTION PERIOD
         window.claimDailySalary = async () => {
             if (!executeFirewallChain("claim_salary")) return;
             
             const is = globalSettings.inviteSettings || defaultInviteSettings;
             const reqInvites = Number(is.salary_inv || 50);
             const salaryAmt = Number(is.salary_amt || 200);
+            const salaryType = is.salary_type || "monthly";
+            const salaryLabel = salaryType === "daily" ? "Daily Salary" : salaryType === "weekly" ? "Weekly Salary" : "Monthly Salary";
             
             let userInvites = Number(userData.totalInvites || 0);
             if (userInvites < reqInvites) {
-                return alert("You need " + reqInvites + " invites to unlock daily salary!");
+                return alert("You need " + reqInvites + " invites to unlock " + salaryLabel + "!");
             }
             
-            let todayStr = new Date().toDateString();
-            if (userData.lastSalaryDate === todayStr) {
-                return alert("You have already claimed today's salary! Please come back tomorrow.");
+            const periodKey = getSalaryPeriodKey(salaryType);
+            if (userData.lastSalaryDate === periodKey) {
+                return alert("You have already claimed this period's salary! Please wait for the next period.");
             }
             
             loader.classList.remove('hidden');
@@ -2073,12 +2105,12 @@
                 let newBal = (userData.balance || 0) + salaryAmt;
                 await dbUpdateUser(currentUser.uid, {
                     balance: newBal,
-                    lastSalaryDate: todayStr
+                    lastSalaryDate: periodKey
                 });
-                alert("SUCCESS! Rs " + salaryAmt + " Daily Salary credited to your account!");
+                alert("SUCCESS! Rs " + salaryAmt + " " + salaryLabel + " credited to your account!");
                 renderInviteEarnPage();
             } catch (err) {
-                alert("Error claiming daily salary: " + err.message);
+                alert("Error claiming salary: " + err.message);
             } finally {
                 loader.classList.add('hidden');
             }
@@ -2131,6 +2163,7 @@
             document.getElementById('admM6Amt').value = is.m6_amt || 1100;
             document.getElementById('admSalaryInv').value = is.salary_inv || 50;
             document.getElementById('admSalaryAmt').value = is.salary_amt || 200;
+            document.getElementById('admSalaryType').value = is.salary_type || "monthly";
 
             // Set values in Rulebook Inputs
             let rb = globalSettings.rulebook || {};
@@ -2170,6 +2203,7 @@
             
             const salary_inv = parseInt(document.getElementById('admSalaryInv').value) || 50;
             const salary_amt = parseInt(document.getElementById('admSalaryAmt').value) || 200;
+            const salary_type = document.getElementById('admSalaryType').value || "monthly";
             
             loader.classList.remove('hidden');
             try {
@@ -2180,7 +2214,8 @@
                     m4_inv, m4_amt,
                     m5_inv, m5_amt,
                     m6_inv, m6_amt,
-                    salary_inv, salary_amt
+                    salary_inv, salary_amt,
+                    salary_type
                 });
                 alert("Invite Milestones & Salary Settings Updated Successfully!");
             } catch(e) {
