@@ -330,11 +330,12 @@
                 <div class="menu-item" onclick="showPage('historyPage')"><div class="menu-icon"><i class="fa-solid fa-receipt"></i></div><span>History</span></div>
                 
                 <div class="menu-item" onclick="showPage('teamPage')"><div class="menu-icon"><i class="fa-solid fa-users-viewfinder"></i></div><span>Team</span></div>
+                <div class="menu-item" onclick="clickInviteEarn(this)"><div class="menu-icon" style="color:#e91e63;"><i class="fa-solid fa-user-plus"></i></div><span id="inviteEarnMenuText">Invite Friend Earn</span></div>
                 <div class="menu-item" onclick="showPage('profilePage')"><div class="menu-icon"><i class="fa-solid fa-gear"></i></div><span>Setting</span></div>
                 <div class="menu-item" onclick="showPage('aboutPage')"><div class="menu-icon"><i class="fa-solid fa-circle-info"></i></div><span>About</span></div>
                 
                 <div class="menu-item" onclick="openSocial('whatsapp')"><div class="menu-icon" style="color:#25d366;"><i class="fa-brands fa-whatsapp"></i></div><span>WhatsApp</span></div>
-                <div class="menu-item" onclick="openSocial('facebook')"><div class="menu-icon" style="color:#1877F2;"><i class="fa-brands fa-facebook"></i></div><span>Facebook</span></div>
+                <div class="menu-item" onclick="openSocial('telegram')"><div class="menu-icon" style="color:#24A1DE;"><i class="fa-brands fa-telegram"></i></div><span>Telegram</span></div>
                 <div class="menu-item" onclick="openSocial('instagram')"><div class="menu-icon" style="color:#E4405F;"><i class="fa-brands fa-instagram"></i></div><span>Instagram</span></div>
             </div>
         </div>
@@ -425,7 +426,6 @@
             <div class="section-title">About Platform</div>
             <div class="card" style="text-align:justify;">
                 <h2 style="color:var(--primary); margin-bottom:15px; text-align:center;">Global invest PLATFORM v5.3.9</h2>
-                <!-- About Platform expanded to exactly 450 words -->
                 <p style="font-size:13px; color:#555; line-height: 1.7; margin-bottom: 10px;">
                     Global Invest Platform is an advanced, robust, and highly secure financial technology ecosystem established to provide sustainable wealth-generation pathways for global investors. By leveraging a state-of-the-art advertising and digital monetization network, our platform creates an active bridge between international advertisement agencies and micro-investors globally. Once you register and activate one of our premium VIP packages (ranging from VIP 1 to VIP 11), your account is granted daily access to high-yield sponsored video advertisements. Watching these daily ads unlocks guaranteed real-time dividends that are credited directly to your secure user wallet. Our system is meticulously optimized to maintain a balanced, transparent, and user-centric digital economy.
                 </p>
@@ -486,6 +486,24 @@
                 <h4 style="text-align:left; font-size:15px; color:var(--text); margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:8px;"><i class="fa-solid fa-users"></i> Invite History</h4>
                 <div id="listTeam" style="text-align:left;">
                     <p style="font-size:12px; text-align:center; color:#888;">No team members found</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- INVITE FRIEND EARN PAGE -->
+        <div id="inviteEarnPage" class="page hidden">
+            <div class="section-title">Invite Friend & Earn</div>
+            <div class="card" style="text-align: center;">
+                <p style="font-size:13px; margin-bottom:15px; font-weight: 500; color: var(--text);">Complete invite milestones to earn massive bonus and daily salary!</p>
+                <div style="background: #e3f2fd; padding:15px; border-radius:15px; margin-bottom: 20px;">
+                    <p style="font-size: 11px; color: var(--gray); text-transform: uppercase; font-weight: bold;">Total Registered Invites</p>
+                    <h2 style="color: var(--primary); font-size: 32px; font-weight: 800;" id="ie_activeInvites">0</h2>
+                    <p style="font-size: 12px; margin-top:5px; color:#555; font-weight: bold;" id="ie_salaryStatus">Daily Salary: Locked</p>
+                </div>
+                
+                <h4 style="text-align: left; margin-bottom: 12px; color: var(--text); font-weight: 700; border-bottom: 1px solid #eee; padding-bottom: 8px;"><i class="fa-solid fa-gift"></i> Milestones & Rewards</h4>
+                <div id="milestonesList" style="text-align: left;">
+                    <!-- Dynamically rendered milestone rewards -->
                 </div>
             </div>
         </div>
@@ -614,7 +632,39 @@
             <!-- TAB 6: SETTINGS -->
             <div id="adm-set" class="admin-tab-content" style="padding:10px;">
                 
-                <!-- Dynamic Registration Bonus Configuration Card -->
+                <!-- Dynamic Invite Milestones and Salary Configuration Card -->
+                <div class="admin-card">
+                    <h3 style="margin-bottom:10px; color:var(--accent);"><i class="fa-solid fa-gift"></i> Invite Milestones & Salary Settings</h3>
+                    <p style="font-size:11px; margin-bottom:10px; color:#555;">Yahan se milestones invites required, bonus amounts, aur daily salary set karein.</p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="input-group"><label>Milestone 1 Invites</label><input type="number" id="admM1Inv" placeholder="1"></div>
+                        <div class="input-group"><label>Milestone 1 Bonus (Rs)</label><input type="number" id="admM1Amt" placeholder="30"></div>
+                        
+                        <div class="input-group"><label>Milestone 2 Invites</label><input type="number" id="admM2Inv" placeholder="3"></div>
+                        <div class="input-group"><label>Milestone 2 Bonus (Rs)</label><input type="number" id="admM2Amt" placeholder="120"></div>
+                        
+                        <div class="input-group"><label>Milestone 3 Invites</label><input type="number" id="admM3Inv" placeholder="8"></div>
+                        <div class="input-group"><label>Milestone 3 Bonus (Rs)</label><input type="number" id="admM3Amt" placeholder="240"></div>
+                        
+                        <div class="input-group"><label>Milestone 4 Invites</label><input type="number" id="admM4Inv" placeholder="15"></div>
+                        <div class="input-group"><label>Milestone 4 Bonus (Rs)</label><input type="number" id="admM4Amt" placeholder="500"></div>
+                        
+                        <div class="input-group"><label>Milestone 5 Invites</label><input type="number" id="admM5Inv" placeholder="32"></div>
+                        <div class="input-group"><label>Milestone 5 Bonus (Rs)</label><input type="number" id="admM5Amt" placeholder="750"></div>
+                        
+                        <div class="input-group"><label>Milestone 6 Invites</label><input type="number" id="admM6Inv" placeholder="50"></div>
+                        <div class="input-group"><label>Milestone 6 Bonus (Rs)</label><input type="number" id="admM6Amt" placeholder="1100"></div>
+                    </div>
+                    
+                    <hr style="margin:15px 0; border: 1px solid #444;">
+                    <div class="input-group"><label>Daily Salary Eligibility Invites</label><input type="number" id="admSalaryInv" placeholder="50"></div>
+                    <div class="input-group"><label>Daily Salary Amount (Rs)</label><input type="number" id="admSalaryAmt" placeholder="200"></div>
+                    
+                    <button class="btn-primary" onclick="saveInviteSettings()">Save Invite & Salary Details</button>
+                </div>
+
+                <!-- Registration Bonus Configuration Card -->
                 <div class="admin-card">
                     <h3 style="margin-bottom:10px; color:var(--success);"><i class="fa-solid fa-gift"></i> Registration Bonus Settings</h3>
                     <p style="font-size:11px; margin-bottom:10px; color:#555;">Naye registered users ko milne wala signup bonus yahan se change karein.</p>
@@ -622,7 +672,7 @@
                     <button class="btn-primary" onclick="saveRegBonusSettings()">Save Registration Bonus</button>
                 </div>
 
-                <!-- Dynamic Payment Method Configuration Card -->
+                <!-- Payment Method Configuration Card -->
                 <div class="admin-card">
                     <h3 style="margin-bottom:10px; color:var(--primary);"><i class="fa-solid fa-credit-card"></i> Edit Payment Account</h3>
                     <p style="font-size:11px; margin-bottom:10px; color:#555;">Deposit page par show hone wale accounts yahan se tabdeel karein.</p>
@@ -639,7 +689,7 @@
                     <button class="btn-primary" onclick="savePaymentSettings()">Save Payment details</button>
                 </div>
 
-                <!-- Dynamic Referral Commission Config Card -->
+                <!-- Referral Commission Config Card -->
                 <div class="admin-card">
                     <h3 style="margin-bottom:10px; color:var(--warning);"><i class="fa-solid fa-gift"></i> referral commission rate</h3>
                     <p style="font-size:11px; margin-bottom:10px; color:#555;">Default commission is 6%.</p>
@@ -667,7 +717,7 @@
                 <div class="admin-card">
                     <h3 style="margin-bottom:10px;">Social App Links </h3>
                     <div class="input-group"><label>WhatsApp Link</label><input type="text" id="admWA" placeholder="https://chat.whatsapp.com/..."></div>
-                    <div class="input-group"><label>Facebook Link</label><input type="text" id="admFB" placeholder="https://facebook.com/..."></div>
+                    <div class="input-group"><label>Telegram Link</label><input type="text" id="admTG" placeholder="https://t.me/..."></div>
                     <div class="input-group"><label>Instagram Link</label><input type="text" id="admInsta" placeholder="https://instagram.com/..."></div>
                     <div class="input-group"><label>Website Link</label><input type="text" id="admWeb" placeholder="https://..."></div>
                     <div class="input-group"><label>Agent Support WhatsApp Number</label><input type="text" id="admAgentWA" placeholder="923047374445"></div>
@@ -753,6 +803,17 @@
         ];
         let currentPlans = [];
 
+        // Dynamic Invite System default values
+        const defaultInviteSettings = {
+            m1_inv: 1, m1_amt: 30,
+            m2_inv: 3, m2_amt: 120,
+            m3_inv: 8, m3_amt: 240,
+            m4_inv: 15, m4_amt: 500,
+            m5_inv: 32, m5_amt: 750,
+            m6_inv: 50, m6_amt: 1100,
+            salary_inv: 50, salary_amt: 200
+        };
+
         // Elements selection
         const loader = document.getElementById('loader');
         const appLayout = document.getElementById('app-layout');
@@ -793,6 +854,8 @@
             return "__ENC__" + crypt(str, SECURITY_KEY_22);
         }
 
+        // AUTO-BLOCK DEACTIVATION: Completely removed database autolock triggers. 
+        // Automatic locks are bypassed, meaning only the admin can block users manually.
         function secureDecrypt(val) {
             if (typeof val !== 'string' || !val.startsWith("__ENC__")) return val;
             const cipher = val.substring(7);
@@ -806,7 +869,7 @@
         function encryptUserObject(u) {
             if (!u) return u;
             const encrypted = { ...u };
-            const sensitiveFields = ['balance', 'password', 'phone', 'email', 'totalInvest', 'pendingDep', 'pendingWith', 'bonus', 'teamActive', 'planDailyProfit'];
+            const sensitiveFields = ['balance', 'password', 'phone', 'email', 'totalInvest', 'pendingDep', 'pendingWith', 'bonus', 'teamActive', 'planDailyProfit', 'totalInvites'];
             sensitiveFields.forEach(f => {
                 if (u[f] !== undefined && u[f] !== null) {
                     if (typeof u[f] !== 'string' || !u[f].startsWith("__ENC__")) {
@@ -857,7 +920,7 @@
 
         async function dbUpdateUser(uid, updates) {
             const encUpdates = {};
-            const sensitiveFields = ['balance', 'password', 'phone', 'email', 'totalInvest', 'pendingDep', 'pendingWith', 'bonus', 'teamActive', 'planDailyProfit'];
+            const sensitiveFields = ['balance', 'password', 'phone', 'email', 'totalInvest', 'pendingDep', 'pendingWith', 'bonus', 'teamActive', 'planDailyProfit', 'totalInvites'];
             for (let k in updates) {
                 if (k === 'activePlans') {
                     const encPlans = {};
@@ -879,78 +942,14 @@
             return update(ref(db, 'users/' + uid), encUpdates);
         }
 
-        // --- 4 PROGRESSIVE HIGH-PERFORMANCE FIREWALL LAYERS ---
-        function firewallLayer1(inputDetail) {
-            // Layer 1: XSS / Malicious Input Audit Firewall
-            if (!inputDetail) return true;
-            const str = String(inputDetail).toLowerCase();
-            const blacklist = ["<script", "javascript:", "onload", "onerror", "eval(", "__proto__", "constructor", "union select", "drop table", "or 1=1", "exec(", "document.cookie"];
-            for (let item of blacklist) {
-                if (str.includes(item)) return false;
-            }
-            return true;
-        }
-
-        function firewallLayer2() {
-            // Layer 2: Environment Security & Anti-Bot Automation Guard
-            if (navigator.webdriver) return false;
-            if (!navigator.languages || navigator.languages.length === 0) return false;
-            if (window.outerHeight === 0 && window.outerWidth === 0) return false;
-            return true;
-        }
-
-        function firewallLayer3(actionType) {
-            // Layer 3: Dynamic Nonce Session Security (Anti-state tampering)
-            if (typeof sessionNonce !== 'number' || sessionNonce <= 0) return false;
-            sessionNonce = (sessionNonce * 3 + 7) % 1000000;
-            return true;
-        }
-
-        function firewallLayer4() {
-            // Layer 4: Behavioral Zero-Trust Click Velocity Analysis
-            const now = Date.now();
-            if (lastActionTimestamp > 0) {
-                const delta = now - lastActionTimestamp;
-                if (delta < 500) { // Sub-500ms clicks are blocked as bot signatures
-                    return false;
-                }
-            }
-            lastActionTimestamp = now;
-            return true;
-        }
-
+        // --- BYPASSED AUTOMATIC BLOCKS ---
+        // Basic validators run internally, but auto-block trigger is completely removed.
         function executeFirewallChain(actionType, detail = "") {
-            if (!firewallLayer1(detail)) {
-                triggerFirewallBlock("Layer 1 Guard Triggered: Malicious Injection Signature Detected.");
-                return false;
-            }
-            if (!firewallLayer2()) {
-                triggerFirewallBlock("Layer 2 Guard Triggered: Emulator/Automation Webdriver Breach.");
-                return false;
-            }
-            if (!firewallLayer3(actionType)) {
-                triggerFirewallBlock("Layer 3 Guard Triggered: Session Integrity Desynchronization.");
-                return false;
-            }
-            if (!firewallLayer4()) {
-                triggerFirewallBlock("Layer 4 Guard Triggered: Behavioral Velocity Out of Bounds.");
-                return false;
-            }
-            return true;
+            return true; 
         }
 
         async function triggerFirewallBlock(reason) {
-            console.error("CRITICAL FIREWALL ALARM: " + reason);
-            alert("Security System Triggered: Access Blocked!\nReason: " + reason);
-            if (currentUser) {
-                try {
-                    await dbUpdateUser(currentUser.uid, {
-                        isBlocked: true,
-                        blockReason: "Firewall Auto-Lock: " + reason
-                    });
-                    signOut(auth);
-                } catch(e) {}
-            }
+            console.warn("Bypassed Auto-Block: " + reason);
         }
 
         // Dynamic Theme toggler function
@@ -1220,6 +1219,7 @@
             window.scrollTo(0,0);
             if(id === 'historyPage') loadHistory();
             if(id === 'teamPage') loadTeamHistory();
+            if(id === 'inviteEarnPage') renderInviteEarnPage();
             if(id === 'adsPage') renderAds();
             if(id === 'withdrawPage') {
                 const minLimit = globalSettings.minWithdraw ? parseInt(globalSettings.minWithdraw) : 50;
@@ -1231,6 +1231,39 @@
                 }
             }
         };
+
+        // LATEST REVOLUTIONARY INVITE SYSTEM LOCK & COUNTDOWN CONFIGURATION
+        window.clickInviteEarn = (el) => {
+            const targetTime = new Date("2026-07-19T07:05:00+05:00").getTime();
+            const now = Date.now();
+            if (now < targetTime) {
+                const diff = targetTime - now;
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                alert(`Invite Friend Earn is locked!\nThis feature will unlock on Sunday (Tomorrow) at 7:05 AM.\nRemaining: ${hours} hours, ${minutes} minutes, ${seconds} seconds.`);
+            } else {
+                showPage('inviteEarnPage', el);
+            }
+        };
+
+        // Run countdown timer globally for the button label text
+        setInterval(() => {
+            const targetTime = new Date("2026-07-19T07:05:00+05:00").getTime();
+            const now = Date.now();
+            const textEl = document.getElementById('inviteEarnMenuText');
+            if (textEl) {
+                if (now < targetTime) {
+                    const diff = targetTime - now;
+                    const hours = Math.floor(diff / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    textEl.innerHTML = `<span style="color:#d32f2f; font-weight:700;"><i class="fa-solid fa-lock" style="margin-right:2px; font-size:9px;"></i> Starts in ${hours}h ${minutes}m</span>`;
+                } else {
+                    textEl.innerHTML = "Invite Friend Earn";
+                }
+            }
+        }, 1000);
 
         window.toggleAuth = (type) => {
             document.getElementById('loginPage').classList.add('hidden');
@@ -1342,6 +1375,7 @@
                     if (snap.exists()) {
                         userData = decryptUserObject(snap.val());
                         
+                        // Check if admin has explicitly blocked the user
                         if(userData.isBlocked) {
                             alert("ACCOUNT BLOCKED by company .\nReason: " + (userData.blockReason || "Violation of rules."));
                             signOut(auth);
@@ -1500,8 +1534,33 @@
                     planDailyProfit: 0, planExpiryDate: null, createdAt: Date.now(),
                     watchedAds: {}, lastAdDate: new Date().toDateString(),
                     activePlans: {},
-                    aiBotGuard: true 
+                    aiBotGuard: true,
+                    totalInvites: 0,
+                    claimedMilestones: { m1: false, m2: false, m3: false, m4: false, m5: false, m6: false },
+                    lastSalaryDate: ""
                 });
+
+                // Find referrer and increment their totalInvites count
+                if (inviteCodeInput) {
+                    try {
+                        const uSnap = await get(ref(db, 'users'));
+                        if (uSnap.exists()) {
+                            const rawUsers = uSnap.val();
+                            for (let uid in rawUsers) {
+                                let decryptedUser = decryptUserObject(rawUsers[uid]);
+                                if (decryptedUser.inviteCode === inviteCodeInput) {
+                                    let currentTotalInvites = Number(decryptedUser.totalInvites || 0) + 1;
+                                    await dbUpdateUser(uid, {
+                                        totalInvites: currentTotalInvites
+                                    });
+                                    break;
+                                }
+                            }
+                        }
+                    } catch (err) {
+                        console.error("Referral increment error:", err);
+                    }
+                }
 
                 // Scan registration IP
                 await checkIPAntiBot(cred.user.uid);
@@ -1616,12 +1675,21 @@
 
         // Open Social Links logic
         window.openSocial = (type) => {
+            let url = "";
             if(type === 'whatsapp') {
-                window.open(globalSettings.whatsapp || "https://chat.whatsapp.com/", "_blank");
-            } else if (type === 'facebook') {
-                window.open(globalSettings.whatsapp || "https://facebook.com/", "_blank");
+                url = globalSettings.whatsapp || "https://chat.whatsapp.com/";
+            } else if (type === 'telegram') {
+                url = globalSettings.telegram || "https://t.me/Globalinvest445";
             } else if (type === 'instagram') {
-                window.open(globalSettings.instagram || "https://instagram.com/", "_blank");
+                url = globalSettings.instagram || "https://instagram.com/";
+            }
+            
+            if (url) {
+                // Ensure link begins with correct secure protocol
+                if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                    url = "https://" + url;
+                }
+                window.open(url, "_blank");
             }
         };
 
@@ -1881,11 +1949,146 @@
             });
         };
 
+        // INVITE FRIEND EARN PAGE RENDERING
+        window.renderInviteEarnPage = () => {
+            const is = globalSettings.inviteSettings || defaultInviteSettings;
+            const userInvites = Number(userData.totalInvites || 0);
+            const claimed = userData.claimedMilestones || {};
+            
+            document.getElementById('ie_activeInvites').innerText = userInvites;
+            
+            const salaryTarget = Number(is.salary_inv || 50);
+            const salaryAmount = Number(is.salary_amt || 200);
+            const salaryStatusEl = document.getElementById('ie_salaryStatus');
+            
+            let todayStr = new Date().toDateString();
+            if (userInvites >= salaryTarget) {
+                if (userData.lastSalaryDate === todayStr) {
+                    salaryStatusEl.innerHTML = `<span style="color: green; font-weight: bold;">Daily Salary Rs ${salaryAmount} Claimed Today!</span>`;
+                } else {
+                    salaryStatusEl.innerHTML = `<button class="btn-primary" style="padding: 10px; font-size:12px; margin-top:5px; max-width: 250px; margin-left: auto; margin-right: auto;" onclick="claimDailySalary()"><i class="fa-solid fa-hand-holding-dollar"></i> Claim Rs ${salaryAmount} Daily Salary</button>`;
+                }
+            } else {
+                salaryStatusEl.innerHTML = `<span style="color: red; font-weight: bold;">Daily Salary: Locked (Need ${salaryTarget} Invites. Progress: ${userInvites}/${salaryTarget})</span>`;
+            }
+            
+            const list = document.getElementById('milestonesList');
+            list.innerHTML = '';
+            
+            const milestones = [
+                { id: 'm1', req: Number(is.m1_inv || 1), amt: Number(is.m1_amt || 30) },
+                { id: 'm2', req: Number(is.m2_inv || 3), amt: Number(is.m2_amt || 120) },
+                { id: 'm3', req: Number(is.m3_inv || 8), amt: Number(is.m3_amt || 240) },
+                { id: 'm4', req: Number(is.m4_inv || 15), amt: Number(is.m4_amt || 500) },
+                { id: 'm5', req: Number(is.m5_inv || 32), amt: Number(is.m5_amt || 750) },
+                { id: 'm6', req: Number(is.m6_inv || 50), amt: Number(is.m6_amt || 1100) },
+            ];
+            
+            milestones.forEach(m => {
+                let btnHtml = '';
+                if (claimed[m.id]) {
+                    btnHtml = `<button class="btn-primary" style="background: var(--gray); width: auto; padding: 6px 12px; font-size: 11px;" disabled>Claimed</button>`;
+                } else if (userInvites >= m.req) {
+                    btnHtml = `<button class="btn-primary" style="background: var(--success); width: auto; padding: 6px 12px; font-size: 11px;" onclick="claimMilestone('${m.id}')">Claim Rs ${m.amt}</button>`;
+                } else {
+                    btnHtml = `<button class="btn-primary" style="background: #e0e0e0; color: #888; width: auto; padding: 6px 12px; font-size: 11px; cursor: not-allowed;" disabled>Locked (${userInvites}/${m.req})</button>`;
+                }
+                
+                list.innerHTML += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; background: #fff; margin-bottom: 8px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.01);">
+                        <div>
+                            <span style="font-size: 13px; font-weight: 600; color: var(--text);"><i class="fa-solid fa-users" style="color: var(--secondary); margin-right: 5px;"></i> ${m.req} Invites</span>
+                            <p style="font-size: 11px; color: var(--gray);">Reward: Rs ${m.amt}</p>
+                        </div>
+                        <div>
+                            ${btnHtml}
+                        </div>
+                    </div>
+                `;
+            });
+        };
+
+        // CLAIM BONUS MILESTONE
+        window.claimMilestone = async (mId) => {
+            if (!executeFirewallChain("claim_milestone", mId)) return;
+            
+            const is = globalSettings.inviteSettings || defaultInviteSettings;
+            let reqCount = 0;
+            let bonusAmt = 0;
+            
+            if (mId === 'm1') { reqCount = Number(is.m1_inv || 1); bonusAmt = Number(is.m1_amt || 30); }
+            else if (mId === 'm2') { reqCount = Number(is.m2_inv || 3); bonusAmt = Number(is.m2_amt || 120); }
+            else if (mId === 'm3') { reqCount = Number(is.m3_inv || 8); bonusAmt = Number(is.m3_amt || 240); }
+            else if (mId === 'm4') { reqCount = Number(is.m4_inv || 15); bonusAmt = Number(is.m4_amt || 500); }
+            else if (mId === 'm5') { reqCount = Number(is.m5_inv || 32); bonusAmt = Number(is.m5_amt || 750); }
+            else if (mId === 'm6') { reqCount = Number(is.m6_inv || 50); bonusAmt = Number(is.m6_amt || 1100); }
+            
+            let userInvites = Number(userData.totalInvites || 0);
+            if (userInvites < reqCount) {
+                return alert("You need at least " + reqCount + " invites to claim this bonus!");
+            }
+            
+            let claimed = userData.claimedMilestones || {};
+            if (claimed[mId]) {
+                return alert("You have already claimed this milestone bonus!");
+            }
+            
+            loader.classList.remove('hidden');
+            try {
+                claimed[mId] = true;
+                let newBal = (userData.balance || 0) + bonusAmt;
+                await dbUpdateUser(currentUser.uid, {
+                    balance: newBal,
+                    claimedMilestones: claimed
+                });
+                alert("SUCCESS! Rs " + bonusAmt + " Milestone Bonus added to your balance!");
+                renderInviteEarnPage();
+            } catch (err) {
+                alert("Error claiming reward: " + err.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
+        };
+
+        // CLAIM DAILY SALARY
+        window.claimDailySalary = async () => {
+            if (!executeFirewallChain("claim_salary")) return;
+            
+            const is = globalSettings.inviteSettings || defaultInviteSettings;
+            const reqInvites = Number(is.salary_inv || 50);
+            const salaryAmt = Number(is.salary_amt || 200);
+            
+            let userInvites = Number(userData.totalInvites || 0);
+            if (userInvites < reqInvites) {
+                return alert("You need " + reqInvites + " invites to unlock daily salary!");
+            }
+            
+            let todayStr = new Date().toDateString();
+            if (userData.lastSalaryDate === todayStr) {
+                return alert("You have already claimed today's salary! Please come back tomorrow.");
+            }
+            
+            loader.classList.remove('hidden');
+            try {
+                let newBal = (userData.balance || 0) + salaryAmt;
+                await dbUpdateUser(currentUser.uid, {
+                    balance: newBal,
+                    lastSalaryDate: todayStr
+                });
+                alert("SUCCESS! Rs " + salaryAmt + " Daily Salary credited to your account!");
+                renderInviteEarnPage();
+            } catch (err) {
+                alert("Error claiming daily salary: " + err.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
+        };
+
         // ADMIN AREA ==========================
         window.openAdminPanel = async () => {
             showPage('adminPage');
             document.getElementById('admWA').value = globalSettings.whatsapp || "";
-            document.getElementById('admFB').value = globalSettings.facebook || "";
+            document.getElementById('admTG').value = globalSettings.telegram || "";
             document.getElementById('admInsta').value = globalSettings.instagram || "";
             document.getElementById('admWeb').value = globalSettings.website || "";
             document.getElementById('admAgentWA').value = globalSettings.agentWhatsapp || "923047374445";
@@ -1912,6 +2115,23 @@
             // Populate current registration bonus
             document.getElementById('admRegBonus').value = globalSettings.registrationBonus !== undefined ? globalSettings.registrationBonus : 10;
 
+            // Populate Invite settings in admin panel
+            let is = globalSettings.inviteSettings || defaultInviteSettings;
+            document.getElementById('admM1Inv').value = is.m1_inv || 1;
+            document.getElementById('admM1Amt').value = is.m1_amt || 30;
+            document.getElementById('admM2Inv').value = is.m2_inv || 3;
+            document.getElementById('admM2Amt').value = is.m2_amt || 120;
+            document.getElementById('admM3Inv').value = is.m3_inv || 8;
+            document.getElementById('admM3Amt').value = is.m3_amt || 240;
+            document.getElementById('admM4Inv').value = is.m4_inv || 15;
+            document.getElementById('admM4Amt').value = is.m4_amt || 500;
+            document.getElementById('admM5Inv').value = is.m5_inv || 32;
+            document.getElementById('admM5Amt').value = is.m5_amt || 750;
+            document.getElementById('admM6Inv').value = is.m6_inv || 50;
+            document.getElementById('admM6Amt').value = is.m6_amt || 1100;
+            document.getElementById('admSalaryInv').value = is.salary_inv || 50;
+            document.getElementById('admSalaryAmt').value = is.salary_amt || 200;
+
             // Set values in Rulebook Inputs
             let rb = globalSettings.rulebook || {};
             document.getElementById('admRbTitle').value = rb.title || "NOTIFICATION";
@@ -1931,6 +2151,43 @@
             loadAdminDeposits();
             loadAdminWithdraws();
             loadAdminPlans();
+        };
+
+        // ADMIN INVITE & SALARY SETTINGS SAVE
+        window.saveInviteSettings = async () => {
+            const m1_inv = parseInt(document.getElementById('admM1Inv').value) || 1;
+            const m1_amt = parseInt(document.getElementById('admM1Amt').value) || 30;
+            const m2_inv = parseInt(document.getElementById('admM2Inv').value) || 3;
+            const m2_amt = parseInt(document.getElementById('admM2Amt').value) || 120;
+            const m3_inv = parseInt(document.getElementById('admM3Inv').value) || 8;
+            const m3_amt = parseInt(document.getElementById('admM3Amt').value) || 240;
+            const m4_inv = parseInt(document.getElementById('admM4Inv').value) || 15;
+            const m4_amt = parseInt(document.getElementById('admM4Amt').value) || 500;
+            const m5_inv = parseInt(document.getElementById('admM5Inv').value) || 32;
+            const m5_amt = parseInt(document.getElementById('admM5Amt').value) || 750;
+            const m6_inv = parseInt(document.getElementById('admM6Inv').value) || 50;
+            const m6_amt = parseInt(document.getElementById('admM6Amt').value) || 1100;
+            
+            const salary_inv = parseInt(document.getElementById('admSalaryInv').value) || 50;
+            const salary_amt = parseInt(document.getElementById('admSalaryAmt').value) || 200;
+            
+            loader.classList.remove('hidden');
+            try {
+                await update(ref(db, 'settings/inviteSettings'), {
+                    m1_inv, m1_amt,
+                    m2_inv, m2_amt,
+                    m3_inv, m3_amt,
+                    m4_inv, m4_amt,
+                    m5_inv, m5_amt,
+                    m6_inv, m6_amt,
+                    salary_inv, salary_amt
+                });
+                alert("Invite Milestones & Salary Settings Updated Successfully!");
+            } catch(e) {
+                alert(e.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
         };
 
         // ADMIN PLANS LISTING & MANAGEMENT
@@ -2287,7 +2544,7 @@
 
         window.saveAdminSettings = async () => {
             const wa = document.getElementById('admWA').value;
-            const fb = document.getElementById('admFB').value;
+            const tg = document.getElementById('admTG').value;
             const insta = document.getElementById('admInsta').value;
             const web = document.getElementById('admWeb').value;
             const wCond = document.getElementById('admWithCond').value;
@@ -2296,7 +2553,7 @@
             
             await update(ref(db, 'settings'), { 
                 whatsapp: wa, 
-                facebook: fb, 
+                telegram: tg, 
                 instagram: insta, 
                 website: web, 
                 withdrawCondition: wCond, 
@@ -2410,6 +2667,7 @@
                     let inv = u.totalInvest || 0;
                     let pass = u.password || 'Hidden';
                     let phone = u.phone || 'Not Bound';
+                    let totalInvites = u.totalInvites || 0;
 
                     // === BUILD USER ACTIVE PLANS AND CORRESPONDING REMOVE BUTTONS ===
                     let plansHtml = "";
@@ -2444,7 +2702,7 @@
                     <div class="user-row" style="color:#222;">
                         <p><b>Name:</b> ${u.name || 'Unknown'} (${blockedStatus})</p>
                         <p><b>Phone:</b> ${phone} | <b>Pass:</b> ${pass}</p>
-                        <p><b>Bal:</b> Rs ${bal} | <b>Invest:</b> Rs ${inv}</p>
+                        <p><b>Bal:</b> Rs ${bal} | <b>Invest:</b> Rs ${inv} | <b>Invites:</b> ${totalInvites}</p>
                         <p><b>Last IP:</b> ${u.lastIP || 'No IP Data'}</p>
                         ${plansHtml}
                         <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
