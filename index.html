@@ -18,7 +18,7 @@
     <meta name="twitter:card" content="summary_large_image">
 
     <title>Global invest PLATFORM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -263,32 +263,7 @@
             <div class="input-group"><input type="email" id="logEmail" placeholder="Email Address"></div>
             <div class="input-group"><input type="password" id="logPass" placeholder="Password"></div>
             <button class="btn-primary" onclick="loginUser()">LOGIN SECURELY</button>
-            <span class="link-text" onclick="toggleAuth('forgot')">Forgot Password? Change Here</span>
             <span class="link-text" onclick="toggleAuth('register')">New User? Create Account Here</span>
-        </div>
-    </div>
-
-    <div id="forgotPasswordPage" class="auth-container hidden">
-        <div class="auth-box">
-            <h2>RESET PASSWORD</h2>
-            <p style="font-size:12px; color:#666; margin-bottom:20px;">Provide details to reset your password</p>
-            <div class="input-group"><input type="email" id="resetEmail" placeholder="Email Address"></div>
-            <div class="input-group"><input type="number" id="resetPhone" placeholder="Bound Mobile Number"></div>
-            <!-- Security Question Verification -->
-            <div class="input-group">
-                <label>Security Question</label>
-                <select id="resetSecQ" style="background:#f8f9fa;">
-                    <option value="pet">What is your favorite pet's name?</option>
-                    <option value="school">What was the name of your first school?</option>
-                    <option value="city">In which city were you born?</option>
-                    <option value="friend">What is your best friend's name?</option>
-                </select>
-            </div>
-            <div class="input-group"><input type="text" id="resetSecAns" placeholder="Your Security Answer"></div>
-            <div class="input-group"><input type="password" id="resetNewPass" placeholder="New Password"></div>
-            <div class="input-group"><input type="password" id="resetConfirmPass" placeholder="Confirm Password"></div>
-            <button class="btn-primary" onclick="resetLoginPassword()">RESET PASSWORD</button>
-            <span class="link-text" onclick="toggleAuth('login')">Back to Login</span>
         </div>
     </div>
 
@@ -300,18 +275,6 @@
             <div class="input-group"><input type="email" id="regEmail" placeholder="Email Address"></div>
             <div class="input-group"><input type="password" id="regPass" placeholder="Password "></div>
             <div class="input-group"><input type="password" id="regCPass" placeholder="Confirm Password"></div>
-            
-            <!-- Security Question Registration -->
-            <div class="input-group">
-                <label>Choose Security Question (Required for Recovery)</label>
-                <select id="regSecQ" style="background:#f8f9fa;">
-                    <option value="pet">What is your favorite pet's name?</option>
-                    <option value="school">What was the name of your first school?</option>
-                    <option value="city">In which city were you born?</option>
-                    <option value="friend">What is your best friend's name?</option>
-                </select>
-            </div>
-            <div class="input-group"><input type="text" id="regSecAns" placeholder="Security Answer"></div>
             
             <div class="input-group"><input type="text" id="regInvite" placeholder="Invite Code "></div>
             <button class="btn-primary" onclick="registerUser()">REGISTER NOW</button>
@@ -455,26 +418,6 @@
                     <input type="password" id="newCPass" placeholder="******">
                 </div>
                 <button class="btn-primary" onclick="changeUserPassword()">CHANGE PASSWORD</button>
-            </div>
-
-            <!-- Email Change Request Form System -->
-            <div class="card" style="margin-top: 20px;">
-                <h3 style="color:var(--primary); margin-bottom:15px; font-size:16px;">Request Email Change</h3>
-                <p style="font-size:11px; color:#c62828; margin-bottom:15px; font-weight:600;">Note: Email updates will require verification and admin approval before updating.</p>
-                <div class="input-group">
-                    <label>Current Email Address</label>
-                    <input type="email" id="oldEmail" placeholder="Enter old email address">
-                </div>
-                <div class="input-group">
-                    <label>New Email Address</label>
-                    <input type="email" id="newEmail" placeholder="Enter new email address">
-                </div>
-                <div class="input-group">
-                    <label>Confirm New Email Address</label>
-                    <input type="email" id="newCEmail" placeholder="Confirm new email address">
-                </div>
-                <button class="btn-primary" onclick="submitEmailChangeRequest()">SUBMIT CHANGE REQUEST</button>
-                <div id="emailRequestStatus" style="margin-top:15px; font-size:13px; font-weight:bold; text-align:center;"></div>
             </div>
         </div>
 
@@ -694,7 +637,6 @@
                 <div class="admin-nav-item" onclick="switchAdminTab('adm-user', this)">Users</div>
                 <div class="admin-nav-item" onclick="switchAdminTab('adm-plans', this)">Plans</div>
                 <div class="admin-nav-item" onclick="switchAdminTab('adm-support', this)">Tickets</div>
-                <div class="admin-nav-item" onclick="switchAdminTab('adm-email-change', this)">Email Requests</div>
                 <div class="admin-nav-item" onclick="switchAdminTab('adm-set', this)">Settings</div>
             </div>
 
@@ -735,14 +677,8 @@
                 <h3 style="margin:10px 0; color:white;"><i class="fa-solid fa-headset"></i> Support Tickets Requests</h3>
                 <div id="adminTicketsList" style="font-size:12px;">Loading support tickets...</div>
             </div>
-
-            <!-- TAB 7: EMAIL CHANGE REQUESTS (ADMIN VIEW) -->
-            <div id="adm-email-change" class="admin-tab-content" style="padding:10px;">
-                <h3 style="margin:10px 0; color:white;"><i class="fa-solid fa-envelope"></i> Email Change Verification</h3>
-                <div id="adminEmailRequestsList" style="font-size:12px;">Loading email requests...</div>
-            </div>
             
-            <!-- TAB 8: SETTINGS -->
+            <!-- TAB 7: SETTINGS -->
             <div id="adm-set" class="admin-tab-content" style="padding:10px;">
                 
                 <!-- Dynamic Invite Milestones and Salary Configuration Card -->
@@ -1003,7 +939,7 @@
         function encryptUserObject(u) {
             if (!u) return u;
             const encrypted = { ...u };
-            const sensitiveFields = ['balance', 'password', 'phone', 'email', 'totalInvest', 'pendingDep', 'pendingWith', 'bonus', 'teamActive', 'planDailyProfit', 'totalInvites', 'secQ', 'secAns'];
+            const sensitiveFields = ['balance', 'password', 'phone', 'email', 'totalInvest', 'pendingDep', 'pendingWith', 'bonus', 'teamActive', 'planDailyProfit', 'totalInvites'];
             sensitiveFields.forEach(f => {
                 if (u[f] !== undefined && u[f] !== null) {
                     if (typeof u[f] !== 'string' || !u[f].startsWith("__ENC__")) {
@@ -1054,7 +990,7 @@
 
         async function dbUpdateUser(uid, updates) {
             const encUpdates = {};
-            const sensitiveFields = ['balance', 'password', 'phone', 'email', 'totalInvest', 'pendingDep', 'pendingWith', 'bonus', 'teamActive', 'planDailyProfit', 'totalInvites', 'secQ', 'secAns'];
+            const sensitiveFields = ['balance', 'password', 'phone', 'email', 'totalInvest', 'pendingDep', 'pendingWith', 'bonus', 'teamActive', 'planDailyProfit', 'totalInvites'];
             for (let k in updates) {
                 if (k === 'activePlans') {
                     const encPlans = {};
@@ -1400,7 +1336,6 @@
             if(id === 'inviteEarnPage') renderInviteEarnPage();
             if(id === 'adsPage') renderAds();
             if(id === 'supportPage') loadUserTickets();
-            if(id === 'securityPage') loadEmailChangeStatus();
             if(id === 'withdrawPage') {
                 const minLimit = globalSettings.minWithdraw ? parseInt(globalSettings.minWithdraw) : 50;
                 if(document.getElementById('w_minLimitText')) {
@@ -1447,12 +1382,8 @@
         window.toggleAuth = (type) => {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('registerPage').classList.add('hidden');
-            if(document.getElementById('forgotPasswordPage')) {
-                document.getElementById('forgotPasswordPage').classList.add('hidden');
-            }
             if(type === 'login') document.getElementById('loginPage').classList.remove('hidden');
             else if(type === 'register') document.getElementById('registerPage').classList.remove('hidden');
-            else if(type === 'forgot') document.getElementById('forgotPasswordPage').classList.remove('hidden');
         };
 
         // Render client-side package cards dynamically based on Firebase settings
@@ -1692,17 +1623,13 @@
                 appLayout.classList.remove('hidden');
                 document.getElementById('loginPage').classList.add('hidden');
                 document.getElementById('registerPage').classList.add('hidden'); 
-                if (document.getElementById('forgotPasswordPage')) {
-                    document.getElementById('forgotPasswordPage').classList.add('hidden');
-                }
                 
             } else {
                 currentUser = null;
                 appLayout.classList.add('hidden');
                 loader.classList.add('hidden');
                 
-                if(document.getElementById('registerPage').classList.contains('hidden') && 
-                   (!document.getElementById('forgotPasswordPage') || document.getElementById('forgotPasswordPage').classList.contains('hidden'))){
+                if(document.getElementById('registerPage').classList.contains('hidden')){
                     document.getElementById('loginPage').classList.remove('hidden');
                 }
             }
@@ -1714,10 +1641,8 @@
             const pass = document.getElementById('regPass').value;
             const cpass = document.getElementById('regCPass').value;
             const inviteCodeInput = document.getElementById('regInvite').value;
-            const secQ = document.getElementById('regSecQ').value;
-            const secAns = document.getElementById('regSecAns').value.trim();
             
-            if(!name || !email || !pass || !secAns) return alert("Fill all fields including security answer!");
+            if(!name || !email || !pass) return alert("Fill all fields!");
             if(pass !== cpass) return alert("Passwords do not match!");
             if(pass.length < 6) return alert("Password must be 6+ chars!");
 
@@ -1743,8 +1668,6 @@
                     activePlans: {},
                     aiBotGuard: true,
                     totalInvites: 0,
-                    secQ: secQ,
-                    secAns: secAns,
                     claimedMilestones: { m1: false, m2: false, m3: false, m4: false, m5: false, m6: false },
                     lastSalaryDate: ""
                 });
@@ -1892,103 +1815,6 @@
             }
         };
 
-        // USER SECURITY-QUESTION ENHANCED RESET PASSWORD (VIA BOUND EMAIL + SECURITY CHECKS)
-        window.resetLoginPassword = async () => {
-            const email = document.getElementById('resetEmail').value.trim();
-            const phone = document.getElementById('resetPhone').value.trim();
-            const inputSecQ = document.getElementById('resetSecQ').value;
-            const inputSecAns = document.getElementById('resetSecAns').value.trim();
-            const newPass = document.getElementById('resetNewPass').value;
-            const confirmPass = document.getElementById('resetConfirmPass').value;
-
-            if(!email || !phone || !inputSecAns || !newPass || !confirmPass) {
-                return alert("All fields are required including security question answer!");
-            }
-            if(newPass !== confirmPass) {
-                return alert("Passwords do not match!");
-            }
-            if(newPass.length < 6) {
-                return alert("New Password must be 6+ characters!");
-            }
-
-            loader.classList.remove('hidden');
-            try {
-                const snap = await get(ref(db, 'users'));
-                if(!snap.exists()) {
-                    loader.classList.add('hidden');
-                    return alert("Wrong information!");
-                }
-
-                let targetUserUid = null;
-                let targetUserData = null;
-
-                snap.forEach(child => {
-                    let u = decryptUserObject(child.val());
-                    if(u.email && String(u.email).trim().toLowerCase() === email.toLowerCase()) {
-                        targetUserUid = child.key;
-                        targetUserData = u;
-                    }
-                });
-
-                if(!targetUserUid || !targetUserData) {
-                    loader.classList.add('hidden');
-                    return alert("Wrong information!");
-                }
-
-                // Verify bound phone matches database entry strictly
-                const boundPhone = targetUserData.phone !== undefined ? targetUserData.phone : "";
-                const cleanBoundPhone = String(boundPhone).trim().replace(/^(0|92)/, '');
-                const cleanInputPhone = String(phone).trim().replace(/^(0|92)/, '');
-
-                if(!cleanBoundPhone || cleanBoundPhone !== cleanInputPhone) {
-                    loader.classList.add('hidden');
-                    return alert("Wrong information!");
-                }
-
-                // Verify Security Question & Security Answer Strictly
-                const dbSecQ = targetUserData.secQ || "";
-                const dbSecAns = targetUserData.secAns || "";
-
-                if (dbSecQ !== inputSecQ || dbSecAns.toLowerCase() !== inputSecAns.toLowerCase()) {
-                    loader.classList.add('hidden');
-                    return alert("Wrong security question or security answer!");
-                }
-
-                // Match successful. Fetch credentials and login programmatically to update Auth password.
-                const oldPassword = targetUserData.password;
-                if(!oldPassword) {
-                    loader.classList.add('hidden');
-                    return alert("Wrong information!");
-                }
-
-                const loginCredentialEmail = targetUserData.authEmail || targetUserData.email;
-                const cred = await signInWithEmailAndPassword(auth, loginCredentialEmail, oldPassword);
-                await updatePassword(cred.user, newPass);
-
-                // Update database plain-text equivalent secure password
-                await dbUpdateUser(cred.user.uid, { password: newPass });
-
-                // Force user signout instantly to log back in
-                await signOut(auth);
-
-                loader.classList.add('hidden');
-                alert("Password changed successfully!");
-
-                // Clean form inputs
-                document.getElementById('resetEmail').value = '';
-                document.getElementById('resetPhone').value = '';
-                document.getElementById('resetSecAns').value = '';
-                document.getElementById('resetNewPass').value = '';
-                document.getElementById('resetConfirmPass').value = '';
-
-                toggleAuth('login');
-            } catch (err) {
-                loader.classList.add('hidden');
-                console.error("Error during password recovery: ", err);
-                alert("Wrong information!");
-            }
-        };
-
         // Open Social Links logic
         window.openSocial = (type) => {
             let url = "";
@@ -2041,7 +1867,7 @@
 
             loader.classList.remove('hidden');
             try {
-                await set(push(ref(db, 'withdrawals')), { uid: currentUser.uid, method: method, accName: name, accNum: num, amount: amt, status: "Pending", time: Date.now() });
+                await set(push(ref(db, 'withdrawals')), { uid: currentUser.uid, method: method, accName: name, accNum: num, amount: Number(amt), status: "Pending", time: Date.now() });
                 
                 let updates = { 
                     balance: userData.balance - amt, 
@@ -2524,57 +2350,6 @@
             }).catch(err => console.error("Error loading tickets: ", err));
         };
 
-        // EMAIL CHANGE SYSTEM FUNCTIONS
-        window.loadEmailChangeStatus = () => {
-            if (!currentUser) return;
-            get(ref(db, 'email_changes/' + currentUser.uid)).then((snap) => {
-                const statusEl = document.getElementById('emailRequestStatus');
-                if (snap.exists()) {
-                    const r = snap.val();
-                    if (r.status === 'Pending') {
-                        statusEl.innerHTML = `<span style="color:var(--warning);">Status: Request Pending Admin Approval</span>`;
-                    } else if (r.status === 'Approved') {
-                        statusEl.innerHTML = `<span style="color:var(--success);">Status: Approved</span>`;
-                    } else if (r.status === 'Rejected') {
-                        statusEl.innerHTML = `<span style="color:red;">Status: Rejected</span>`;
-                    }
-                } else {
-                    statusEl.innerHTML = "";
-                }
-            }).catch(err => console.error("Email status fetch error: ", err));
-        };
-
-        window.submitEmailChangeRequest = async () => {
-            const oldEmail = document.getElementById('oldEmail').value.trim();
-            const newEmail = document.getElementById('newEmail').value.trim();
-            const newCEmail = document.getElementById('newCEmail').value.trim();
-
-            if(!oldEmail || !newEmail || !newCEmail) return alert("Please fill all fields!");
-            if(newEmail !== newCEmail) return alert("New emails do not match!");
-            
-            const userCurrentEmail = userData.email || currentUser.email || "";
-            if(oldEmail.toLowerCase() !== userCurrentEmail.toLowerCase()) {
-                return alert("Current email address is incorrect!");
-            }
-
-            loader.classList.remove('hidden');
-            try {
-                await set(ref(db, 'email_changes/' + currentUser.uid), {
-                    uid: currentUser.uid,
-                    oldEmail: oldEmail,
-                    newEmail: newEmail,
-                    status: "Pending",
-                    timestamp: Date.now()
-                });
-                loader.classList.add('hidden');
-                alert("Email change request submitted successfully!");
-                loadEmailChangeStatus();
-            } catch(e) {
-                loader.classList.add('hidden');
-                alert("Error: " + e.message);
-            }
-        };
-
         // COMPANY ADMIN AREA ==========================
         window.openAdminPanel = async () => {
             showPage('adminPage');
@@ -2650,7 +2425,6 @@
             loadAdminWithdraws();
             loadAdminPlans();
             loadAdminTickets();
-            loadAdminEmailRequests();
         };
 
         // ADMIN INVITE & SALARY SETTINGS SAVE
@@ -2947,8 +2721,8 @@
                             <p><b>Account:</b> ${w.accName} (${w.accNum})</p>
                             <p><b>Amount Requested:</b> Rs ${w.amount}</p>
                             <div style="margin-top:10px; display:flex; gap:10px;">
-                                <button onclick="approveWithdraw('${wid}', '${w.uid}', ${w.amount})" style="background:green;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Approve</button>
-                                <button onclick="rejectWithdraw('${wid}', '${w.uid}', ${w.amount})" style="background:red;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Reject & Refund</button>
+                                <button onclick="approveWithdraw('${wid}', '${w.uid}', ${Number(w.amount)})" style="background:green;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Approve</button>
+                                <button onclick="rejectWithdraw('${wid}', '${w.uid}', ${Number(w.amount)})" style="background:red;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Reject & Refund</button>
                             </div>
                         </div>`;
                     }
@@ -2982,14 +2756,24 @@
             if (reason.trim() === "") reason = "Provided account information is invalid";
 
             let uSnap = await get(ref(db, 'users/' + uid));
-            let u = decryptUserObject(uSnap.val());
-            let pWith = (Number(u.pendingWith) || 0) - Number(amount); if(pWith < 0) pWith = 0;
-            let bal = (Number(u.balance) || 0) + Number(amount); // Refund back to user
-            
-            await dbUpdateUser(uid, { pendingWith: pWith, balance: bal });
-            await update(ref(db, 'withdrawals/' + wid), { status: 'Rejected', rejectReason: reason });
-            alert("Withdrawal Rejected & Amount Refunded with Reason: " + reason);
-            openAdminPanel(); // Refresh stats
+            if (uSnap.exists()) {
+                let u = decryptUserObject(uSnap.val());
+                let refundAmount = Number(amount); // EXACT REFUND TO MATCH REQUESTED AMOUNT
+                
+                let currentPendingWith = Number(u.pendingWith) || 0;
+                let pWith = currentPendingWith - refundAmount; 
+                if(pWith < 0) pWith = 0;
+                
+                let currentBalance = Number(u.balance) || 0;
+                let bal = currentBalance + refundAmount; // Exactly refund requested withdrawal balance back to account
+                
+                await dbUpdateUser(uid, { pendingWith: pWith, balance: bal });
+                await update(ref(db, 'withdrawals/' + wid), { status: 'Rejected', rejectReason: reason });
+                alert("Withdrawal Rejected & Rs " + refundAmount + " Refunded to user balance successfully.");
+                openAdminPanel(); // Refresh stats
+            } else {
+                alert("User record not found!");
+            }
         };
 
         // ADMIN TICKETS VIEW & RESPONSE (ADMIN SIDE)
@@ -3043,77 +2827,6 @@
                 loadAdminTickets();
             } catch(e) {
                 alert(e.message);
-            } finally {
-                loader.classList.add('hidden');
-            }
-        };
-
-        // ADMIN EMAIL REQUESTS VIEW & APPROVAL (ADMIN SIDE)
-        window.loadAdminEmailRequests = async () => {
-            const list = document.getElementById('adminEmailRequestsList');
-            list.innerHTML = 'Loading email change requests...';
-            const snap = await get(ref(db, 'email_changes'));
-            let html = '';
-            if(snap.exists()) {
-                snap.forEach(child => {
-                    let r = child.val();
-                    let reqUid = child.key; // Unique key is the user UID
-                    let uName = (allUsersCache[r.uid] && allUsersCache[r.uid].name) ? allUsersCache[r.uid].name : 'Unknown User';
-                    
-                    if(r.status === 'Pending') {
-                        html += `
-                        <div class="user-row" style="border-left: 4px solid var(--warning); color:#333;">
-                            <p><b>User Name:</b> ${uName}</p>
-                            <p><b>Old Email Address:</b> ${r.oldEmail}</p>
-                            <p><b>Requested New Email:</b> ${r.newEmail}</p>
-                            <div style="margin-top:10px; display:flex; gap:10px;">
-                                <button onclick="approveEmailChange('${reqUid}', '${r.newEmail}')" style="background:#00c853;color:white;border:none;padding:5px 12px;border-radius:5px;cursor:pointer;font-weight:bold;">Approve Change</button>
-                                <button onclick="rejectEmailChange('${reqUid}')" style="background:#e53935;color:white;border:none;padding:5px 12px;border-radius:5px;cursor:pointer;font-weight:bold;">Reject</button>
-                            </div>
-                        </div>`;
-                    }
-                });
-            }
-            list.innerHTML = html || 'No pending email change requests found.';
-        };
-
-        window.approveEmailChange = async (reqUid, newEmail) => {
-            if(!confirm("Approve this email change request?")) return;
-            
-            loader.classList.remove('hidden');
-            try {
-                // Update user email securely in the user object node
-                await dbUpdateUser(reqUid, { email: newEmail });
-                
-                // Update status in requested node
-                await update(ref(db, 'email_changes/' + reqUid), { status: "Approved" });
-                
-                alert("Email change request approved and database entry successfully updated!");
-                
-                // Refresh local cache
-                if (allUsersCache[reqUid]) {
-                    allUsersCache[reqUid].email = newEmail;
-                }
-                
-                loadAdminEmailRequests();
-                loadAdminUsers();
-            } catch(e) {
-                alert("Error: " + e.message);
-            } finally {
-                loader.classList.add('hidden');
-            }
-        };
-
-        window.rejectEmailChange = async (reqUid) => {
-            if(!confirm("Reject this email change request?")) return;
-            
-            loader.classList.remove('hidden');
-            try {
-                await update(ref(db, 'email_changes/' + reqUid), { status: "Rejected" });
-                alert("Email change request rejected!");
-                loadAdminEmailRequests();
-            } catch(e) {
-                alert("Error: " + e.message);
             } finally {
                 loader.classList.add('hidden');
             }
