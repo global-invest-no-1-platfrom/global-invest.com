@@ -1670,6 +1670,8 @@
                         if(userData.isPhoneBound) {
                             document.getElementById('updPhone').disabled = true;
                             document.getElementById('verifiedBadge').classList.remove('hidden');
+                        } else {
+                            document.getElementById('verifiedBadge').classList.add('hidden');
                         }
                     } else {
                         // User exists in auth but database is deleted (by Admin)
@@ -1807,7 +1809,7 @@
             if (!executeFirewallChain("login", emailInput)) return;
 
             loader.classList.remove('hidden');
-            try { 
+            try {
                 let targetAuthEmail = emailInput;
                 const snap = await get(ref(db, 'users'));
                 if (snap.exists()) {
@@ -2398,7 +2400,7 @@
             
             loader.classList.remove('hidden');
             try {
-                let newBal = (userData.balance || 0) + activeTier.amt;
+                let newBal = (Number(userData.balance) || 0) + activeTier.amt;
                 await dbUpdateUser(currentUser.uid, {
                     balance: newBal,
                     lastSalaryDate: periodKey
@@ -2937,7 +2939,7 @@
                     let uName = (allUsersCache[w.uid] && allUsersCache[w.uid].name) ? allUsersCache[w.uid].name : 'Unknown User';
                     
                     if(w.status === 'Pending') {
-                        totalPendingW += w.amount;
+                        totalPendingW += Number(w.amount || 0);
                         html += `
                         <div class="user-row" style="border-left: 4px solid #e53935;">
                             <p><b>User:</b> ${uName}</p>
@@ -2960,8 +2962,8 @@
             if(!confirm("Approve this withdrawal?")) return;
             let uSnap = await get(ref(db, 'users/' + uid));
             let u = decryptUserObject(uSnap.val());
-            let pWith = (u.pendingWith || 0) - amount; if(pWith < 0) pWith = 0;
-            let tWith = (u.totalWith || 0) + amount;
+            let pWith = (Number(u.pendingWith) || 0) - Number(amount); if(pWith < 0) pWith = 0;
+            let tWith = (Number(u.totalWith) || 0) + Number(amount);
 
             let userUpdates = { 
                 pendingWith: pWith, 
@@ -2981,8 +2983,8 @@
 
             let uSnap = await get(ref(db, 'users/' + uid));
             let u = decryptUserObject(uSnap.val());
-            let pWith = (u.pendingWith || 0) - amount; if(pWith < 0) pWith = 0;
-            let bal = (u.balance || 0) + amount; // Refund back to user
+            let pWith = (Number(u.pendingWith) || 0) - Number(amount); if(pWith < 0) pWith = 0;
+            let bal = (Number(u.balance) || 0) + Number(amount); // Refund back to user
             
             await dbUpdateUser(uid, { pendingWith: pWith, balance: bal });
             await update(ref(db, 'withdrawals/' + wid), { status: 'Rejected', rejectReason: reason });
@@ -3295,8 +3297,8 @@
                 for (let uid in allUsersCache) {
                     let u = allUsersCache[uid];
                     totalUsers++;
-                    totalBal += (u.balance || 0);
-                    totalInv += (u.totalInvest || 0);
+                    totalBal += Number(u.balance || 0);
+                    totalInv += Number(u.totalInvest || 0);
 
                     let blockedStatus = u.isBlocked ? `<span style="color:red; font-weight:bold;">BLOCKED</span>` : `<span style="color:green; font-weight:bold;">ACTIVE</span>`;
                     let bal = parseFloat(u.balance || 0).toFixed(0);
@@ -3368,10 +3370,10 @@
             
             let uSnap = await get(ref(db, 'users/' + uid));
             let u = decryptUserObject(uSnap.val());
-            let newBal = (u.balance || 0) + val;
+            let newBal = (Number(u.balance) || 0) + val;
             if(newBal < 0) newBal = 0;
 
-            if(confirm(`User's current balance is Rs ${(u.balance || 0).toFixed(2)}.\nNew Balance will be Rs ${newBal.toFixed(2)}.\nAre you sure?`)) {
+            if(confirm(`User's current balance is Rs ${(Number(u.balance) || 0).toFixed(2)}.\nNew Balance will be Rs ${newBal.toFixed(2)}.\nAre you sure?`)) {
                 await dbUpdateUser(uid, { balance: newBal });
                 alert("Balance updated successfully!");
                 openAdminPanel(); // Refresh UI
@@ -3444,7 +3446,7 @@
                         let w = child.val();
                         if(w.uid === currentUser.uid) {
                             let color = w.status === 'Pending' ? 'bg-warning' : w.status === 'Rejected' ? 'bg-warning' : 'bg-success';
-                            let reasonText = (w.status === 'Rejected' && w.rejectReason) ? `<br><small style="color:#e53935; font-weight:bold;">Reason: ${d.rejectReason}</small>` : '';
+                            let reasonText = (w.status === 'Rejected' && w.rejectReason) ? `<br><small style="color:#e53935; font-weight:bold;">Reason: ${w.rejectReason}</small>` : '';
                             let badgeStyle = w.status === 'Rejected' ? 'style="background:#e53935;"' : '';
                             html += `<div class="h-item"><div><h4>${w.method}</h4><p>${new Date(w.time).toLocaleDateString()} | Acc: ${w.accNum}${reasonText}</p></div><div style="text-align:right;"><h4 style="color:red;">- Rs ${w.amount}</h4><span class="badge ${color}" ${badgeStyle}>${w.status}</span></div></div>`;
                         }
