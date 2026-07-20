@@ -499,7 +499,7 @@
         <div id="aboutPage" class="page hidden">
             <div class="section-title">About Platform</div>
             <div class="card" style="text-align:justify; max-height: 70vh; overflow-y: auto; font-family: monospace; font-size: 11px; line-height: 1.5; color: #333;">
-                <h2 style="color:var(--primary); margin-bottom:15px; text-align:center; font-family: 'Poppins', sans-serif;">Global invest PLATFORM v8.0.4</h2>
+                <h2 style="color:var(--primary); margin-bottom:15px; text-align:center; font-family: 'Poppins', sans-serif;">Global invest PLATFORM v5.3.9</h2>
                 <div id="aboutContentLines">
                     <!-- Javascript will load exactly 550 lines of comprehensive platform rules & about information here -->
                 </div>
@@ -2923,7 +2923,7 @@
             openAdminPanel(); // Refresh stats
         };
 
-        // ADMIN WITHDRAWALS HANDLING
+        // ADMIN WITHDRAWALS HANDLING [FIXED: 'did is not defined' issue solved here]
         window.loadAdminWithdraws = async () => {
             const list = document.getElementById('adminPendingWithdraws');
             list.innerHTML = 'Loading...';
@@ -2946,7 +2946,7 @@
                             <p><b>Amount Requested:</b> Rs ${w.amount}</p>
                             <div style="margin-top:10px; display:flex; gap:10px;">
                                 <button onclick="approveWithdraw('${wid}', '${w.uid}', ${w.amount})" style="background:green;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Approve</button>
-                                <button onclick="rejectWithdraw('${did}', '${w.uid}', ${w.amount})" style="background:red;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Reject & Refund</button>
+                                <button onclick="rejectWithdraw('${wid}', '${w.uid}', ${w.amount})" style="background:red;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;">Reject & Refund</button>
                             </div>
                         </div>`;
                     }
@@ -3444,7 +3444,7 @@
                         let w = child.val();
                         if(w.uid === currentUser.uid) {
                             let color = w.status === 'Pending' ? 'bg-warning' : w.status === 'Rejected' ? 'bg-warning' : 'bg-success';
-                            let reasonText = (w.status === 'Rejected' && w.rejectReason) ? `<br><small style="color:#e53935; font-weight:bold;">Reason: ${w.rejectReason}</small>` : '';
+                            let reasonText = (w.status === 'Rejected' && w.rejectReason) ? `<br><small style="color:#e53935; font-weight:bold;">Reason: ${d.rejectReason}</small>` : '';
                             let badgeStyle = w.status === 'Rejected' ? 'style="background:#e53935;"' : '';
                             html += `<div class="h-item"><div><h4>${w.method}</h4><p>${new Date(w.time).toLocaleDateString()} | Acc: ${w.accNum}${reasonText}</p></div><div style="text-align:right;"><h4 style="color:red;">- Rs ${w.amount}</h4><span class="badge ${color}" ${badgeStyle}>${w.status}</span></div></div>`;
                         }
